@@ -4,5 +4,11 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="Model\Managers\" />
+    <Folder Include="Model\Interfaces\" />
+    <Folder Include="Model\DTOs\" />
+  </ItemGroup>
+
 
 </Project>
