@@ -5,9 +5,11 @@ using System.Threading.Tasks;
 
 namespace SocialMediaForModelers.Model
 {
-    public class CommentLike
+    public class PostLike
     {
-        public int CommentId { get; set; }
+        public int PostId { get; set; }
         public string UserId { get; set; }
+
+        // Navigation properties
     }
 }
