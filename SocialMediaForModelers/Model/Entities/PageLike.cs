@@ -9,5 +9,8 @@ namespace SocialMediaForModelers.Model
     {
         public int PageId { get; set; }
         public string UserId { get; set; }
+
+        // Navigation properties
+        public UserPage UserPage { get; set; }
     }
 }
