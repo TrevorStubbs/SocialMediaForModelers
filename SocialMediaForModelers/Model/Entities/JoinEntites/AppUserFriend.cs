@@ -12,6 +12,5 @@ namespace SocialMediaForModelers.Model
 
         // Navigation properties
         public ApplicationUser AppUser { get; set; }
-        public ApplicationUser UserFriends { get; set; }
     }
 }
