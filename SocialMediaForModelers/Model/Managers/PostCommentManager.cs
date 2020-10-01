@@ -27,7 +27,7 @@ namespace SocialMediaForModelers.Model.Managers
                 Body = postComment.Body
             };
 
-            _context.Entry(newComment).State = Microsoft.EntityFrameworkCore.EntityState.Added;
+            _context.Entry(newComment).State = EntityState.Added;
             await _context.SaveChangesAsync();
             return postComment;
         }
@@ -105,7 +105,14 @@ namespace SocialMediaForModelers.Model.Managers
 
         public async Task AddLikeToComment(int commentId, string userId)
         {
+            CommentLike newLike = new CommentLike()
+            {
+                CommentId = commentId,
+                UserId = userId
+            };
 
+            _context.Entry(newLike).State = EntityState.Added;
+            await _context.SaveChangesAsync();
         }
 
         public async Task<LikeDTO> GetCommentsLikes(int commentId, string userId)
@@ -122,9 +129,13 @@ namespace SocialMediaForModelers.Model.Managers
             return likeDTO;
         }
 
-        public Task DeleteALike(int commentId, string userId)
+        public async Task DeleteALike(int commentId, string userId)
         {
-            throw new NotImplementedException();
+            var like = await _context.CommentLikes.Where(x => x.CommentId == commentId && x.UserId == userId)
+                                                  .FirstOrDefaultAsync();
+
+            _context.Entry(like).State = EntityState.Deleted;
+            await _context.SaveChangesAsync();
         }
 
 
