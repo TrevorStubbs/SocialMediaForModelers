@@ -25,4 +25,7 @@ Microsoft Visual Studio Community 2019
 ### Model Properties and Requirements TODO
 
 ## Change Log
+- 0.4 PostCommentManager V1
+- 0.3 EF Core setup
+- 0.2 ERD Scaffold
 - 0.1 Initial Repo Build
