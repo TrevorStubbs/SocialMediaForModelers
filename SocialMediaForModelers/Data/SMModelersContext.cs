@@ -40,6 +40,13 @@ namespace SocialMediaForModelers.Data
                     UserName = "stubbste@gmail.com",
                     DOB = new DateTime(1982, 6, 8)
                 });
+            modelBuilder.Entity<PostComment>().HasData(
+                new PostComment
+                {
+                    ID = 1,
+                    UserId = "1234",
+                    Body = "I am a comment"
+                });
         }
 
         // Normal Tables

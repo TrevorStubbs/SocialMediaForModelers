@@ -5,6 +5,7 @@ using SocialMediaForModelers.Model.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
 namespace SocialMediaForModelers.Model.Managers
@@ -37,11 +38,11 @@ namespace SocialMediaForModelers.Model.Managers
             var comments = await _context.PostComments.Where(x => x.UserId == userId)
                                                       .ToListAsync();
             var commentDTOs = new List<PostCommentDTO>();
-            foreach (var item in commentDTOs)
+            foreach (var item in comments)
             {
                 commentDTOs.Add(new PostCommentDTO()
                 {
-                    Id = item.Id,
+                    Id = item.ID,
                     UserId = item.UserId,
                     Body = item.Body
                 });
@@ -50,9 +51,10 @@ namespace SocialMediaForModelers.Model.Managers
             return commentDTOs;
         }
 
-        public async Task<List<PostCommentDTO>> GetCommentsForAPost(int postComment)
+        // ============ This will need to move to the Post Manager =============
+        public async Task<List<PostCommentDTO>> GetCommentsForAPost(int postId)
         {
-            var comments = await _context.PostComments.Where(x => x.ID == postComment)
+            var comments = await _context.PostComments.Where(x => x.ID == postId)
                                                       .ToListAsync();
             var commentDTOs = new List<PostCommentDTO>();
             foreach (var item in commentDTOs)
@@ -67,10 +69,11 @@ namespace SocialMediaForModelers.Model.Managers
 
             return commentDTOs;
         }
+        // =======================================================================
 
-        public async Task<PostCommentDTO> GetASpecificComment(int postComment, string userId)
+        public async Task<PostCommentDTO> GetASpecificComment(int commentId, string userId)
         {
-            var comment = await _context.PostComments.Where(x => x.ID == postComment && x.UserId == userId)
+            var comment = await _context.PostComments.Where(x => x.ID == commentId && x.UserId == userId)
                                                      .FirstOrDefaultAsync();
             var commentDTO = new PostCommentDTO()
             {
@@ -93,7 +96,6 @@ namespace SocialMediaForModelers.Model.Managers
             _context.Entry(newComment).State = EntityState.Modified;
             await _context.SaveChangesAsync();
             return postComment;
-
         }
 
         public async Task Delete(int commentId)
