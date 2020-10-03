@@ -22,6 +22,12 @@ namespace SocialMediaForModelers.Model.Managers
             _context = context;
         }
 
+        /// <summary>
+        /// Create a new PostImage
+        /// </summary>
+        /// <param name="postImage">The PostImageDTO to create the new entity</param>
+        /// <param name="userId">The user's id</param>
+        /// <returns>If successful: the new ImageDTO</returns>
         public async Task<PostImageDTO> Create(PostImageDTO postImage, string userId)
         {
             PostImage newImage = new PostImage()
@@ -38,6 +44,10 @@ namespace SocialMediaForModelers.Model.Managers
             return postImage;
         }
 
+        /// <summary>
+        /// Gets all the images in the table
+        /// </summary>
+        /// <returns>A list of all the images in the table</returns>
         public async Task<List<PostImageDTO>> GetAllImages()
         {
             var images = await _context.PostImages.ToListAsync();
