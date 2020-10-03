@@ -29,13 +29,5 @@ namespace SocialMediaForModelers.Model.Interfaces
 
         // Delete
         Task Delete(int imageId);
-
-        // Add Like to Image
-        Task AddLikeToImage(int imageId, string userId);
-
-        // Get Likes
-        Task<LikeDTO> GetImageLikes(int imageId, string userId);
-
-        Task DeleteALike(int commentId, string userId);
     }
 }

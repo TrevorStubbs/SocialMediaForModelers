@@ -125,20 +125,5 @@ namespace SocialMediaForModelers.Model.Managers
             _context.Entry(imageToBeDeleted).State = EntityState.Deleted;
             await _context.SaveChangesAsync();
         }
-
-        public Task AddLikeToImage(int imageId, string userId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<LikeDTO> GetImageLikes(int imageId, string userId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task DeleteALike(int imageId, string userId)
-        {
-            throw new NotImplementedException();
-        }
     }
 }
