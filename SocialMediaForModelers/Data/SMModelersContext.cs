@@ -40,6 +40,13 @@ namespace SocialMediaForModelers.Data
                     UserName = "stubbste@gmail.com",
                     DOB = new DateTime(1982, 6, 8)
                 });
+            modelBuilder.Entity<PostComment>().HasData(
+                new PostComment
+                {
+                    ID = 1,
+                    UserId = "1234",
+                    Body = "I am a comment"
+                });
         }
 
         // Normal Tables
@@ -53,5 +60,9 @@ namespace SocialMediaForModelers.Data
         public DbSet<PostToComment> PostToComments { get; set; }
         public DbSet<PostToImage> PostToImages { get; set; }
         public DbSet<UserPageToPost> UserPageToPosts { get; set; }
+        // Like Tables
+        public DbSet<CommentLike> CommentLikes { get; set; }
+        public DbSet<PageLike> pageLikes { get; set; }
+        public DbSet<PostLike> PostLikes { get; set; }
     }
 }
