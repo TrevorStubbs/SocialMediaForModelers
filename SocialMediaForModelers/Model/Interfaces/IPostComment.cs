@@ -15,7 +15,7 @@ namespace SocialMediaForModelers.Model.Interfaces
         Task<List<PostCommentDTO>> GetAllUsersComments(string userId);
 
         // ReadPostsComments
-        Task<List<PostCommentDTO>> GetCommentsForAPost(int commentId);
+        Task<List<PostCommentDTO>> GetCommentsForAPost(int postId);
 
         // ReadSpecificComment
         Task<PostCommentDTO> GetASpecificComment(int commentId, string userId);
