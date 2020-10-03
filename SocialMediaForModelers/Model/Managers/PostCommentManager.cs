@@ -51,10 +51,10 @@ namespace SocialMediaForModelers.Model.Managers
             return commentDTOs;
         }
 
-        // ============ This will need to move to the Post Manager =============
+        // ============ This may need to move to the Post Manager =============
         public async Task<List<PostCommentDTO>> GetCommentsForAPost(int postId)
         {
-            var comments = await _context.PostComments.Where(x => x.ID == postId)
+            var comments = await _context.PostComments.Where(x => x.ID == postId) // This is not correct.
                                                       .ToListAsync();
             var commentDTOs = new List<PostCommentDTO>();
             foreach (var item in commentDTOs)
@@ -87,13 +87,13 @@ namespace SocialMediaForModelers.Model.Managers
 
         public async Task<PostCommentDTO> Update(PostCommentDTO postComment)
         {
-            PostComment newComment = new PostComment()
+            PostComment updateComment = new PostComment()
             {
                 ID = postComment.Id,
                 UserId = postComment.UserId,
                 Body = postComment.Body
             };
-            _context.Entry(newComment).State = EntityState.Modified;
+            _context.Entry(updateComment).State = EntityState.Modified;
             await _context.SaveChangesAsync();
             return postComment;
         }
