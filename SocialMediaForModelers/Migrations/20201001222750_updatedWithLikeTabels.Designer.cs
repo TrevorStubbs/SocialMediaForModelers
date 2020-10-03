@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SocialMediaForModelers.Data;
 
 namespace SocialMediaForModelers.Migrations
 {
     [DbContext(typeof(SMModelersContext))]
-    partial class SMModelersContextModelSnapshot : ModelSnapshot
+    [Migration("20201001222750_updatedWithLikeTabels")]
+    partial class updatedWithLikeTabels
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -108,9 +110,9 @@ namespace SocialMediaForModelers.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "93789471-d30f-48eb-a40a-ba60c542ba94",
+                            Id = "fde21a89-8fe7-496c-8339-e742f9410c66",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "2f3a2d9f-6723-494c-885b-7e52d18b65f8",
+                            ConcurrencyStamp = "c2d186e1-f7d7-41ce-9fbd-a6c6f0805521",
                             DOB = new DateTime(1982, 6, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "stubbste@gmail.com",
                             EmailConfirmed = false,
@@ -118,7 +120,7 @@ namespace SocialMediaForModelers.Migrations
                             LastName = "Stubbs",
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "cbb47e90-26ac-4c04-b71a-6e26a245b648",
+                            SecurityStamp = "fb33837e-b667-4979-9002-0baf3507f8b7",
                             TwoFactorEnabled = false,
                             UserId = "1234",
                             UserName = "stubbste@gmail.com"
@@ -241,14 +243,6 @@ namespace SocialMediaForModelers.Migrations
                     b.HasKey("ID");
 
                     b.ToTable("PostComments");
-
-                    b.HasData(
-                        new
-                        {
-                            ID = 1,
-                            Body = "I am a comment",
-                            UserId = "1234"
-                        });
                 });
 
             modelBuilder.Entity("SocialMediaForModelers.Model.PostImage", b =>
