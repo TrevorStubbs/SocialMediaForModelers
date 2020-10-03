@@ -13,10 +13,13 @@ namespace SocialMediaForModelers.Model.Interfaces
 
         // Read
         // GetAllImages
-        Task<List<PostImageDTO>> GetAllImages(int userId);
+        Task<List<PostImageDTO>> GetAllImages();
+
+        // GetAllOfAUsersImages
+        Task<List<PostImageDTO>> GetAllUsersImages(string userId);
 
         // GetAllImagesForAPost
-        Task<List<PostImageDTO>> GetAnImagesForAPost(int postId);
+        Task<List<PostImageDTO>> GetAllImagesForAPost(int postId);
 
         // GetAllASpecificImage
         Task<PostImageDTO> GetASpecificImage(int imageId);
