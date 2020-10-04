@@ -10,6 +10,7 @@ namespace SocialMediaForModelers.Model
     public class PostImage
     {
         public int ID { get; set; }
+        public string UserId { get; set; }
         public string ImageURI { get; set; } // Will need to change once S3 is setup
 
         // Navigation properties

@@ -19,6 +19,12 @@ namespace SocialMediaForModelers.Model.Managers
             _context = context;
         }
 
+        /// <summary>
+        /// Creates a new Comment and puts it into the database
+        /// </summary>
+        /// <param name="postComment">The DTO to create the comment</param>
+        /// <param name="userId">The userId who made the comment</param>
+        /// <returns>If successful returns the DTO to the caller</returns>
         public async Task<PostCommentDTO> Create(PostCommentDTO postComment, string userId)
         {
             PostComment newComment = new PostComment()
@@ -33,6 +39,11 @@ namespace SocialMediaForModelers.Model.Managers
             return postComment;
         }
 
+        /// <summary>
+        /// Gets all the comments made by the specified user
+        /// </summary>
+        /// <param name="userId">The user's Id</param>
+        /// <returns>A list of all the comments made by this user</returns>
         public async Task<List<PostCommentDTO>> GetAllUsersComments(string userId)
         {
             var comments = await _context.PostComments.Where(x => x.UserId == userId)
@@ -51,10 +62,10 @@ namespace SocialMediaForModelers.Model.Managers
             return commentDTOs;
         }
 
-        // ============ This will need to move to the Post Manager =============
+        // ============ TODO: This may need to move to the Post Manager =============
         public async Task<List<PostCommentDTO>> GetCommentsForAPost(int postId)
         {
-            var comments = await _context.PostComments.Where(x => x.ID == postId)
+            var comments = await _context.PostComments.Where(x => x.ID == postId) // This is not correct.
                                                       .ToListAsync();
             var commentDTOs = new List<PostCommentDTO>();
             foreach (var item in commentDTOs)
@@ -71,6 +82,12 @@ namespace SocialMediaForModelers.Model.Managers
         }
         // =======================================================================
 
+        /// <summary>
+        /// Get a single specified comment
+        /// </summary>
+        /// <param name="commentId">The Id of the comment</param>
+        /// <param name="userId">The User's Id</param>
+        /// <returns>A DTO of the specified comment</returns>
         public async Task<PostCommentDTO> GetASpecificComment(int commentId, string userId)
         {
             var comment = await _context.PostComments.Where(x => x.ID == commentId && x.UserId == userId)
@@ -85,19 +102,29 @@ namespace SocialMediaForModelers.Model.Managers
             return commentDTO;
         }
 
+        /// <summary>
+        /// Updates a comments in the database
+        /// </summary>
+        /// <param name="postComment">The PostCommentDTO to be used to update the comment</param>
+        /// <returns>If successful returns the updated PostCommentDTO</returns>
         public async Task<PostCommentDTO> Update(PostCommentDTO postComment)
         {
-            PostComment newComment = new PostComment()
+            PostComment updateComment = new PostComment()
             {
                 ID = postComment.Id,
                 UserId = postComment.UserId,
                 Body = postComment.Body
             };
-            _context.Entry(newComment).State = EntityState.Modified;
+            _context.Entry(updateComment).State = EntityState.Modified;
             await _context.SaveChangesAsync();
             return postComment;
         }
 
+        /// <summary>
+        /// Deletes a comment from the database
+        /// </summary>
+        /// <param name="commentId">The Id of the comment to be deleted</param>
+        /// <returns>Nothing</returns>
         public async Task Delete(int commentId)
         {
             PostComment commentToBeDeleted = await _context.PostComments.FindAsync(commentId);
@@ -105,6 +132,12 @@ namespace SocialMediaForModelers.Model.Managers
             await _context.SaveChangesAsync();
         }
 
+        /// <summary>
+        /// Adds a like to the comment
+        /// </summary>
+        /// <param name="commentId">The Id of the comment to be liked</param>
+        /// <param name="userId">The user who is making the request</param>
+        /// <returns>Nothing</returns>
         public async Task AddLikeToComment(int commentId, string userId)
         {
             CommentLike newLike = new CommentLike()
@@ -117,6 +150,12 @@ namespace SocialMediaForModelers.Model.Managers
             await _context.SaveChangesAsync();
         }
 
+        /// <summary>
+        /// Gets the total number of likes for this comment and if the user who requested it has liked the comment
+        /// </summary>
+        /// <param name="commentId">The Id of the comment</param>
+        /// <param name="userId">The Id of the user requesting this info</param>
+        /// <returns>A LikeDTO which has the total number of likes and the a boolean</returns>
         public async Task<LikeDTO> GetCommentsLikes(int commentId, string userId)
         {            
             var likes = await _context.CommentLikes.Where(x => x.CommentId == commentId)                                                    
@@ -131,6 +170,12 @@ namespace SocialMediaForModelers.Model.Managers
             return likeDTO;
         }
 
+        /// <summary>
+        /// Removes a like from a comment
+        /// </summary>
+        /// <param name="commentId">The Id of the comment</param>
+        /// <param name="userId">The Id of the user who is making the request</param>
+        /// <returns>Nothing</returns>
         public async Task DeleteALike(int commentId, string userId)
         {
             var like = await _context.CommentLikes.Where(x => x.CommentId == commentId && x.UserId == userId)
