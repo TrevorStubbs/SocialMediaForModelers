@@ -23,7 +23,7 @@ namespace SocialMediaForModelers.Model.Managers
         }
 
         /// <summary>
-        /// Create a new PostImage
+        /// Creates a new Image and puts it in the database
         /// </summary>
         /// <param name="postImage">The PostImageDTO to create the new entity</param>
         /// <param name="userId">The user's id</param>
@@ -45,7 +45,7 @@ namespace SocialMediaForModelers.Model.Managers
         }
 
         /// <summary>
-        /// Gets all the images in the table
+        /// Gets all the images in the table from the database
         /// </summary>
         /// <returns>A list of all the images in the table</returns>
         public async Task<List<PostImageDTO>> GetAllImages()
@@ -67,6 +67,11 @@ namespace SocialMediaForModelers.Model.Managers
             return imageList;
         }
 
+        /// <summary>
+        /// Gets all the images posted by the specified user from the database
+        /// </summary>
+        /// <param name="userId">The User's Id</param>
+        /// <returns>A list of all the users images</returns>
         public async Task<List<PostImageDTO>> GetAllUsersImages(string userId)
         {
             var images = await _context.PostImages.Where(x => x.UserId == userId).ToListAsync();
@@ -85,7 +90,7 @@ namespace SocialMediaForModelers.Model.Managers
             return imageList;
         }
 
-        // ============= This may need to be moved to the Post Manager ===================
+        // ============= TODO: This may need to be moved to the Post Manager ===================
         public async Task<List<PostImageDTO>> GetAllImagesForAPost(int postId)
         {
             var images = await _context.PostImages.Where(x => x.ID == postId).ToListAsync();
@@ -104,6 +109,11 @@ namespace SocialMediaForModelers.Model.Managers
             return imageList;
         }
 
+        /// <summary>
+        /// Gets a specific Image from the database
+        /// </summary>
+        /// <param name="imageId">The Id of the image</param>
+        /// <returns>A single PostImageDTO</returns>
         public async Task<PostImageDTO> GetASpecificImage(int imageId)
         {
             var image = await _context.PostImages.Where(x => x.ID == imageId).FirstOrDefaultAsync();
@@ -117,6 +127,11 @@ namespace SocialMediaForModelers.Model.Managers
             return imageDTO;
         }
 
+        /// <summary>
+        /// Updates a specific image in the database
+        /// </summary>
+        /// <param name="postImage">A PostImageDTO to be use to update the DB</param>
+        /// <returns>If successful the DTO gets sent back to the caller</returns>
         public async Task<PostImageDTO> Update(PostImageDTO postImage)
         {
             PostImage updateImage = new PostImage()
@@ -129,8 +144,16 @@ namespace SocialMediaForModelers.Model.Managers
             await _context.SaveChangesAsync();
             return postImage;
         }
+
+        /// <summary>
+        /// Deletes a specific image from the database
+        /// </summary>
+        /// <param name="imageId">The Id of the image to be deleted</param>
+        /// <returns>Nothing</returns>
         public async Task Delete(int imageId)
         {
+            // TODO: Once S3 works - Delete the image from the S3 bucket
+
             PostImage imageToBeDeleted = await _context.PostImages.FindAsync(imageId);
             _context.Entry(imageToBeDeleted).State = EntityState.Deleted;
             await _context.SaveChangesAsync();
