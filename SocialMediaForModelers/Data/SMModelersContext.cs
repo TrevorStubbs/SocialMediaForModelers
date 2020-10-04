@@ -24,7 +24,7 @@ namespace SocialMediaForModelers.Data
             modelBuilder.Entity<AppUserFriend>().HasKey(x => new { x.UserId, x.FriendId });
 
             modelBuilder.Entity<PostToComment>().HasKey(x => new { x.UserPageId, x.CommentId });
-            modelBuilder.Entity<PostToImage>().HasKey(x => new { x.PostId, x.PhotoId });
+            modelBuilder.Entity<PostToImage>().HasKey(x => new { x.PostId, x.ImageId });
             modelBuilder.Entity<UserPageToPost>().HasKey(x => new { x.UserPageId, x.PostId });
             modelBuilder.Entity<CommentLike>().HasKey(x => new { x.CommentId, x.UserId });
             modelBuilder.Entity<PageLike>().HasKey(x => new { x.PageId, x.UserId });
@@ -46,6 +46,13 @@ namespace SocialMediaForModelers.Data
                     ID = 1,
                     UserId = "1234",
                     Body = "I am a comment"
+                });
+            modelBuilder.Entity<PostImage>().HasData(
+                new PostImage
+                {
+                    ID = 1,
+                    UserId = "1234",
+                    ImageURI = "/Dog.png"
                 });
         }
 
