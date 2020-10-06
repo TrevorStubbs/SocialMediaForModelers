@@ -54,7 +54,22 @@ namespace SocialMediaForModelers.Model.Managers
             return filledList;
         }
 
+        public async Task<UserPostDTO> GetASpecificPost(int postId)
+        {
+            var post = await _context.UserPosts.Where(x => x.ID == postId).FirstOrDefaultAsync(); //TODO Add an includes
 
+            var postDTO = new UserPostDTO() 
+            {
+                Id = post.ID,
+                UserId = post.UserId,
+                Caption = post.Caption
+                // Add Comments
+                // Add Images
+                // Add Likes
+            };
+
+            return postDTO;
+        }
 
         private async Task<List<UserPostDTO>> FillUserPostDTO(List<UserPost> inputList)
         {
