@@ -40,48 +40,27 @@ namespace SocialMediaForModelers.Model.Managers
         {
             var allPosts = await _context.UserPosts.ToListAsync();
 
-            var allPostDTOs = new List<UserPostDTO>();
+            var filledList = FillUserPostDTO(allPosts).Result;
 
-            foreach (var post in allPosts)
-            {
-                var commentList = await _context.PostToComments.Where(x => x.PostId == post.ID).ToListAsync();
-
-                var imageList = await _context.PostToImages.Where(x => x.PostId == post.ID).ToListAsync();
-
-                List<PostCommentDTO> comments = new List<PostCommentDTO>();
-                List<PostImageDTO> images = new List<PostImageDTO>();
-
-                foreach (var item in commentList)
-                {
-                    comments.Add(await _postComment.GetASpecificComment(item.CommentId));
-                }
-
-                foreach (var item in imageList)
-                {
-                    images.Add(await _postImage.GetASpecificImage(item.ImageId));
-                }
-
-                allPostDTOs.Add(new UserPostDTO()
-                {
-                    Id = post.ID,
-                    UserId = post.UserId,
-                    Caption = post.Caption,
-                    PostComments = comments,
-                    PostImages = images
-                    // TODO : PostLikes = getlikes                    
-                });
-            }
-
-            return allPostDTOs;
+            return filledList;
         }
 
         public async Task<List<UserPostDTO>> GetAllUserPosts(string userId)
         {
             var allPosts = await _context.UserPosts.Where(x => x.UserId == userId).ToListAsync();
 
+            var filledList = FillUserPostDTO(allPosts).Result;
+
+            return filledList;
+        }
+
+
+
+        private async Task<List<UserPostDTO>> FillUserPostDTO(List<UserPost> inputList)
+        {
             var allPostsDTOs = new List<UserPostDTO>();
 
-            foreach (var post in allPosts)
+            foreach (var post in inputList)
             {
                 var commentList = await _context.PostToComments.Where(x => x.PostId == post.ID).ToListAsync();
 
