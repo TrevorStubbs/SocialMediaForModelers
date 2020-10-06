@@ -115,6 +115,7 @@ namespace SocialMediaForModelers.Model.Managers
                 UserId = postComment.UserId,
                 Body = postComment.Body
             };
+
             _context.Entry(updateComment).State = EntityState.Modified;
             await _context.SaveChangesAsync();
             return postComment;

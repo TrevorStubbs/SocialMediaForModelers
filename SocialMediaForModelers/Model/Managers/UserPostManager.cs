@@ -47,7 +47,8 @@ namespace SocialMediaForModelers.Model.Managers
 
         public async Task<List<UserPostDTO>> GetAllUserPosts(string userId)
         {
-            var allPosts = await _context.UserPosts.Where(x => x.UserId == userId).ToListAsync();
+            var allPosts = await _context.UserPosts.Where(x => x.UserId == userId)
+                                                   .ToListAsync();
 
             var filledList = FillUserPostDTO(allPosts).Result;
 
@@ -56,19 +57,63 @@ namespace SocialMediaForModelers.Model.Managers
 
         public async Task<UserPostDTO> GetASpecificPost(int postId)
         {
-            var post = await _context.UserPosts.Where(x => x.ID == postId).FirstOrDefaultAsync(); //TODO Add an includes
+            var post = await _context.UserPosts.Where(x => x.ID == postId)                                               
+                                               .FirstOrDefaultAsync();
+
+            var comments = new List<PostCommentDTO>();
+            var images = new List<PostImageDTO>();
+
+            foreach (var item in post.PostComments)
+            {
+                comments.Add(await _postComment.GetASpecificComment(item.CommentId));
+            }
+
+            foreach (var item in post.PostImages)
+            {
+                images.Add(await _postImage.GetASpecificImage(item.ImageId));
+            }
 
             var postDTO = new UserPostDTO() 
             {
                 Id = post.ID,
                 UserId = post.UserId,
-                Caption = post.Caption
-                // Add Comments
-                // Add Images
-                // Add Likes
+                Caption = post.Caption,
+                PostComments = comments,
+                PostImages = images
+                // TODO: Add Likes
             };
 
             return postDTO;
+        }
+
+        public async Task<UserPostDTO> Update(UserPostDTO post)
+        {
+            var originalPost = await GetASpecificPost(post.Id);
+
+
+            UserPost updatedPost = new UserPost()
+            {
+                ID = post.Id,
+                UserId = post.UserId,
+                Caption = post.Caption
+            };
+
+            // ============ TODO: Will not test till this is done! ====================
+            // Update the Comment list
+            // Update the Image list
+            // Update the Likes
+            // ========================================================================
+
+            _context.Entry(updatedPost).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+            return post;
+        }
+
+        public async Task Delete(int postId)
+        {
+            var postToBeDeleted = await _context.UserPosts.FindAsync(postId);
+            _context.Entry(postToBeDeleted).State = EntityState.Deleted;
+            await _context.SaveChangesAsync();
         }
 
         private async Task<List<UserPostDTO>> FillUserPostDTO(List<UserPost> inputList)

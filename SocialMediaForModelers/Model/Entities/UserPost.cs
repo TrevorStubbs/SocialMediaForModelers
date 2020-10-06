@@ -15,7 +15,7 @@ namespace SocialMediaForModelers.Model
         // Navigation properties
         public List<UserPageToPost> UserPageToPosts { get; set; }
         public List<PostLike> PostLikes { get; set; }
-        public List<PostToImage> PostToImages { get; set; }
-        public List<PostToComment> PostToComments { get; set; }
+        public List<PostToImage> PostImages { get; set; }
+        public List<PostToComment> PostComments { get; set; }
     }
 }
