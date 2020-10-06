@@ -88,9 +88,9 @@ namespace SocialMediaForModelers.Model.Managers
         /// <param name="commentId">The Id of the comment</param>
         /// <param name="userId">The User's Id</param>
         /// <returns>A DTO of the specified comment</returns>
-        public async Task<PostCommentDTO> GetASpecificComment(int commentId, string userId)
+        public async Task<PostCommentDTO> GetASpecificComment(int commentId)
         {
-            var comment = await _context.PostComments.Where(x => x.ID == commentId && x.UserId == userId)
+            var comment = await _context.PostComments.Where(x => x.ID == commentId)
                                                      .FirstOrDefaultAsync();
             var commentDTO = new PostCommentDTO()
             {

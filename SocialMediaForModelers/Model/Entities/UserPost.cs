@@ -9,6 +9,7 @@ namespace SocialMediaForModelers.Model
     public class UserPost
     {
         public int ID { get; set; }
+        public string UserId { get; set; }
         public string Caption{ get; set; }        
 
         // Navigation properties

@@ -40,7 +40,7 @@ namespace SocialMediaForModelersxUnitTests
             var service = BuildService();
 
             var expectedList = new List<string>();
-            var firstComment = await service.GetASpecificComment(1, "1234");
+            var firstComment = await service.GetASpecificComment(1);
             expectedList.Add(firstComment.Body);
             expectedList.Add(comment1.Body);
             expectedList.Add(comment2.Body);
@@ -68,7 +68,7 @@ namespace SocialMediaForModelersxUnitTests
             var service = BuildService();
             var comment = await service.Create(TestDto1(), TestDto1().UserId);
 
-            var returnFromMethod = await service.GetASpecificComment(comment.Id, comment.UserId);
+            var returnFromMethod = await service.GetASpecificComment(comment.Id);
 
             Assert.NotNull(returnFromMethod);
             Assert.Equal(TestDto1().Body, returnFromMethod.Body);
