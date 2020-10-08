@@ -32,7 +32,6 @@ namespace SocialMediaForModelers.Model.Managers
         {
             PostImage newImage = new PostImage()
             {
-                ID = postImage.Id,
                 UserId = postImage.UserId,
                 ImageURI = postImage.ImageURI
             };

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SocialMediaForModelers.Data;
 
 namespace SocialMediaForModelers.Migrations
 {
     [DbContext(typeof(SMModelersContext))]
-    partial class SMModelersContextModelSnapshot : ModelSnapshot
+    [Migration("20201006011930_updatedUserPostData")]
+    partial class updatedUserPostData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -108,9 +110,9 @@ namespace SocialMediaForModelers.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "3b0575c4-94e4-46f7-aeda-631520fae009",
+                            Id = "662044de-eb39-4aa9-98ce-089aa21630ad",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "9815a6a3-ba77-49e5-942b-1efe4c653921",
+                            ConcurrencyStamp = "80da13c0-8512-4bea-8dd7-21e271f73330",
                             DOB = new DateTime(1982, 6, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "stubbste@gmail.com",
                             EmailConfirmed = false,
@@ -118,7 +120,7 @@ namespace SocialMediaForModelers.Migrations
                             LastName = "Stubbs",
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "b6bdb1e0-f35c-4929-ae02-ad19975ea9c8",
+                            SecurityStamp = "bd9b2bb9-c527-48b6-bdc8-341745fec8d9",
                             TwoFactorEnabled = false,
                             UserId = "1234",
                             UserName = "stubbste@gmail.com"
@@ -164,13 +166,6 @@ namespace SocialMediaForModelers.Migrations
                     b.HasIndex("UserPostID");
 
                     b.ToTable("PostToComments");
-
-                    b.HasData(
-                        new
-                        {
-                            PostId = 1,
-                            CommentId = 1
-                        });
                 });
 
             modelBuilder.Entity("SocialMediaForModelers.Model.Entities.JoinEntites.PostToImage", b =>
@@ -194,13 +189,6 @@ namespace SocialMediaForModelers.Migrations
                     b.HasIndex("UserPostID");
 
                     b.ToTable("PostToImages");
-
-                    b.HasData(
-                        new
-                        {
-                            PostId = 1,
-                            ImageId = 1
-                        });
                 });
 
             modelBuilder.Entity("SocialMediaForModelers.Model.Entities.JoinEntites.UserPageToPost", b =>
@@ -343,14 +331,6 @@ namespace SocialMediaForModelers.Migrations
                     b.HasKey("ID");
 
                     b.ToTable("UserPosts");
-
-                    b.HasData(
-                        new
-                        {
-                            ID = 1,
-                            Caption = "This is my post",
-                            UserId = "1234"
-                        });
                 });
 
             modelBuilder.Entity("SocialMediaForModelers.Model.AppUserFriend", b =>
@@ -381,7 +361,7 @@ namespace SocialMediaForModelers.Migrations
                         .HasForeignKey("PostCommentID");
 
                     b.HasOne("SocialMediaForModelers.Model.UserPost", null)
-                        .WithMany("PostComments")
+                        .WithMany("PostToComments")
                         .HasForeignKey("UserPostID");
                 });
 
@@ -392,7 +372,7 @@ namespace SocialMediaForModelers.Migrations
                         .HasForeignKey("PostImageID");
 
                     b.HasOne("SocialMediaForModelers.Model.UserPost", "UserPost")
-                        .WithMany("PostImages")
+                        .WithMany("PostToImages")
                         .HasForeignKey("UserPostID");
                 });
 
