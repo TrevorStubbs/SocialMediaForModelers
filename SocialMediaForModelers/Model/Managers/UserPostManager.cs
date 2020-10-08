@@ -116,6 +116,31 @@ namespace SocialMediaForModelers.Model.Managers
             await _context.SaveChangesAsync();
         }
 
+        public async Task AddALikeToPost(int postId, string userId)
+        {
+            PostLike like = new PostLike()
+            {
+                PostId = postId,
+                UserId = userId
+            };
+
+            _context.Entry(like).State = EntityState.Added;
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<LikeDTO> GetPostLikes(int postId, string userId)
+        {
+            var likes = await _context.PostLikes.Where(x => x.PostId == postId).ToListAsync();
+
+            LikeDTO likeDTO = new LikeDTO()
+            {
+                NumberOfLikes = likes.Count,
+                UserLiked = UserLiked(likes, userId)
+            };
+
+            return likeDTO;
+        }
+
         private async Task<List<UserPostDTO>> FillUserPostDTO(List<UserPost> inputList)
         {
             var allPostsDTOs = new List<UserPostDTO>();
@@ -151,6 +176,19 @@ namespace SocialMediaForModelers.Model.Managers
             }
 
             return allPostsDTOs;
+        }
+
+        private bool UserLiked(List<PostLike> likes, string userId)
+        {
+            foreach (var item in likes)
+            {
+                if (item.UserId == userId)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }

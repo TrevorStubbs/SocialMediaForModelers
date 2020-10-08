@@ -164,7 +164,7 @@ namespace SocialMediaForModelers.Model.Managers
 
             LikeDTO likeDTO = new LikeDTO() 
             { 
-                NumberOfLikes = likes.Count(), 
+                NumberOfLikes = likes.Count, 
                 UserLiked = UserLiked(likes, userId) 
             };
 
