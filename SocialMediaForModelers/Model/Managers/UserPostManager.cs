@@ -7,11 +7,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Security.Cryptography.X509Certificates;
+using System.Security.Policy;
 using System.Threading.Tasks;
 
 namespace SocialMediaForModelers.Model.Managers
 {
-    public class UserPostManager //: IUserPost
+    public class UserPostManager : IUserPost
     {
         private SMModelersContext _context;
         private IPostComment _postComment;
@@ -116,7 +118,7 @@ namespace SocialMediaForModelers.Model.Managers
             await _context.SaveChangesAsync();
         }
 
-        public async Task AddALikeToPost(int postId, string userId)
+        public async Task AddALikeToAPost(int postId, string userId)
         {
             PostLike like = new PostLike()
             {
@@ -139,6 +141,54 @@ namespace SocialMediaForModelers.Model.Managers
             };
 
             return likeDTO;
+        }
+
+        public async Task DeleteALike(int postId, string userId)
+        {
+            var like = await _context.PostLikes.Where(x => x.PostId == postId && x.UserId == userId).FirstOrDefaultAsync();
+
+            _context.Entry(like).State = EntityState.Deleted;
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task AddAnImageToAPost(int postId, int imageId)
+        {
+            PostToImage newImageJoin = new PostToImage()
+            {
+                PostId = postId,
+                ImageId = imageId
+            };
+
+            _context.Entry(newImageJoin).State = EntityState.Added;
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteAnImageFromAPost(int postId, int imageId)
+        {
+            var like = await _context.PostToImages.FirstOrDefaultAsync(x => x.PostId == postId && x.ImageId == imageId);
+
+            _context.(like).State = EntityState.Deleted;
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task AddACommentToAPost(int postId, int commentId)
+        {
+            PostToComment comment = new PostToComment()
+            {
+                PostId = postId,
+                CommentId = commentId
+            };
+
+            _context.Entry(comment).State = EntityState.Added;
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteACommentFromAPost(int postId, int commentId)
+        {
+            var comment = await _context.PostToComments.FirstOrDefaultAsync(x => x.PostId == postId && x.CommentId == commentId);
+
+            _context.Entry(comment).State = EntityState.Deleted;
+            await _context.SaveChangesAsync();
         }
 
         private async Task<List<UserPostDTO>> FillUserPostDTO(List<UserPost> inputList)

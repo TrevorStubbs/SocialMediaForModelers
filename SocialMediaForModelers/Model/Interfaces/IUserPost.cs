@@ -10,7 +10,7 @@ namespace SocialMediaForModelers.Model.Interfaces
     {
         // PostCRUD
         //  Create a Post
-        Task<UserPostDTO> Create(UserPostDTO post, string userId);
+        Task<UserPostDTO> Create(UserPostDTO post);
 
         //  GetAllPosts
         Task<List<UserPostDTO>> GetAllPosts();
