@@ -54,6 +54,25 @@ namespace SocialMediaForModelers.Data
                     UserId = "1234",
                     ImageURI = "/Dog.png"
                 });
+            modelBuilder.Entity<UserPost>().HasData(
+                new UserPost
+                {
+                    ID = 1,
+                    UserId = "1234",
+                    Caption = "This is my post"
+                });
+            modelBuilder.Entity<PostToImage>().HasData(
+                new PostToImage
+                {
+                    PostId = 1,
+                    ImageId = 1
+                });
+            modelBuilder.Entity<PostToComment>().HasData(
+                new PostToComment
+                {
+                    PostId = 1,
+                    CommentId = 1
+                });
         }
 
         // Normal Tables
