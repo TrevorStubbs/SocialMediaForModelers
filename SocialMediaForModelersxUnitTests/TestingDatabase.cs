@@ -14,12 +14,16 @@ namespace SocialMediaForModelersxUnitTests
         public void ConfigurationServices(IServiceCollection service)
         {
             service.AddTransient<IPostComment, PostCommentManager>();
+            service.AddTransient<IPostImage, PostImageManager>();
+            service.AddTransient<IUserPost, UserPostManager>();
         }
     }
     public class TestingDatabase : IDisposable
     {
         private readonly SqliteConnection _connection;
         protected readonly SMModelersContext _db;
+        protected readonly IPostComment _comment;
+        protected readonly IPostImage _image;
 
         public TestingDatabase()
         {
@@ -32,6 +36,10 @@ namespace SocialMediaForModelersxUnitTests
                 .Options);
 
             _db.Database.EnsureCreated();
+
+            _comment = new PostCommentManager(_db);
+
+            _image = new PostImageManager(_db);
         }
 
         public void Dispose()
