@@ -120,9 +120,6 @@ namespace SocialMediaForModelers.Model.Managers
         /// <returns>If successful the updated DTO</returns>
         public async Task<UserPostDTO> Update(UserPostDTO post)
         {
-            var originalPost = await GetASpecificPost(post.Id);
-
-
             UserPost updatedPost = new UserPost()
             {
                 ID = post.Id,

@@ -19,14 +19,11 @@ namespace SocialMediaForModelersxUnitTests
         [Fact]
         public async void CanCreateANewPost()
         {
-            // Arrange
             var post = UserPostTestDTO1();
-
             var service = BuildService();
-            // Act
+
             var saved = await service.Create(post);
 
-            // Assert
             Assert.NotNull(saved);
             Assert.Equal(post.Id, saved.Id);
             Assert.Equal(post.UserId, saved.UserId);
@@ -125,6 +122,44 @@ namespace SocialMediaForModelersxUnitTests
             Assert.NotNull(updatedPost);
             Assert.Equal(updatedPost.Caption, returnFromMethod.Caption);
         }
+
+        [Fact]
+        public async void CanDeleteAPost()
+        {
+            var service = BuildService();
+            await service.Create(UserPostTestDTO1());
+            await service.Create(UserPostTestDTO2());
+
+            await service.Delete(1);
+
+            var returnFromMethod = await service.GetAllPosts();
+
+            var expectedList = new List<int>()
+            {
+                2,3
+            };
+
+            var returnList = new List<int>();
+
+            foreach (var post in returnFromMethod)
+            {
+                returnList.Add(post.Id);
+            }
+
+            Assert.NotNull(returnList);
+            Assert.Equal(expectedList, returnList);
+        }
+
+        // ================ Future Tests ========================
+        // Test the Adding likes
+        // Test Retrieving like info
+        // Test Deleting a like
+        // Test Adding an image to the post
+        // Test Deleting an image from a post
+        // Test Adding a comment to a post
+        // Test Deleting a comment from a post
+        // ========================================================
+
 
         private UserPostDTO UserPostTestDTO1()
         {

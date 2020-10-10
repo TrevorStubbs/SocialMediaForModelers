@@ -86,7 +86,6 @@ namespace SocialMediaForModelers.Model.Managers
         /// Get a single specified comment
         /// </summary>
         /// <param name="commentId">The Id of the comment</param>
-        /// <param name="userId">The User's Id</param>
         /// <returns>A DTO of the specified comment</returns>
         public async Task<PostCommentDTO> GetASpecificComment(int commentId)
         {
