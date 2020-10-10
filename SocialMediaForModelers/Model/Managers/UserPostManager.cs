@@ -35,6 +35,7 @@ namespace SocialMediaForModelers.Model.Managers
         {
             var newPost = new UserPost()
             {
+                UserId = post.UserId,
                 Caption = post.Caption
             };
 
@@ -51,7 +52,7 @@ namespace SocialMediaForModelers.Model.Managers
         {
             var allPosts = await _context.UserPosts.ToListAsync();
 
-            var filledList = FillUserPostDTO(allPosts).Result;
+            var filledList = await FillUserPostDTO(allPosts);
 
             return filledList;
         }
@@ -66,7 +67,7 @@ namespace SocialMediaForModelers.Model.Managers
             var allPosts = await _context.UserPosts.Where(x => x.UserId == userId)
                                                    .ToListAsync();
 
-            var filledList = FillUserPostDTO(allPosts).Result;
+            var filledList = await FillUserPostDTO(allPosts);
 
             return filledList;
         }
@@ -82,16 +83,21 @@ namespace SocialMediaForModelers.Model.Managers
                                                .FirstOrDefaultAsync();
 
             var comments = new List<PostCommentDTO>();
-            var images = new List<PostImageDTO>();
-
-            foreach (var item in post.PostComments)
+            if (post.PostComments != null)
             {
-                comments.Add(await _postComment.GetASpecificComment(item.CommentId));
+                foreach (var item in post.PostComments)
+                {
+                    comments.Add(await _postComment.GetASpecificComment(item.CommentId));
+                }
             }
 
-            foreach (var item in post.PostImages)
+            var images = new List<PostImageDTO>();
+            if (post.PostImages != null)
             {
-                images.Add(await _postImage.GetASpecificImage(item.ImageId));
+                foreach (var item in post.PostImages)
+                {
+                    images.Add(await _postImage.GetASpecificImage(item.ImageId));
+                }
             }
 
             var postDTO = new UserPostDTO()

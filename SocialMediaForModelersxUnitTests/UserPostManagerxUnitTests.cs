@@ -92,6 +92,40 @@ namespace SocialMediaForModelersxUnitTests
             Assert.Equal(expectedList, returnList);
         }
 
+        [Fact]
+        public async void CanGetASpecificPost()
+        {
+            var service = BuildService();
+            var expectedId = 1;
+            var expectedUserId = "1234";
+            var expectedCaption = "This is my post";
+                
+            var returnFromMethod = await service.GetASpecificPost(1);
+
+            Assert.NotNull(returnFromMethod);
+            Assert.Equal(expectedId, returnFromMethod.Id);
+            Assert.Equal(expectedUserId, returnFromMethod.UserId);
+            Assert.Equal(expectedCaption, returnFromMethod.Caption);
+        }
+
+        [Fact]
+        public async void CanUpdateAPost()
+        {
+            var service = BuildService();
+
+            var updatedPost = new UserPostDTO()
+            {
+                Id = 1,
+                UserId = "1234",
+                Caption = "I am an updated post"
+            };
+
+            var returnFromMethod = await service.Update(updatedPost);
+
+            Assert.NotNull(updatedPost);
+            Assert.Equal(updatedPost.Caption, returnFromMethod.Caption);
+        }
+
         private UserPostDTO UserPostTestDTO1()
         {
             var userId = "1234";
