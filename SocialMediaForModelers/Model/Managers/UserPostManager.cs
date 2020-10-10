@@ -35,6 +35,7 @@ namespace SocialMediaForModelers.Model.Managers
         {
             var newPost = new UserPost()
             {
+                UserId = post.UserId,
                 Caption = post.Caption
             };
 
@@ -51,7 +52,7 @@ namespace SocialMediaForModelers.Model.Managers
         {
             var allPosts = await _context.UserPosts.ToListAsync();
 
-            var filledList = FillUserPostDTO(allPosts).Result;
+            var filledList = await FillUserPostDTO(allPosts);
 
             return filledList;
         }
@@ -66,7 +67,7 @@ namespace SocialMediaForModelers.Model.Managers
             var allPosts = await _context.UserPosts.Where(x => x.UserId == userId)
                                                    .ToListAsync();
 
-            var filledList = FillUserPostDTO(allPosts).Result;
+            var filledList = await FillUserPostDTO(allPosts);
 
             return filledList;
         }
@@ -78,23 +79,28 @@ namespace SocialMediaForModelers.Model.Managers
         /// <returns>A single PostDTO</returns>
         public async Task<UserPostDTO> GetASpecificPost(int postId)
         {
-            var post = await _context.UserPosts.Where(x => x.ID == postId)                                               
+            var post = await _context.UserPosts.Where(x => x.ID == postId)
                                                .FirstOrDefaultAsync();
 
             var comments = new List<PostCommentDTO>();
+            if (post.PostComments != null)
+            {
+                foreach (var item in post.PostComments)
+                {
+                    comments.Add(await _postComment.GetASpecificComment(item.CommentId));
+                }
+            }
+
             var images = new List<PostImageDTO>();
-
-            foreach (var item in post.PostComments)
+            if (post.PostImages != null)
             {
-                comments.Add(await _postComment.GetASpecificComment(item.CommentId));
+                foreach (var item in post.PostImages)
+                {
+                    images.Add(await _postImage.GetASpecificImage(item.ImageId));
+                }
             }
 
-            foreach (var item in post.PostImages)
-            {
-                images.Add(await _postImage.GetASpecificImage(item.ImageId));
-            }
-
-            var postDTO = new UserPostDTO() 
+            var postDTO = new UserPostDTO()
             {
                 Id = post.ID,
                 UserId = post.UserId,
@@ -114,9 +120,6 @@ namespace SocialMediaForModelers.Model.Managers
         /// <returns>If successful the updated DTO</returns>
         public async Task<UserPostDTO> Update(UserPostDTO post)
         {
-            var originalPost = await GetASpecificPost(post.Id);
-
-
             UserPost updatedPost = new UserPost()
             {
                 ID = post.Id,
@@ -278,16 +281,21 @@ namespace SocialMediaForModelers.Model.Managers
                 var imageList = await _context.PostToImages.Where(x => x.PostId == post.ID).ToListAsync();
 
                 var comments = new List<PostCommentDTO>();
-                var images = new List<PostImageDTO>();
-
-                foreach (var item in commentList)
+                if (commentList != null)
                 {
-                    comments.Add(await _postComment.GetASpecificComment(item.CommentId));
+                    foreach (var item in commentList)
+                    {
+                        comments.Add(await _postComment.GetASpecificComment(item.CommentId));
+                    }
                 }
 
-                foreach (var item in imageList)
+                var images = new List<PostImageDTO>();
+                if (imageList != null)
                 {
-                    images.Add(await _postImage.GetASpecificImage(item.ImageId));
+                    foreach (var item in imageList)
+                    {
+                        images.Add(await _postImage.GetASpecificImage(item.ImageId));
+                    }
                 }
 
                 allPostsDTOs.Add(new UserPostDTO()
