@@ -16,7 +16,7 @@ Microsoft Visual Studio Community 2019
 
 ## Data Model TODO
 ### Overall Project Schema TODO
-![ERD V1](assets/SMModel.png)
+![ERD V2](assets/SMModelV2.png)
 
 ### Model Properties and Requirements TODO
 ---
@@ -25,6 +25,8 @@ Microsoft Visual Studio Community 2019
 
 ### Scrum Log
 - Sprint 2
+  - Milestone 5
+    - US 1 UserPostManager
   - Milestone 2
     - US2 PostImageManager Tests
     - US1 PostImageManager

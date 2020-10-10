@@ -30,9 +30,8 @@ namespace SocialMediaForModelers.Model.Interfaces
         /// Get a single specified comment
         /// </summary>
         /// <param name="commentId">The Id of the comment</param>
-        /// <param name="userId">The User's Id</param>
         /// <returns>A DTO of the specified comment</returns>
-        Task<PostCommentDTO> GetASpecificComment(int commentId, string userId);
+        Task<PostCommentDTO> GetASpecificComment(int commentId);
 
         // ReadPostsComments
         // TODO: Move this to posts
