@@ -39,6 +39,13 @@ namespace SocialMediaForModelers.Model.Managers
             return postComment;
         }
 
+        public async Task<List<PostCommentDTO>> GetAllComments()
+        {
+            var comments = await _context.PostComments.ToListAsync();
+
+
+        }
+
         /// <summary>
         /// Gets all the comments made by the specified user
         /// </summary>

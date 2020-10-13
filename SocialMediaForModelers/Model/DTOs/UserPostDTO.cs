@@ -14,7 +14,7 @@ namespace SocialMediaForModelers.Model.DTOs
 
         // Navigation properties
         public List<UserPageToPost> UserPageToPosts { get; set; }
-        public List<PostLike> PostLikes { get; set; }
+        public List<LikeDTO> PostLikes { get; set; }
         public List<PostImageDTO> PostImages { get; set; }
         public List<PostCommentDTO> PostComments { get; set; }
     }
