@@ -7,7 +7,7 @@ namespace SocialMediaForModelers.Model.Entities.JoinEntites
 {
     public class UserPageToPost
     {
-        public int UserPageId { get; set; }
+        public int PageId { get; set; }
         public int PostId { get; set; }
 
         // Navigation properties

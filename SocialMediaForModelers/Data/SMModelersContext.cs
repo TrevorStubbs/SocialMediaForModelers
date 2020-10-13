@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 
@@ -25,7 +26,7 @@ namespace SocialMediaForModelers.Data
 
             modelBuilder.Entity<PostToComment>().HasKey(x => new { x.PostId, x.CommentId });
             modelBuilder.Entity<PostToImage>().HasKey(x => new { x.PostId, x.ImageId });
-            modelBuilder.Entity<UserPageToPost>().HasKey(x => new { x.UserPageId, x.PostId });
+            modelBuilder.Entity<UserPageToPost>().HasKey(x => new { x.PageId, x.PostId });
             modelBuilder.Entity<CommentLike>().HasKey(x => new { x.CommentId, x.UserId });
             modelBuilder.Entity<PageLike>().HasKey(x => new { x.PageId, x.UserId });
             modelBuilder.Entity<PostLike>().HasKey(x => new { x.PostId, x.UserId });
@@ -40,6 +41,7 @@ namespace SocialMediaForModelers.Data
                     UserName = "stubbste@gmail.com",
                     DOB = new DateTime(1982, 6, 8)
                 });
+
             modelBuilder.Entity<PostComment>().HasData(
                 new PostComment
                 {
@@ -47,6 +49,7 @@ namespace SocialMediaForModelers.Data
                     UserId = "1234",
                     Body = "I am a comment"
                 });
+
             modelBuilder.Entity<PostImage>().HasData(
                 new PostImage
                 {
@@ -54,6 +57,7 @@ namespace SocialMediaForModelers.Data
                     UserId = "1234",
                     ImageURI = "/Dog.png"
                 });
+
             modelBuilder.Entity<UserPost>().HasData(
                 new UserPost
                 {
@@ -61,17 +65,35 @@ namespace SocialMediaForModelers.Data
                     UserId = "1234",
                     Caption = "This is my post"
                 });
+
+            modelBuilder.Entity<UserPage>().HasData(
+                new UserPage
+                {
+                    ID = 1,
+                    UserId = "1234",
+                    PageName = "Seed Page",
+                    PageContent = "I am I here"
+                });
+
             modelBuilder.Entity<PostToImage>().HasData(
                 new PostToImage
                 {
                     PostId = 1,
                     ImageId = 1
                 });
+
             modelBuilder.Entity<PostToComment>().HasData(
                 new PostToComment
                 {
                     PostId = 1,
                     CommentId = 1
+                });
+
+            modelBuilder.Entity<UserPageToPost>().HasData(
+                new UserPageToPost
+                {
+                    PageId = 1,
+                    PostId = 1
                 });
         }
 

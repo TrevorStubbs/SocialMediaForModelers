@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SocialMediaForModelers.Data;
 using SocialMediaForModelers.Model.DTOs;
+using SocialMediaForModelers.Model.Entities.JoinEntites;
 using SocialMediaForModelers.Model.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -10,15 +11,15 @@ using System.Threading.Tasks;
 
 namespace SocialMediaForModelers.Model.Managers
 {
-    public class UserPageManager //: IUserPage
+    public class UserPageManager : IUserPage
     {
         private SMModelersContext _context;
-        private IUserPost _posts;
+        private IUserPost _post;
 
-        public UserPageManager(SMModelersContext context, IUserPost posts)
+        public UserPageManager(SMModelersContext context, IUserPost post)
         {
             _context = context;
-            _posts = posts;
+            _post = post;
         }
 
         // Create
@@ -153,6 +154,28 @@ namespace SocialMediaForModelers.Model.Managers
             var like = await _context.PageLikes.Where(x => x.PageId == pageId && x.UserId == userId).FirstOrDefaultAsync();
 
             _context.Entry(like).State = EntityState.Deleted;
+            await _context.SaveChangesAsync();
+        }
+
+        // Add A Post to a page
+        public async Task AddAPostToAPage(int pageId, int postId)
+        {
+            UserPageToPost newPostJoin = new UserPageToPost()
+            {
+                PageId = pageId,
+                PostId = postId
+            };
+
+            _context.Entry(newPostJoin).State = EntityState.Added;
+            await _context.SaveChangesAsync();
+        }
+
+        // Delete a post from a page
+        public async Task DeleteAPostFromAPage(int pageId, int postId)
+        {
+            var postJoin = await _context.UserPageToPosts.Where(x => x.PageId == pageId && x.PostId == postId).FirstOrDefaultAsync();
+
+            _context.Entry(postJoin).State = EntityState.Deleted;
             await _context.SaveChangesAsync();
         }
 

@@ -27,7 +27,7 @@ namespace SocialMediaForModelers.Model.Interfaces
         Task Delete(int pageId);
 
         // Add like
-        Task AddALikeAPage(int pageId, string userId);
+        Task AddALikeToAPage(int pageId, string userId);
 
         // Get likes
         Task<LikeDTO> GetPageLikes(int pageId, string userId);
@@ -36,7 +36,9 @@ namespace SocialMediaForModelers.Model.Interfaces
         Task DeleteALike(int postId, string userId);
 
         // Add a post to a page.
+        Task AddAPostToAPage(int pageId, int postId);
 
         // Delete a post from a page.
+        Task DeleteAPostFromAPage(int pageId, int postId);
     }
 }
