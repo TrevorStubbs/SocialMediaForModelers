@@ -39,11 +39,27 @@ namespace SocialMediaForModelers.Model.Managers
             return postComment;
         }
 
+        // =============== TODO =========================
+        // 1. Add this to the interface
+        // 2. Build unit tests for this method
+        // 3. Summary comments on the Method and interface
         public async Task<List<PostCommentDTO>> GetAllComments()
         {
             var comments = await _context.PostComments.ToListAsync();
 
+            var commentDTOs = new List<PostCommentDTO>();
 
+            foreach (var comment in comments)
+            {
+                commentDTOs.Add(new PostCommentDTO()
+                {
+                    Id = comment.ID,
+                    UserId = comment.UserId,
+                    Body = comment.Body
+                });
+            }
+
+            return commentDTOs;
         }
 
         /// <summary>
@@ -87,7 +103,8 @@ namespace SocialMediaForModelers.Model.Managers
 
             return commentDTOs;
         }
-        // =======================================================================
+
+        // =============================================================================
 
         /// <summary>
         /// Get a single specified comment

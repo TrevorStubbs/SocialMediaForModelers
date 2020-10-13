@@ -88,7 +88,7 @@ namespace SocialMediaForModelers.Data
         public DbSet<UserPageToPost> UserPageToPosts { get; set; }
         // Like Tables
         public DbSet<CommentLike> CommentLikes { get; set; }
-        public DbSet<PageLike> pageLikes { get; set; }
+        public DbSet<PageLike> PageLikes { get; set; }
         public DbSet<PostLike> PostLikes { get; set; }
     }
 }

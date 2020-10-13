@@ -5,6 +5,7 @@ using SocialMediaForModelers.Model.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 
 namespace SocialMediaForModelers.Model.Managers
@@ -96,9 +97,76 @@ namespace SocialMediaForModelers.Model.Managers
         }
 
         // Update
+        public async Task<UserPageDTO> Update(UserPageDTO page)
+        {
+            UserPage updatePage = new UserPage()
+            {
+                ID = page.ID,
+                UserId = page.UserId,
+                PageName = page.PageName,
+                PageContent = page.PageContent
+            };
+
+            _context.Entry(updatePage).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+            return page;
+        }
 
         // Delete
+        public async Task Delete(int pageId)
+        {
+            var pageToBeDeleted = await _context.UserPages.FindAsync(pageId);
+            _context.Entry(pageToBeDeleted).State = EntityState.Deleted;
+            await _context.SaveChangesAsync();
+        }
 
+        // Add a like
+        public async Task AddALikeToAPage(int pageId, string userId)
+        {
+            var newLike = new PageLike()
+            {
+                PageId = pageId,
+                UserId = userId
+            };
 
+            _context.Entry(newLike).State = EntityState.Added;
+            await _context.SaveChangesAsync();
+        }
+
+        // Get likes
+        public async Task<LikeDTO> GetPageLikes(int pageId, string userId)
+        {
+            var likes = await _context.PageLikes.Where(x => x.PageId == pageId).ToListAsync();
+
+            LikeDTO likeDTO = new LikeDTO()
+            {
+                NumberOfLikes = likes.Count,
+                UserLiked = UserLiked(likes, userId)
+            };
+
+            return likeDTO;
+        }
+
+        // Delete a like from a page
+        public async Task DeleteALike(int pageId, string userId)
+        {
+            var like = await _context.PageLikes.Where(x => x.PageId == pageId && x.UserId == userId).FirstOrDefaultAsync();
+
+            _context.Entry(like).State = EntityState.Deleted;
+            await _context.SaveChangesAsync();
+        }
+
+        private bool UserLiked(List<PageLike> likes, string userId)
+        {
+            foreach (var like in likes)
+            {
+                if (like.UserId == userId)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
     }
 }
