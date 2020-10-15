@@ -130,14 +130,14 @@ namespace SocialMediaForModelersxUnitTests
             await service.Create(UserPostTestDTO1());
             await service.Create(UserPostTestDTO2());
 
-            await service.Delete(1);
-
-            var returnFromMethod = await service.GetAllPosts();
-
             var expectedList = new List<int>()
             {
                 2,3
             };
+
+            await service.Delete(1);
+
+            var returnFromMethod = await service.GetAllPosts();
 
             var returnList = new List<int>();
 
@@ -150,7 +150,7 @@ namespace SocialMediaForModelersxUnitTests
             Assert.Equal(expectedList, returnList);
         }
 
-        // ================ Future Tests ========================
+        // ================ TODO: Future Tests ========================
         // Test the Adding likes
         // Test Retrieving like info
         // Test Deleting a like
