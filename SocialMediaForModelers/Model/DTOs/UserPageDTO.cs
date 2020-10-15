@@ -8,7 +8,7 @@ namespace SocialMediaForModelers.Model.DTOs
 {
     public class UserPageDTO
     {
-        public int ID { get; set; }
+        public int Id { get; set; }
         public string UserId { get; set; }
         public string PageName { get; set; }
         public string PageContent { get; set; } // may need to be turned into a class

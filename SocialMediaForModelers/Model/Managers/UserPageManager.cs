@@ -48,7 +48,7 @@ namespace SocialMediaForModelers.Model.Managers
             {
                 pageList.Add(new UserPageDTO()
                 {
-                    ID = page.ID,
+                    Id = page.ID,
                     UserId = page.UserId,
                     PageName = page.PageName,
                     PageContent = page.PageContent
@@ -70,7 +70,7 @@ namespace SocialMediaForModelers.Model.Managers
                 {
                     pageList.Add(new UserPageDTO()
                     {
-                        ID = page.ID,
+                        Id = page.ID,
                         UserId = page.UserId,
                         PageName = page.PageName,
                         PageContent = page.PageContent
@@ -88,7 +88,7 @@ namespace SocialMediaForModelers.Model.Managers
 
             var pageDTO = new UserPageDTO()
             {
-                ID = page.ID,
+                Id = page.ID,
                 UserId = page.UserId,
                 PageName = page.PageName,
                 PageContent = page.PageContent
@@ -102,7 +102,7 @@ namespace SocialMediaForModelers.Model.Managers
         {
             UserPage updatePage = new UserPage()
             {
-                ID = page.ID,
+                ID = page.Id,
                 UserId = page.UserId,
                 PageName = page.PageName,
                 PageContent = page.PageContent

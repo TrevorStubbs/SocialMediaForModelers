@@ -75,6 +75,7 @@ namespace SocialMediaForModelers.Data
                     PageContent = "I am I here"
                 });
 
+            // Join Table Seeds
             modelBuilder.Entity<PostToImage>().HasData(
                 new PostToImage
                 {

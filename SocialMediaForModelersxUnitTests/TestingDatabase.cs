@@ -25,7 +25,7 @@ namespace SocialMediaForModelersxUnitTests
         protected readonly SMModelersContext _db;
         protected readonly IPostComment _comment;
         protected readonly IPostImage _image;
-        proctected readonly IUserPost _post;
+        protected readonly IUserPost _post;
 
         public TestingDatabase()
         {
