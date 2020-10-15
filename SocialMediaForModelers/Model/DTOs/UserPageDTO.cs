@@ -6,16 +6,15 @@ using System.Threading.Tasks;
 
 namespace SocialMediaForModelers.Model.DTOs
 {
-    public class UserPostDTO
+    public class UserPageDTO
     {
         public int Id { get; set; }
         public string UserId { get; set; }
-        public string Caption { get; set; }
+        public string PageName { get; set; }
+        public string PageContent { get; set; } // may need to be turned into a class
 
         // Navigation properties
-        public List<UserPageToPost> UserPageToPosts { get; set; }
-        public List<LikeDTO> PostLikes { get; set; }
-        public List<PostImageDTO> PostImages { get; set; }
-        public List<PostCommentDTO> PostComments { get; set; }
+        public List<LikeDTO> PageLikes { get; set; }
+        public List<UserPageToPost> PageToPost { get; set; }
     }
 }

@@ -9,6 +9,7 @@ namespace SocialMediaForModelers.Model
     public class UserPage
     {
         public int ID { get; set; }
+        public string UserId { get; set; }
         public string PageName { get; set; }
         public string PageContent { get; set; } // may need to be turned into a class
 
