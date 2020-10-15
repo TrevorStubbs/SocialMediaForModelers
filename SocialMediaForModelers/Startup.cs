@@ -48,6 +48,7 @@ namespace SocialMediaForModelers
             services.AddTransient<IPostComment, PostCommentManager>();
             services.AddTransient<IPostImage, PostImageManager>();
             services.AddTransient<IUserPost, UserPostManager>();
+            services.AddTransient<IUserPage, UserPageManager>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
