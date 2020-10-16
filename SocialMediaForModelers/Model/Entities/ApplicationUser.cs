@@ -9,13 +9,12 @@ namespace SocialMediaForModelers.Model
 {
     public class ApplicationUser : IdentityUser
     {
-        public string UserId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public DateTime DOB { get; set; }
 
         // Navigation properties
         public List<AppUserFriend> UserFriends { get; set; }
-        public UserPage UsersPage { get; set; }
+        public List<UserPage> UsersPage { get; set; }
     }
 }
