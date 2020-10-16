@@ -43,7 +43,7 @@ namespace SocialMediaForModelers
             services.AddDbContext<SMModelersContext>(options =>
             {
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
-            });
+            });            
 
             services.AddTransient<IPostComment, PostCommentManager>();
             services.AddTransient<IPostImage, PostImageManager>();
@@ -67,7 +67,7 @@ namespace SocialMediaForModelers
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers();
+                endpoints.MapControllerRoute("default", "{controller=home}/{id?}");
             });
         }
     }

@@ -34,7 +34,6 @@ namespace SocialMediaForModelers.Data
             modelBuilder.Entity<ApplicationUser>().HasData(
                 new ApplicationUser
                 {
-                    UserId = "1234",
                     FirstName = "Trevor",
                     LastName = "Stubbs",
                     Email = "stubbste@gmail.com",

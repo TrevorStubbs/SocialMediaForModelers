@@ -12,6 +12,7 @@ namespace SocialMediaForModelers.Model
         public int ID { get; set; }
         public string UserId { get; set; }
         public string Body { get; set; }
+        // TODO: add date created
 
         // Navigation properties
         public List<PostToComment> PostToComments { get; set; }
