@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
@@ -43,7 +44,11 @@ namespace SocialMediaForModelers
             services.AddDbContext<SMModelersContext>(options =>
             {
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
-            });            
+            });
+
+            services.AddIdentity<ApplicationUser, IdentityRole>()
+                    .AddEntityFrameworkStores<SMModelersContext>()
+                    .AddDefaultTokenProviders();
 
             services.AddTransient<IPostComment, PostCommentManager>();
             services.AddTransient<IPostImage, PostImageManager>();
