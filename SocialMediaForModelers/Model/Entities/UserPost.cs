@@ -10,7 +10,8 @@ namespace SocialMediaForModelers.Model
     {
         public int ID { get; set; }
         public string UserId { get; set; }
-        public string Caption{ get; set; }        
+        public string Caption{ get; set; }
+        // TODO: add date created
 
         // Navigation properties
         public List<UserPageToPost> UserPageToPosts { get; set; }

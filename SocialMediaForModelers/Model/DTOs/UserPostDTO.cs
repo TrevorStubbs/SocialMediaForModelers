@@ -11,6 +11,7 @@ namespace SocialMediaForModelers.Model.DTOs
         public int Id { get; set; }
         public string UserId { get; set; }
         public string Caption { get; set; }
+        // TODO: add date created
 
         // Navigation properties
         public List<UserPageToPost> UserPageToPosts { get; set; }

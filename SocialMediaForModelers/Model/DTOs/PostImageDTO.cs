@@ -10,5 +10,6 @@ namespace SocialMediaForModelers.Model.DTOs
         public int Id { get; set; }
         public string UserId { get; set; }
         public string ImageURI { get; set; }
+        // TODO: add date created
     }
 }

@@ -25,7 +25,14 @@ Microsoft Visual Studio Community 2019
 
 ### Scrum Log
 - Sprint 2
+  - Milestone 3
+    - US 2 RoleInitializer
+    - US 1 ApplicationUser
+  - Milestone 4
+    - US 2 UserPageManager Tests
+    - US 1 UserPageManager
   - Milestone 5
+    - US 2 UserPostManager Tests
     - US 1 UserPostManager
   - Milestone 2
     - US2 PostImageManager Tests

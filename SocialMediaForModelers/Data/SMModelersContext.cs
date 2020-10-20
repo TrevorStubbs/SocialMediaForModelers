@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using SocialMediaForModelers.Model;
 using SocialMediaForModelers.Model.Entities.JoinEntites;
 using System;
@@ -11,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace SocialMediaForModelers.Data
 {
-    public class SMModelersContext : DbContext
+    public class SMModelersContext : IdentityDbContext<ApplicationUser>
     {
         public SMModelersContext(DbContextOptions<SMModelersContext> options) : base(options)
         {
@@ -34,7 +35,6 @@ namespace SocialMediaForModelers.Data
             modelBuilder.Entity<ApplicationUser>().HasData(
                 new ApplicationUser
                 {
-                    UserId = "1234",
                     FirstName = "Trevor",
                     LastName = "Stubbs",
                     Email = "stubbste@gmail.com",
@@ -99,7 +99,7 @@ namespace SocialMediaForModelers.Data
         }
 
         // Normal Tables
-        public DbSet<ApplicationUser> AppUsers { get; set; }
+        public DbSet<ApplicationUser> ApplicationUsers { get; set; }
         public DbSet<PostComment> PostComments { get; set; }
         public DbSet<PostImage> PostImages { get; set; }
         public DbSet<UserPage> UserPages { get; set; }
