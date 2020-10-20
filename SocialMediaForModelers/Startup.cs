@@ -79,8 +79,6 @@ namespace SocialMediaForModelers
                 options.AddPolicy("UserPriv", policy => policy.RequireRole(ApplicationRoles.Admin, ApplicationRoles.User));
             });
 
-
-
             services.AddTransient<IPostComment, PostCommentManager>();
             services.AddTransient<IPostImage, PostImageManager>();
             services.AddTransient<IUserPost, UserPostManager>();
@@ -105,6 +103,7 @@ namespace SocialMediaForModelers
             app.UseAuthorization();
 
             var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+            RoleInitializer.SeedData(serviceProvider, userManager, Configuration);
 
             app.UseEndpoints(endpoints =>
             {
