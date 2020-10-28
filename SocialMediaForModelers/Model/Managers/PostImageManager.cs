@@ -158,5 +158,12 @@ namespace SocialMediaForModelers.Model.Managers
             _context.Entry(imageToBeDeleted).State = EntityState.Deleted;
             await _context.SaveChangesAsync();
         }
+
+        // ===================== TODO ==========================
+        //
+        // Add private method to call S3ImageManager to add an image to S3 then return the Image uri so that the caller can add it to the database
+        // Private method to call S2ImageManager to delete an image from S3 when an image is deleted from the database.
+        //
+        // ===============================================================================
     }
 }
