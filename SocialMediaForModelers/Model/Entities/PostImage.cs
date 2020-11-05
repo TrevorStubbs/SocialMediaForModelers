@@ -11,7 +11,7 @@ namespace SocialMediaForModelers.Model
     {
         public int ID { get; set; }
         public string UserId { get; set; }
-        public string ImageURI { get; set; } // Will need to change once S3 is setup
+        public string CloudStorageKey { get; set; } // Will need to change once S3 is setup
         // TODO: add date created
 
         // Navigation properties

@@ -16,10 +16,12 @@ namespace SocialMediaForModelers.Model.Managers
     public class PostImageManager : IPostImage
     {
         private SMModelersContext _context;
+        private ICloudImage _cloudImage;
 
-        public PostImageManager(SMModelersContext context)
+        public PostImageManager(SMModelersContext context, ICloudImage cloudImage)
         {
             _context = context;
+            _cloudImage = cloudImage;
         }
 
         /// <summary>
@@ -33,7 +35,7 @@ namespace SocialMediaForModelers.Model.Managers
             PostImage newImage = new PostImage()
             {
                 UserId = postImage.UserId,
-                ImageURI = postImage.ImageURI
+                CloudStorageKey = Guid.NewGuid().ToString()
             };
 
             // call method to put the image into the S3 bucket
@@ -59,7 +61,7 @@ namespace SocialMediaForModelers.Model.Managers
                 {
                     Id = item.ID,
                     UserId = item.UserId,
-                    ImageURI = item.ImageURI
+                    ImageURI = _cloudImage.GetImageUrl(item.CloudStorageKey)
                 });
             }
 
@@ -82,7 +84,7 @@ namespace SocialMediaForModelers.Model.Managers
                 {
                     Id = item.ID,
                     UserId = item.UserId,
-                    ImageURI = item.ImageURI
+                    ImageURI = _cloudImage.GetImageUrl(item.CloudStorageKey)
                 });
             }
 
@@ -101,7 +103,7 @@ namespace SocialMediaForModelers.Model.Managers
                 {
                     Id = item.ID,
                     UserId = item.UserId,
-                    ImageURI = item.ImageURI
+                    ImageURI = _cloudImage.GetImageUrl(item.CloudStorageKey)
                 });
             }
 
@@ -121,7 +123,7 @@ namespace SocialMediaForModelers.Model.Managers
             {
                 Id = image.ID,
                 UserId = image.UserId,
-                ImageURI = image.ImageURI
+                ImageURI = _cloudImage.GetImageUrl(image.CloudStorageKey)
             };
 
             return imageDTO;
@@ -137,9 +139,13 @@ namespace SocialMediaForModelers.Model.Managers
             PostImage updateImage = new PostImage()
             {
                 ID = postImage.Id,
-                UserId = postImage.UserId,
-                ImageURI = postImage.ImageURI
+                UserId = postImage.UserId
             };
+
+            var image = await _context.PostImages.Where(x => x.ID == postImage.Id).FirstOrDefaultAsync();
+
+            updateImage.CloudStorageKey = image.CloudStorageKey;
+
             _context.Entry(updateImage).State = EntityState.Modified;
             await _context.SaveChangesAsync();
             return postImage;

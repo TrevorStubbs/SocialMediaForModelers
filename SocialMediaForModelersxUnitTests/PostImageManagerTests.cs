@@ -13,7 +13,7 @@ namespace SocialMediaForModelersxUnitTests
     {
         private IPostImage BuildService()
         {
-            return new PostImageManager(_db);
+            return new PostImageManager(_db, _cloudImage);
         }
 
         [Fact]
