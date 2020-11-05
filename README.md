@@ -25,6 +25,8 @@ Microsoft Visual Studio Community 2019
 
 ### Scrum Log
 - Sprint 2
+  - Milestone 6
+    - US 1 AWS Setup
   - Milestone 3
     - US 2 RoleInitializer
     - US 1 ApplicationUser
