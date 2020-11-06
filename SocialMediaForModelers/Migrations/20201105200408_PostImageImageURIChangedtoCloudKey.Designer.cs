@@ -10,16 +10,147 @@ using SocialMediaForModelers.Data;
 namespace SocialMediaForModelers.Migrations
 {
     [DbContext(typeof(SMModelersContext))]
-    [Migration("20200926190454_seedUpdate1")]
-    partial class seedUpdate1
+    [Migration("20201105200408_PostImageImageURIChangedtoCloudKey")]
+    partial class PostImageImageURIChangedtoCloudKey
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.8")
+                .HasAnnotation("ProductVersion", "3.1.9")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
+
+                    b.Property<string>("NormalizedName")
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedName")
+                        .IsUnique()
+                        .HasName("RoleNameIndex")
+                        .HasFilter("[NormalizedName] IS NOT NULL");
+
+                    b.ToTable("AspNetRoles");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RoleId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("AspNetRoleClaims");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AspNetUserClaims");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+                {
+                    b.Property<string>("LoginProvider")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ProviderKey")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ProviderDisplayName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("LoginProvider", "ProviderKey");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AspNetUserLogins");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("RoleId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("UserId", "RoleId");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("AspNetUserRoles");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("LoginProvider")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Value")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("UserId", "LoginProvider", "Name");
+
+                    b.ToTable("AspNetUserTokens");
+                });
 
             modelBuilder.Entity("SocialMediaForModelers.Model.AppUserFriend", b =>
                 {
@@ -48,13 +179,15 @@ namespace SocialMediaForModelers.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("DOB")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
@@ -72,10 +205,12 @@ namespace SocialMediaForModelers.Migrations
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("NormalizedEmail")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
 
                     b.Property<string>("NormalizedUserName")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
 
                     b.Property<string>("PasswordHash")
                         .HasColumnType("nvarchar(max)");
@@ -92,27 +227,28 @@ namespace SocialMediaForModelers.Migrations
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
 
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("UserName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("UsersPageID")
-                        .HasColumnType("int");
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UsersPageID");
+                    b.HasIndex("NormalizedEmail")
+                        .HasName("EmailIndex");
 
-                    b.ToTable("AppUsers");
+                    b.HasIndex("NormalizedUserName")
+                        .IsUnique()
+                        .HasName("UserNameIndex")
+                        .HasFilter("[NormalizedUserName] IS NOT NULL");
+
+                    b.ToTable("AspNetUsers");
 
                     b.HasData(
                         new
                         {
-                            Id = "a90b7c0d-9588-47ba-abfa-35030dc6a110",
+                            Id = "8fe8247e-2345-4fca-8412-489d2ccdcaee",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "2939859c-8b27-46ce-b0f9-d5c116b8a7f9",
+                            ConcurrencyStamp = "4034e20d-4f45-4ae4-9c86-2d8aced96443",
                             DOB = new DateTime(1982, 6, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "stubbste@gmail.com",
                             EmailConfirmed = false,
@@ -120,9 +256,8 @@ namespace SocialMediaForModelers.Migrations
                             LastName = "Stubbs",
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "b8da5b41-c5a9-4334-9b73-acd49645e974",
+                            SecurityStamp = "9e2ba19d-ef5b-4057-9a4a-79300ea1bd7c",
                             TwoFactorEnabled = false,
-                            UserId = "1234",
                             UserName = "stubbste@gmail.com"
                         });
                 });
@@ -142,12 +277,12 @@ namespace SocialMediaForModelers.Migrations
 
                     b.HasIndex("PostCommentID");
 
-                    b.ToTable("CommentLike");
+                    b.ToTable("CommentLikes");
                 });
 
             modelBuilder.Entity("SocialMediaForModelers.Model.Entities.JoinEntites.PostToComment", b =>
                 {
-                    b.Property<int>("UserPageId")
+                    b.Property<int>("PostId")
                         .HasColumnType("int");
 
                     b.Property<int>("CommentId")
@@ -159,13 +294,20 @@ namespace SocialMediaForModelers.Migrations
                     b.Property<int?>("UserPostID")
                         .HasColumnType("int");
 
-                    b.HasKey("UserPageId", "CommentId");
+                    b.HasKey("PostId", "CommentId");
 
                     b.HasIndex("PostCommentID");
 
                     b.HasIndex("UserPostID");
 
                     b.ToTable("PostToComments");
+
+                    b.HasData(
+                        new
+                        {
+                            PostId = 1,
+                            CommentId = 1
+                        });
                 });
 
             modelBuilder.Entity("SocialMediaForModelers.Model.Entities.JoinEntites.PostToImage", b =>
@@ -173,7 +315,7 @@ namespace SocialMediaForModelers.Migrations
                     b.Property<int>("PostId")
                         .HasColumnType("int");
 
-                    b.Property<int>("PhotoId")
+                    b.Property<int>("ImageId")
                         .HasColumnType("int");
 
                     b.Property<int?>("PostImageID")
@@ -182,31 +324,50 @@ namespace SocialMediaForModelers.Migrations
                     b.Property<int?>("UserPostID")
                         .HasColumnType("int");
 
-                    b.HasKey("PostId", "PhotoId");
+                    b.HasKey("PostId", "ImageId");
 
                     b.HasIndex("PostImageID");
 
                     b.HasIndex("UserPostID");
 
                     b.ToTable("PostToImages");
+
+                    b.HasData(
+                        new
+                        {
+                            PostId = 1,
+                            ImageId = 1
+                        });
                 });
 
             modelBuilder.Entity("SocialMediaForModelers.Model.Entities.JoinEntites.UserPageToPost", b =>
                 {
-                    b.Property<int>("UserPageId")
+                    b.Property<int>("PageId")
                         .HasColumnType("int");
 
                     b.Property<int>("PostId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("UserPageID")
+                        .HasColumnType("int");
+
                     b.Property<int?>("UserPostID")
                         .HasColumnType("int");
 
-                    b.HasKey("UserPageId", "PostId");
+                    b.HasKey("PageId", "PostId");
+
+                    b.HasIndex("UserPageID");
 
                     b.HasIndex("UserPostID");
 
                     b.ToTable("UserPageToPosts");
+
+                    b.HasData(
+                        new
+                        {
+                            PageId = 1,
+                            PostId = 1
+                        });
                 });
 
             modelBuilder.Entity("SocialMediaForModelers.Model.PageLike", b =>
@@ -224,7 +385,7 @@ namespace SocialMediaForModelers.Migrations
 
                     b.HasIndex("UserPageID");
 
-                    b.ToTable("PageLike");
+                    b.ToTable("PageLikes");
                 });
 
             modelBuilder.Entity("SocialMediaForModelers.Model.PostComment", b =>
@@ -243,6 +404,14 @@ namespace SocialMediaForModelers.Migrations
                     b.HasKey("ID");
 
                     b.ToTable("PostComments");
+
+                    b.HasData(
+                        new
+                        {
+                            ID = 1,
+                            Body = "I am a comment",
+                            UserId = "1234"
+                        });
                 });
 
             modelBuilder.Entity("SocialMediaForModelers.Model.PostImage", b =>
@@ -252,12 +421,23 @@ namespace SocialMediaForModelers.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("ImageURI")
+                    b.Property<string>("CloudStorageKey")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ID");
 
                     b.ToTable("PostImages");
+
+                    b.HasData(
+                        new
+                        {
+                            ID = 1,
+                            CloudStorageKey = "/Dog.png",
+                            UserId = "1234"
+                        });
                 });
 
             modelBuilder.Entity("SocialMediaForModelers.Model.PostLike", b =>
@@ -275,7 +455,7 @@ namespace SocialMediaForModelers.Migrations
 
                     b.HasIndex("UserPostID");
 
-                    b.ToTable("PostLike");
+                    b.ToTable("PostLikes");
                 });
 
             modelBuilder.Entity("SocialMediaForModelers.Model.UserPage", b =>
@@ -285,15 +465,32 @@ namespace SocialMediaForModelers.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("PageContent")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PageName")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("ID");
 
+                    b.HasIndex("ApplicationUserId");
+
                     b.ToTable("UserPages");
+
+                    b.HasData(
+                        new
+                        {
+                            ID = 1,
+                            PageContent = "I am I here",
+                            PageName = "Seed Page",
+                            UserId = "1234"
+                        });
                 });
 
             modelBuilder.Entity("SocialMediaForModelers.Model.UserPost", b =>
@@ -306,9 +503,71 @@ namespace SocialMediaForModelers.Migrations
                     b.Property<string>("Caption")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("ID");
 
                     b.ToTable("UserPosts");
+
+                    b.HasData(
+                        new
+                        {
+                            ID = 1,
+                            Caption = "This is my post",
+                            UserId = "1234"
+                        });
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+                {
+                    b.HasOne("SocialMediaForModelers.Model.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+                {
+                    b.HasOne("SocialMediaForModelers.Model.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SocialMediaForModelers.Model.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+                {
+                    b.HasOne("SocialMediaForModelers.Model.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("SocialMediaForModelers.Model.AppUserFriend", b =>
@@ -318,16 +577,9 @@ namespace SocialMediaForModelers.Migrations
                         .HasForeignKey("AppUserId");
                 });
 
-            modelBuilder.Entity("SocialMediaForModelers.Model.ApplicationUser", b =>
-                {
-                    b.HasOne("SocialMediaForModelers.Model.UserPage", "UsersPage")
-                        .WithMany()
-                        .HasForeignKey("UsersPageID");
-                });
-
             modelBuilder.Entity("SocialMediaForModelers.Model.CommentLike", b =>
                 {
-                    b.HasOne("SocialMediaForModelers.Model.PostComment", null)
+                    b.HasOne("SocialMediaForModelers.Model.PostComment", "PostComment")
                         .WithMany("CommentLikes")
                         .HasForeignKey("PostCommentID");
                 });
@@ -339,7 +591,7 @@ namespace SocialMediaForModelers.Migrations
                         .HasForeignKey("PostCommentID");
 
                     b.HasOne("SocialMediaForModelers.Model.UserPost", null)
-                        .WithMany("PostToComments")
+                        .WithMany("PostComments")
                         .HasForeignKey("UserPostID");
                 });
 
@@ -350,7 +602,7 @@ namespace SocialMediaForModelers.Migrations
                         .HasForeignKey("PostImageID");
 
                     b.HasOne("SocialMediaForModelers.Model.UserPost", "UserPost")
-                        .WithMany("PostToImages")
+                        .WithMany("PostImages")
                         .HasForeignKey("UserPostID");
                 });
 
@@ -358,9 +610,7 @@ namespace SocialMediaForModelers.Migrations
                 {
                     b.HasOne("SocialMediaForModelers.Model.UserPage", "UserPage")
                         .WithMany("PageToPost")
-                        .HasForeignKey("UserPageId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UserPageID");
 
                     b.HasOne("SocialMediaForModelers.Model.UserPost", "UserPost")
                         .WithMany("UserPageToPosts")
@@ -376,9 +626,16 @@ namespace SocialMediaForModelers.Migrations
 
             modelBuilder.Entity("SocialMediaForModelers.Model.PostLike", b =>
                 {
-                    b.HasOne("SocialMediaForModelers.Model.UserPost", null)
+                    b.HasOne("SocialMediaForModelers.Model.UserPost", "UserPost")
                         .WithMany("PostLikes")
                         .HasForeignKey("UserPostID");
+                });
+
+            modelBuilder.Entity("SocialMediaForModelers.Model.UserPage", b =>
+                {
+                    b.HasOne("SocialMediaForModelers.Model.ApplicationUser", null)
+                        .WithMany("UsersPage")
+                        .HasForeignKey("ApplicationUserId");
                 });
 #pragma warning restore 612, 618
         }

@@ -11,5 +11,6 @@ namespace SocialMediaForModelers.Model
         public string UserId { get; set; }
 
         // Navigation properties
+        public UserPost UserPost { get; set; }
     }
 }

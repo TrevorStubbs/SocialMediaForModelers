@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SocialMediaForModelers.Data;
 
 namespace SocialMediaForModelers.Migrations
 {
     [DbContext(typeof(SMModelersContext))]
-    partial class SMModelersContextModelSnapshot : ModelSnapshot
+    [Migration("20201019230437_roleInitilzer")]
+    partial class roleInitilzer
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -244,9 +246,9 @@ namespace SocialMediaForModelers.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "8fe8247e-2345-4fca-8412-489d2ccdcaee",
+                            Id = "3ec1a885-f5fe-4ada-9665-9a45da0b064a",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "4034e20d-4f45-4ae4-9c86-2d8aced96443",
+                            ConcurrencyStamp = "af0e3cf4-4e14-473c-81b4-6142fb17344e",
                             DOB = new DateTime(1982, 6, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "stubbste@gmail.com",
                             EmailConfirmed = false,
@@ -254,7 +256,7 @@ namespace SocialMediaForModelers.Migrations
                             LastName = "Stubbs",
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "9e2ba19d-ef5b-4057-9a4a-79300ea1bd7c",
+                            SecurityStamp = "cf62a11e-414e-4ae8-bae7-1fd2ba50d7e3",
                             TwoFactorEnabled = false,
                             UserName = "stubbste@gmail.com"
                         });
@@ -419,7 +421,7 @@ namespace SocialMediaForModelers.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("CloudStorageKey")
+                    b.Property<string>("ImageURI")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")
@@ -433,7 +435,7 @@ namespace SocialMediaForModelers.Migrations
                         new
                         {
                             ID = 1,
-                            CloudStorageKey = "/Dog.png",
+                            ImageURI = "/Dog.png",
                             UserId = "1234"
                         });
                 });

@@ -8,7 +8,7 @@ namespace SocialMediaForModelers.Model.Entities.JoinEntites
     public class PostToImage
     {        
         public int PostId { get; set; }
-        public int PhotoId { get; set; }
+        public int ImageId { get; set; }
 
         // Navigation properties
         public UserPost UserPost { get; set; }
