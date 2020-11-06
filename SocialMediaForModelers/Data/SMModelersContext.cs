@@ -55,7 +55,7 @@ namespace SocialMediaForModelers.Data
                 {
                     ID = 1,
                     UserId = "1234",
-                    ImageURI = "/Dog.png"
+                    CloudStorageKey = "/Dog.png"
                 });
 
             modelBuilder.Entity<UserPost>().HasData(
