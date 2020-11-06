@@ -98,7 +98,7 @@ namespace SocialMediaForModelers.Model.Managers
         }
 
         // Update
-        public async Task<UserPageDTO> Update(UserPageDTO page)
+        public async Task<UserPageDTO> Update(UserPageDTO page, int pageId)
         {
             UserPage updatePage = new UserPage()
             {

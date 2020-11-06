@@ -21,7 +21,7 @@ namespace SocialMediaForModelers.Model.Interfaces
         Task<UserPageDTO> GetASpecificPage(int pageId);
 
         // Update Page
-        Task<UserPageDTO> Update(UserPageDTO page);
+        Task<UserPageDTO> Update(UserPageDTO page, int pageId);
 
         // Delete A Page
         Task Delete(int pageId);

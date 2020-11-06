@@ -43,7 +43,7 @@ namespace SocialMediaForModelers.Model.Interfaces
         /// </summary>
         /// <param name="postComment">The PostCommentDTO to be used to update the comment</param>
         /// <returns>If successful returns the updated PostCommentDTO</returns>
-        Task<PostCommentDTO> Update(PostCommentDTO postComment);
+        Task<PostCommentDTO> Update(PostCommentDTO postComment, int commentId);
 
         // Delete
         /// <summary>
