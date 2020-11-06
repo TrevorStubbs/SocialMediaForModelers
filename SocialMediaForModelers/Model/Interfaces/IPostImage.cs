@@ -52,7 +52,7 @@ namespace SocialMediaForModelers.Model.Interfaces
         /// </summary>
         /// <param name="postImage">A PostImageDTO to be use to update the DB</param>
         /// <returns>If successful the DTO gets sent back to the caller</returns>
-        Task<PostImageDTO> Update(PostImageDTO postImage);
+        Task<PostImageDTO> Update(PostImageDTO postImage, int imageId);
 
         // Delete
         /// <summary>

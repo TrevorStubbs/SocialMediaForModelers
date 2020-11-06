@@ -130,7 +130,7 @@ namespace SocialMediaForModelers.Model.Managers
         /// </summary>
         /// <param name="postComment">The PostCommentDTO to be used to update the comment</param>
         /// <returns>If successful returns the updated PostCommentDTO</returns>
-        public async Task<PostCommentDTO> Update(PostCommentDTO postComment)
+        public async Task<PostCommentDTO> Update(PostCommentDTO postComment, int commentId)
         {
             PostComment updateComment = new PostComment()
             {

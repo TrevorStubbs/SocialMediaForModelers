@@ -47,7 +47,7 @@ namespace SocialMediaForModelers.Model.Interfaces
         /// </summary>
         /// <param name="post">The PostDTO needed to update the database</param>
         /// <returns>If successful the updated DTO</returns>
-        Task<UserPostDTO> Update(UserPostDTO post);
+        Task<UserPostDTO> Update(UserPostDTO post, int postId);
 
         //  Delete a Post
         /// <summary>

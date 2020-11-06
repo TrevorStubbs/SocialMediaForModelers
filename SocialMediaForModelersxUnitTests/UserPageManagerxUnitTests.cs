@@ -128,7 +128,7 @@ namespace SocialMediaForModelersxUnitTests
                 PageContent = "UpdatedContent"
             };
 
-            var returnFromMethod = await service.Update(updatedPage);
+            var returnFromMethod = await service.Update(updatedPage, 1);
 
             Assert.NotNull(returnFromMethod);
             Assert.Equal(updatedPage.PageName, returnFromMethod.PageName);
