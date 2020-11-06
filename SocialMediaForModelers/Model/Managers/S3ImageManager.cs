@@ -26,7 +26,7 @@ namespace SocialMediaForModelers.Model.Managers
             _s3Client = new AmazonS3Client(config["AWSS3:AccessKeyId"], config["AWSS3:SecretKey"], _region);
         }
 
-        public async Task<HttpStatusCode> AddAnImageToABucket(string imageId, IFormFile imageFile)
+        public async Task<HttpStatusCode> AddAnImageToCloudStorage(string imageId, IFormFile imageFile)
         {
             try
             {
@@ -81,7 +81,7 @@ namespace SocialMediaForModelers.Model.Managers
 
         }
 
-        public async Task<HttpStatusCode> DeleteAnImageFromABucket(string imageId)
+        public async Task<HttpStatusCode> DeleteAnImageFromCloudStorage(string imageId)
         {
             try
             {

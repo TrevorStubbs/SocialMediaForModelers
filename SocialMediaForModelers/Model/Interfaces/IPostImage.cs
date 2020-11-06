@@ -1,4 +1,5 @@
-﻿using SocialMediaForModelers.Model.DTOs;
+﻿using Microsoft.AspNetCore.Http;
+using SocialMediaForModelers.Model.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +16,7 @@ namespace SocialMediaForModelers.Model.Interfaces
         /// <param name="postImage">The PostImageDTO to create the new entity</param>
         /// <param name="userId">The user's id</param>
         /// <returns>If successful: the new ImageDTO</returns>
-        Task<PostImageDTO> Create(PostImageDTO postImage, string userId);
+        Task<PostImageDTO> Create(PostImageDTO postImage, string userId, IFormFile imageFile);
 
         // Read
         // GetAllImages - Will be Admin Only

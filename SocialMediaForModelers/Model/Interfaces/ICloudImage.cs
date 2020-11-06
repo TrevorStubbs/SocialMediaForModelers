@@ -11,10 +11,10 @@ namespace SocialMediaForModelers.Model.Interfaces
     public interface ICloudImage
     {
         // Add an image
-        Task<HttpStatusCode> AddAnImageToABucket(string imageId, IFormFile imageFile);
+        Task<HttpStatusCode> AddAnImageToCloudStorage(string imageId, IFormFile imageFile);
         // Get image url
         string GetImageUrl(string imageId);
         // Delete an image
-        Task<HttpStatusCode> DeleteAnImageFromABucket(string imageId);
+        Task<HttpStatusCode> DeleteAnImageFromCloudStorage(string imageId);
     }
 }
