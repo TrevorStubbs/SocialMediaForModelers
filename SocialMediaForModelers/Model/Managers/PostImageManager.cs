@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.SignalR;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using SocialMediaForModelers.Data;
@@ -16,10 +17,12 @@ namespace SocialMediaForModelers.Model.Managers
     public class PostImageManager : IPostImage
     {
         private SMModelersContext _context;
+        private ICloudImage _cloudImage;
 
-        public PostImageManager(SMModelersContext context)
+        public PostImageManager(SMModelersContext context, ICloudImage cloudImage)
         {
             _context = context;
+            _cloudImage = cloudImage;
         }
 
         /// <summary>
@@ -28,18 +31,22 @@ namespace SocialMediaForModelers.Model.Managers
         /// <param name="postImage">The PostImageDTO to create the new entity</param>
         /// <param name="userId">The user's id</param>
         /// <returns>If successful: the new ImageDTO</returns>
-        public async Task<PostImageDTO> Create(PostImageDTO postImage, string userId)
+        public async Task<PostImageDTO> Create(PostImageDTO postImage, string userId, IFormFile imageFile)
         {
             PostImage newImage = new PostImage()
             {
                 UserId = postImage.UserId,
-                ImageURI = postImage.ImageURI
+                CloudStorageKey = Guid.NewGuid().ToString()
             };
 
-            // call method to put the image into the S3 bucket
-
             _context.Entry(newImage).State = EntityState.Added;
-            await _context.SaveChangesAsync();
+            var success = await _context.SaveChangesAsync();
+
+            if(success > 0)
+            {
+                await _cloudImage.AddAnImageToCloudStorage(newImage.CloudStorageKey, imageFile);
+            }
+
             return postImage;
         }
 
@@ -59,7 +66,7 @@ namespace SocialMediaForModelers.Model.Managers
                 {
                     Id = item.ID,
                     UserId = item.UserId,
-                    ImageURI = item.ImageURI
+                    ImageURI = _cloudImage.GetImageUrl(item.CloudStorageKey)
                 });
             }
 
@@ -82,7 +89,7 @@ namespace SocialMediaForModelers.Model.Managers
                 {
                     Id = item.ID,
                     UserId = item.UserId,
-                    ImageURI = item.ImageURI
+                    ImageURI = _cloudImage.GetImageUrl(item.CloudStorageKey)
                 });
             }
 
@@ -101,7 +108,7 @@ namespace SocialMediaForModelers.Model.Managers
                 {
                     Id = item.ID,
                     UserId = item.UserId,
-                    ImageURI = item.ImageURI
+                    ImageURI = _cloudImage.GetImageUrl(item.CloudStorageKey)
                 });
             }
 
@@ -121,14 +128,14 @@ namespace SocialMediaForModelers.Model.Managers
             {
                 Id = image.ID,
                 UserId = image.UserId,
-                ImageURI = image.ImageURI
+                ImageURI = _cloudImage.GetImageUrl(image.CloudStorageKey)
             };
 
             return imageDTO;
         }
 
         /// <summary>
-        /// Updates a specific image in the database
+        /// Updates a specific image entry in the database
         /// </summary>
         /// <param name="postImage">A PostImageDTO to be use to update the DB</param>
         /// <returns>If successful the DTO gets sent back to the caller</returns>
@@ -137,9 +144,13 @@ namespace SocialMediaForModelers.Model.Managers
             PostImage updateImage = new PostImage()
             {
                 ID = postImage.Id,
-                UserId = postImage.UserId,
-                ImageURI = postImage.ImageURI
+                UserId = postImage.UserId
             };
+
+            var image = await _context.PostImages.Where(x => x.ID == postImage.Id).FirstOrDefaultAsync();
+
+            updateImage.CloudStorageKey = image.CloudStorageKey;
+
             _context.Entry(updateImage).State = EntityState.Modified;
             await _context.SaveChangesAsync();
             return postImage;
@@ -151,10 +162,12 @@ namespace SocialMediaForModelers.Model.Managers
         /// <param name="imageId">The Id of the image to be deleted</param>
         /// <returns>Nothing</returns>
         public async Task Delete(int imageId)
-        {
-            // TODO: Once S3 works - Delete the image from the S3 bucket
-
+        {            
+            // Get the image
             PostImage imageToBeDeleted = await _context.PostImages.FindAsync(imageId);
+            // Delete the image from S3
+            await _cloudImage.DeleteAnImageFromCloudStorage(imageToBeDeleted.CloudStorageKey);
+            // Delete the image entry from the Database
             _context.Entry(imageToBeDeleted).State = EntityState.Deleted;
             await _context.SaveChangesAsync();
         }
