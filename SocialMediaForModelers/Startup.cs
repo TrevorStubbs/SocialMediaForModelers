@@ -1,9 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -16,11 +19,13 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using SocialMediaForModelers.Data;
 using SocialMediaForModelers.Model;
 using SocialMediaForModelers.Model.AppRoles;
 using SocialMediaForModelers.Model.Interfaces;
 using SocialMediaForModelers.Model.Managers;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace SocialMediaForModelers
 {
@@ -53,6 +58,21 @@ namespace SocialMediaForModelers
             services.AddIdentity<ApplicationUser, IdentityRole>()
                     .AddEntityFrameworkStores<SMModelersContext>()
                     .AddDefaultTokenProviders();
+
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "SMModelers", Version = "v1" });
+
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer"
+                });
+
+                c.OperationFilter<AuthenticationRequirementOperationFilter>();
+            });
 
             services.AddAuthentication(options =>
             {
@@ -98,6 +118,13 @@ namespace SocialMediaForModelers
 
             app.UseStaticFiles();
 
+            app.UseSwagger();
+
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/Swagger/v1/swagger.json", "SMModelers V1");
+            });
+
             app.UseRouting();
 
             app.UseAuthentication();
@@ -110,6 +137,31 @@ namespace SocialMediaForModelers
             {
                 endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
             });
+        }
+
+        private class AuthenticationRequirementOperationFilter : IOperationFilter
+        {
+            public void Apply(OpenApiOperation operation, OperationFilterContext context)
+            {
+                var hasAnonymous = context.ApiDescription.CustomAttributes().OfType<AllowAnonymousAttribute>().Any();
+                if (hasAnonymous)
+                    return;
+
+                operation.Security ??= new List<OpenApiSecurityRequirement>();
+
+                var scheme = new OpenApiSecurityScheme
+                {
+                    Reference = new OpenApiReference
+                    {
+                        Id = "Bearer",
+                        Type = ReferenceType.SecurityScheme,
+                    },
+                };
+                operation.Security.Add(new OpenApiSecurityRequirement
+                {
+                    [scheme] = new List<string>()
+                });
+            }
         }
     }
 }
