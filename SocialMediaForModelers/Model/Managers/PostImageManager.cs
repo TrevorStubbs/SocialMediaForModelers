@@ -139,7 +139,7 @@ namespace SocialMediaForModelers.Model.Managers
         /// </summary>
         /// <param name="postImage">A PostImageDTO to be use to update the DB</param>
         /// <returns>If successful the DTO gets sent back to the caller</returns>
-        public async Task<PostImageDTO> Update(PostImageDTO postImage)
+        public async Task<PostImageDTO> Update(PostImageDTO postImage, int imageId)
         {
             PostImage updateImage = new PostImage()
             {

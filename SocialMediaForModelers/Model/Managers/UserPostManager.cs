@@ -118,7 +118,7 @@ namespace SocialMediaForModelers.Model.Managers
         /// </summary>
         /// <param name="post">The PostDTO needed to update the database</param>
         /// <returns>If successful the updated DTO</returns>
-        public async Task<UserPostDTO> Update(UserPostDTO post)
+        public async Task<UserPostDTO> Update(UserPostDTO post, int postId)
         {
             UserPost updatedPost = new UserPost()
             {

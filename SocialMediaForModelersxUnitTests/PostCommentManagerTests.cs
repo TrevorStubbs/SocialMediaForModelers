@@ -88,7 +88,7 @@ namespace SocialMediaForModelersxUnitTests
                 Body = "I am updated"
             };
 
-            var returnFromMethod = await service.Update(updatedComment);
+            var returnFromMethod = await service.Update(updatedComment, 1);
 
             Assert.NotNull(returnFromMethod);
             Assert.Equal(updatedComment.Body, returnFromMethod.Body);
