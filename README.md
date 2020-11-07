@@ -144,3 +144,6 @@ Microsoft Visual Studio Community 2019
 - Sprint 3
   - Milestone 1
     - US1 Route Plan
+    - US2 Swagger Install
+    - US3 JWT Token initialization
+    - US4 Account Controller Built
