@@ -63,19 +63,19 @@ Microsoft Visual Studio Community 2019
   - DELETE: `/{PostId}`
     - Deletes a post from the database
       - TODO: deletes comments, images, and likes.
-  - POST: `/{PostId}/{userId}`
+  - POST: `/{PostId}/Like/{userId}`
     - Add a like to a page
-  - GET: `/{PostId}/{userId}`
+  - GET: `/{PostId}/Like/{userId}`
     - Gets the total number of like for the page
-  - DELETE: `/{PostId}/{userId}`
+  - DELETE: `/{PostId}/Like/{userId}`
     - Delete a like from a page
-  - POST: `/{PostId}/{ImageId}`
+  - POST: `/{PostId}/Image/{ImageId}`
     - Adds an image to the post
-  - DELETE: `/{PostId}/{ImageId}`
+  - DELETE: `/{PostId}/Image/{ImageId}`
     - Deletes an image from the post
-  - POST: `/{PostId}/{CommentId}`
+  - POST: `/{PostId}/Comment/{CommentId}`
     - Adds a comment to the post
-  - DELETE: `/{PostId}/{CommentId}`
+  - DELETE: `/{PostId}/Comment/{CommentId}`
     - Deletes a comment from the post
 - PostImage Routes - "/PostImage"
   - POST: `/`
