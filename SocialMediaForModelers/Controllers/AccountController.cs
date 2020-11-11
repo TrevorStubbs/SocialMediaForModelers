@@ -23,9 +23,9 @@ namespace SocialMediaForModelers.Controllers
     [Authorize]
     public class AccountController : ControllerBase
     {
-        private UserManager<ApplicationUser> _userManager;
-        private SignInManager<ApplicationUser> _signInManager;
-        private IConfiguration _config;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly IConfiguration _config;
 
         public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IConfiguration config)
         {
