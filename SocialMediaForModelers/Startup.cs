@@ -112,6 +112,17 @@ namespace SocialMediaForModelers
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+
+                //app.UseSwagger(c =>
+                //{
+                //    c.RouteTemplate = "swagger/{documentName}/swagger.json";
+                //    c.SerializeAsV2 = true;
+                //});
+
+                //app.UseSwaggerUI(c =>
+                //{
+                //    c.SwaggerEndpoint("/swagger/v1/swagger.json", "SMModelers V1");
+                //});
             }
 
             app.UseHttpsRedirection();
@@ -134,7 +145,7 @@ namespace SocialMediaForModelers
             RoleInitializer.SeedData(serviceProvider, userManager, Configuration);
 
             app.UseEndpoints(endpoints =>
-            {
+            {                
                 endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
             });
         }
