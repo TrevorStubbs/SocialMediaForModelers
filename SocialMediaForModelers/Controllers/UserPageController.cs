@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -15,6 +17,7 @@ namespace SocialMediaForModelers.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [AllowAnonymous]
     public class UserPageController : ControllerBase
     {
         private readonly IUserPage _userPage;
@@ -25,7 +28,7 @@ namespace SocialMediaForModelers.Controllers
         }
 
         // POST: /UserPage
-        [HttpPost("UserPage")]
+        [HttpPost]
         public async Task<ActionResult<UserPageDTO>> PostUserPage(UserPageDTO newPage)
         {
             await _userPage.Create(newPage); // Might want to add the UserEmail or Id
@@ -34,7 +37,7 @@ namespace SocialMediaForModelers.Controllers
         }
 
         // GET: /UserPage
-        [HttpGet("UserPage")]
+        [HttpGet]
         public async Task<ActionResult<IEnumerable<UserPageDTO>>> GetAllUserPages()
         {
             List<UserPageDTO> pages = await _userPage.GetAllPages();
@@ -42,17 +45,17 @@ namespace SocialMediaForModelers.Controllers
             return pages;
         }
 
-        // GET: /UserPage/{UserId}
-        [HttpGet("UserPage/{UserId}")]
-        public async Task<ActionResult<IEnumerable<UserPageDTO>>> GetAllPagesForAUser(string userId)
+        // GET: /UserPage/UserId
+        [HttpGet("UserId")]
+        public async Task<ActionResult<IEnumerable<UserPageDTO>>> GetAllPagesForAUser()
         {
-            var pages = await _userPage.GetAllPagesForAUser(userId);
+            var pages = await _userPage.GetAllPagesForAUser(GetUserId());
 
             return pages;
         }
 
         // GET: /UserPage/{PageId}
-        [HttpGet("UserPage/{PageId}")]
+        [HttpGet("{pageId}")]
         public async Task<ActionResult<UserPageDTO>> GetAUserPage(int pageId)
         {
             var page = await _userPage.GetASpecificPage(pageId);
@@ -61,7 +64,7 @@ namespace SocialMediaForModelers.Controllers
         }
         
         // PUT: /UserPage/{PageId}
-        [HttpPut("UserPage/{PageId}")]
+        [HttpPut("{pageId}")]
         public async Task<ActionResult<UserPageDTO>> UpdateAPage(UserPageDTO page, int pageId)
         {
             // Test to see if claim == page.UserId or policy is admin
@@ -79,7 +82,7 @@ namespace SocialMediaForModelers.Controllers
         }
 
         // DELETE: /UserPage/{PageId}
-        [HttpDelete("UserPage/{PageId}")]
+        [HttpDelete("{pageId}")]
         public async Task<ActionResult<UserPage>> DeletePage(int pageId)
         {
             // Test to see if claim == page.UserId or policy is admin
@@ -92,7 +95,7 @@ namespace SocialMediaForModelers.Controllers
         }
 
         // POST: /UserPage/{PageId}/Like/{UserId}
-        [HttpPost("UserPage/{PageId}/Like/{UserId}")]
+        [HttpPost("{pageId}/Like/{userId}")]
         public async Task<ActionResult<PageLike>> PostLike(int pageId, string userId)
         {
             await _userPage.AddALikeToAPage(pageId, userId);
@@ -102,7 +105,7 @@ namespace SocialMediaForModelers.Controllers
 
         
         // GET: /UserPage/{PageId}/Like/{UserId}
-        [HttpGet("UserPage/{PageId}/Like/{UserId}")]
+        [HttpGet("{pageId}/Like/{userId}")]
         public async Task<ActionResult<LikeDTO>> GetLikes(int pageId, string userId)
         {
             var likeData = await _userPage.GetPageLikes(pageId, userId);
@@ -111,7 +114,7 @@ namespace SocialMediaForModelers.Controllers
         }
 
         // DELETE: /UserPage/{PageId}/Like/{UserId}
-        [HttpDelete("UserPage/{PageId}/Like/{UserId}")]
+        [HttpDelete("{pageId}/Like/{userId}")]
         public async Task<IActionResult> DeleteLike(int pageId, string userId)
         {
             await _userPage.DeleteALike(pageId, userId);
@@ -120,7 +123,7 @@ namespace SocialMediaForModelers.Controllers
         }
 
         // POST: /UserPage/{PageId}/UserPost/{PostId}
-        [HttpPost("/UserPage/{PageId}/UserPost/{PostId}")]
+        [HttpPost("{pageId}/UserPost/{postId}")]
         public async Task<IActionResult> PostUserPost(int pageId, int postId)
         {
             await _userPage.AddAPostToAPage(pageId, postId);
@@ -129,12 +132,20 @@ namespace SocialMediaForModelers.Controllers
         }
 
         // DELETE: /UserPage/{PageId}/UserPost/{PostId}
-        [HttpDelete("/UserPage/{PageId}/UserPost/{PostId}")]
+        [HttpDelete("{pageId}/UserPost/{postId}")]
         public async Task<IActionResult> DeleteUserPost(int pageId, int postId)
         {
             await _userPage.DeleteAPostFromAPage(pageId, postId);
 
             return Ok();
+        }
+
+        protected string GetUserId()
+        {
+            return "1234"; // For testing
+
+            // ============= TODO: Change to this =========================
+            //return User.Claims.First(x => x.Type == "UserId").Value;
         }
     }
 }
