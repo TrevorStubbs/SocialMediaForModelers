@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualBasic;
+using SocialMediaForModelers.Controllers.ControllerSupport;
 using SocialMediaForModelers.Data;
 using SocialMediaForModelers.Model;
 using SocialMediaForModelers.Model.DTOs;
@@ -17,7 +18,8 @@ namespace SocialMediaForModelers.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [AllowAnonymous]
+    // ===================== TODO: Change to Restricted =============================
+    [AllowAnonymous] 
     public class UserPageController : ControllerBase
     {
         private readonly IUserPage _userPage;
@@ -49,7 +51,7 @@ namespace SocialMediaForModelers.Controllers
         [HttpGet("UserId")]
         public async Task<ActionResult<IEnumerable<UserPageDTO>>> GetAllPagesForAUser()
         {
-            var pages = await _userPage.GetAllPagesForAUser(GetUserId());
+            var pages = await _userPage.GetAllPagesForAUser(UserClaimsGetters.GetUserId(User));
 
             return pages;
         }
@@ -94,30 +96,30 @@ namespace SocialMediaForModelers.Controllers
             return Ok();
         }
 
-        // POST: /UserPage/{PageId}/Like/{UserId}
-        [HttpPost("{pageId}/Like/{userId}")]
-        public async Task<ActionResult<PageLike>> PostLike(int pageId, string userId)
+        // POST: /UserPage/{PageId}/Like
+        [HttpPost("{pageId}/Like")]
+        public async Task<ActionResult<PageLike>> PostLike(int pageId)
         {
-            await _userPage.AddALikeToAPage(pageId, userId);
+            await _userPage.AddALikeToAPage(pageId, UserClaimsGetters.GetUserId(User));
 
             return Ok(); // Maybe resend the 'like' data
         }
 
         
-        // GET: /UserPage/{PageId}/Like/{UserId}
-        [HttpGet("{pageId}/Like/{userId}")]
-        public async Task<ActionResult<LikeDTO>> GetLikes(int pageId, string userId)
+        // GET: /UserPage/{PageId}/Like
+        [HttpGet("{pageId}/Like")]
+        public async Task<ActionResult<LikeDTO>> GetLikes(int pageId)
         {
-            var likeData = await _userPage.GetPageLikes(pageId, userId);
+            var likeData = await _userPage.GetPageLikes(pageId, UserClaimsGetters.GetUserId(User));
 
             return likeData;
         }
 
-        // DELETE: /UserPage/{PageId}/Like/{UserId}
-        [HttpDelete("{pageId}/Like/{userId}")]
-        public async Task<IActionResult> DeleteLike(int pageId, string userId)
+        // DELETE: /UserPage/{PageId}/Like
+        [HttpDelete("{pageId}/Like")]
+        public async Task<IActionResult> DeleteLike(int pageId)
         {
-            await _userPage.DeleteALike(pageId, userId);
+            await _userPage.DeleteALike(pageId, UserClaimsGetters.GetUserId(User));
 
             return Ok();
         }
@@ -138,14 +140,6 @@ namespace SocialMediaForModelers.Controllers
             await _userPage.DeleteAPostFromAPage(pageId, postId);
 
             return Ok();
-        }
-
-        protected string GetUserId()
-        {
-            return "1234"; // For testing
-
-            // ============= TODO: Change to this =========================
-            //return User.Claims.First(x => x.Type == "UserId").Value;
         }
     }
 }
