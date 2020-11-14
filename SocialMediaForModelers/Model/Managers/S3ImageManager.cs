@@ -20,12 +20,22 @@ namespace SocialMediaForModelers.Model.Managers
         private IConfiguration _config;
         private readonly RegionEndpoint _region = RegionEndpoint.USWest2;
 
+        /// <summary>
+        /// Needs an AWS AcessKey and Secret key, and needs a region to instantiate the AmazonS3Client
+        /// </summary>
+        /// <param name="config">This data comes from user secrets</param>
         public S3ImageManager(IConfiguration config)
         {
             _config = config;
             _s3Client = new AmazonS3Client(config["AWSS3:AccessKeyId"], config["AWSS3:SecretKey"], _region);
         }
 
+        /// <summary>
+        /// Takes an image object and places it into the AWS S3 bucket.
+        /// </summary>
+        /// <param name="imageId">The imageId from the app database</param>
+        /// <param name="imageFile">The imageFile provided by the client</param>
+        /// <returns>The HttpStatusCode</returns>
         public async Task<HttpStatusCode> AddAnImageToCloudStorage(string imageId, IFormFile imageFile)
         {
             try
@@ -57,6 +67,11 @@ namespace SocialMediaForModelers.Model.Managers
 
         }
 
+        /// <summary>
+        /// Generates a temporary image URL for the client to use.
+        /// </summary>
+        /// <param name="imageId">The imageId from the app database</param>
+        /// <returns>The URL as a string</returns>
         public string GetImageUrl(string imageId)
         {
             try
@@ -65,7 +80,7 @@ namespace SocialMediaForModelers.Model.Managers
                 {
                     BucketName = _config["AWSS3:BuckName"],
                     Key = imageId,
-                    Expires = DateTime.UtcNow.AddHours(1)
+                    Expires = DateTime.UtcNow.AddMinutes(5) // change this to 1 hour
                 };
 
                 return _s3Client.GetPreSignedURL(urlRequest);
@@ -81,6 +96,11 @@ namespace SocialMediaForModelers.Model.Managers
 
         }
 
+        /// <summary>
+        /// Deletes an image object from the S3 bucket
+        /// </summary>
+        /// <param name="imageId">The imageId from the app database</param>
+        /// <returns>An HTTP Response Code</returns>
         public async Task<HttpStatusCode> DeleteAnImageFromCloudStorage(string imageId)
         {
             try
@@ -107,7 +127,20 @@ namespace SocialMediaForModelers.Model.Managers
         }
 
         // -------------------- S3 Provider Methods ------------------------------
-
+        /// <summary>
+        /// Creates a new S3 Bucket.
+        /// Bucket names must be unique across all existing bucket names.
+        /// Bucket names must comply with DNS naming conventions.
+        /// Bucket names must be at least 3 and no more than 63 characters long.
+        /// Bucket names must not contain uppercase characters or underscores.
+        /// Bucket names must start with a lowercase letter or number.
+        /// Bucket names must be a series of one or more labels.Adjacent labels are separated by a single period (.). Bucket names can contain lowercase letters, numbers, and hyphens.Each label must start and end with a lowercase letter or a number.
+        /// Bucket names must not be formatted as an IP address(for example, 192.168.5.4).
+        /// </summary>
+        /// <param name="bucketName">
+        /// The bucket name
+        /// </param>
+        /// <returns>A PutBucketResponse Object</returns>
         public async Task<PutBucketResponse> CreateS3Bucket(string bucketName)
         {
             try
@@ -129,6 +162,11 @@ namespace SocialMediaForModelers.Model.Managers
             }
         }
 
+        /// <summary>
+        /// Deletes A specific bucket. (needs to be empty of objects)
+        /// </summary>
+        /// <param name="bucketName">The bucket's name</param>
+        /// <returns>A DeleteBucketResponse Object</returns>
         public async Task<DeleteBucketResponse> DeleteS3Bucket(string bucketName)
         {
             try
@@ -150,6 +188,11 @@ namespace SocialMediaForModelers.Model.Managers
             }
         }
 
+        /// <summary>
+        /// Gets the whole GetObjectResponse object from AWS S3.
+        /// </summary>
+        /// <param name="imageId">The imageId from the database</param>
+        /// <returns>A GetObjectResponse Object</returns>
         public async Task<GetObjectResponse> GetS3Object(string imageId)
         {
             try
