@@ -82,9 +82,9 @@
     - Gets all of the comments from a specific user
   - GET: `/{postId}`
     - Gets all of the comments associated with a specific post
-  - GET: `/{imageId}`
+  - GET: `/{commentId}`
     - Gets a specific comment
-  - PUT: `/{imageId}`
+  - PUT: `/{commentId}`
     - Updates a specific comment
-  - DELETE: `/{imageId}`
+  - DELETE: `/{commentId}`
     - Deletes a comment from the database
