@@ -48,13 +48,13 @@
     - Gets the total number of like for the page
   - DELETE: `/{postId}/Like`
     - Delete a like from a page
-  - POST: `/{postId}/{imageId}`
+  - POST: `/{postId}/Image/{imageId}`
     - Adds an image to the post
-  - DELETE: `/{postId}/{imageId}`
+  - DELETE: `/{postId}/Image/{imageId}`
     - Deletes an image from the post
-  - POST: `/{postId}/{commentId}`
+  - POST: `/{postId}/Comment/{commentId}`
     - Adds a comment to the post
-  - DELETE: `/{postId}/{commentId}`
+  - DELETE: `/{postId}/Comment/{commentId}`
     - Deletes a comment from the post
 - PostImage Routes - "/PostImage"
   - POST: `/`

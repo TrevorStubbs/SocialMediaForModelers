@@ -19,7 +19,7 @@ namespace SocialMediaForModelers.Controllers
     [Route("api/[controller]")]
     [ApiController]
     // ===================== TODO: Change to Restricted =============================
-    [AllowAnonymous] 
+    [AllowAnonymous]
     public class UserPageController : ControllerBase
     {
         private readonly IUserPage _userPage;
@@ -33,9 +33,14 @@ namespace SocialMediaForModelers.Controllers
         [HttpPost]
         public async Task<ActionResult<UserPageDTO>> PostUserPage(UserPageDTO newPage)
         {
-            await _userPage.Create(newPage); // Might want to add the UserEmail or Id
+            var page = await _userPage.Create(newPage); // Might want to add the UserEmail or Id
 
-            return Ok(); // Maybe reload the page
+            if (page != null)
+            {
+                return page;
+            }
+
+            return BadRequest(); // Maybe reload the page
         }
 
         // GET: /UserPage
@@ -44,7 +49,12 @@ namespace SocialMediaForModelers.Controllers
         {
             List<UserPageDTO> pages = await _userPage.GetAllPages();
 
-            return pages;
+            if (pages != null)
+            {
+                return pages;
+            }
+
+            return BadRequest();
         }
 
         // GET: /UserPage/UserId
@@ -53,7 +63,12 @@ namespace SocialMediaForModelers.Controllers
         {
             var pages = await _userPage.GetAllPagesForAUser(UserClaimsGetters.GetUserId(User));
 
-            return pages;
+            if (pages != null)
+            {
+                return pages;
+            }
+
+            return BadRequest();
         }
 
         // GET: /UserPage/{PageId}
@@ -62,12 +77,17 @@ namespace SocialMediaForModelers.Controllers
         {
             var page = await _userPage.GetASpecificPage(pageId);
 
-            return page;
+            if (page != null)
+            {
+                return page;
+            }
+
+            return BadRequest();
         }
-        
+
         // PUT: /UserPage/{PageId}
         [HttpPut("{pageId}")]
-        public async Task<ActionResult<UserPageDTO>> UpdateAPage(UserPageDTO page, int pageId)
+        public async Task<ActionResult<UserPageDTO>> PutAPage(UserPageDTO page, int pageId)
         {
             // Test to see if claim == page.UserId or policy is admin
             // if so allow the update
@@ -91,55 +111,98 @@ namespace SocialMediaForModelers.Controllers
             // if so allow the delete
             // if not don't allow it
 
-            await _userPage.Delete(pageId);
+            try
+            {
+                await _userPage.Delete(pageId);
 
-            return Ok();
+                return Ok();
+            }
+            catch (Exception e)
+            {
+
+                throw new Exception($"Delete action exception message: {e.Message}"
+                    );
+            }
         }
 
         // POST: /UserPage/{PageId}/Like
         [HttpPost("{pageId}/Like")]
-        public async Task<ActionResult<PageLike>> PostLike(int pageId)
+        public async Task<IActionResult> PostPageLike(int pageId)
         {
-            await _userPage.AddALikeToAPage(pageId, UserClaimsGetters.GetUserId(User));
+            try
+            {
+                await _userPage.AddALikeToAPage(pageId, UserClaimsGetters.GetUserId(User));
 
-            return Ok(); // Maybe resend the 'like' data
+                return Ok(); // Maybe resend the 'like' data
+            }
+            catch (Exception e)
+            {
+
+                throw new Exception($"Tried to add a like to a page: {e.Message}");
+            }
         }
 
-        
+
         // GET: /UserPage/{PageId}/Like
         [HttpGet("{pageId}/Like")]
-        public async Task<ActionResult<LikeDTO>> GetLikes(int pageId)
+        public async Task<ActionResult<LikeDTO>> GetPageLikes(int pageId)
         {
             var likeData = await _userPage.GetPageLikes(pageId, UserClaimsGetters.GetUserId(User));
 
-            return likeData;
+            if (likeData != null)
+            {
+                return likeData;
+            }
+
+            return BadRequest();
         }
 
         // DELETE: /UserPage/{PageId}/Like
         [HttpDelete("{pageId}/Like")]
-        public async Task<IActionResult> DeleteLike(int pageId)
+        public async Task<IActionResult> DeletePageLike(int pageId)
         {
-            await _userPage.DeleteALike(pageId, UserClaimsGetters.GetUserId(User));
+            try
+            {
+                await _userPage.DeleteALike(pageId, UserClaimsGetters.GetUserId(User));
 
-            return Ok();
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                throw new Exception($"Cannot delete that like: {e.Message}");
+            }
         }
 
         // POST: /UserPage/{PageId}/UserPost/{PostId}
         [HttpPost("{pageId}/UserPost/{postId}")]
-        public async Task<IActionResult> PostUserPost(int pageId, int postId)
+        public async Task<IActionResult> PostUserPostToPage(int pageId, int postId)
         {
-            await _userPage.AddAPostToAPage(pageId, postId);
+            try
+            {
+                await _userPage.AddAPostToAPage(pageId, postId);
 
-            return Ok();
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                throw new Exception($"Cannot add that post to the page: {e.Message}");
+            }
         }
 
         // DELETE: /UserPage/{PageId}/UserPost/{PostId}
         [HttpDelete("{pageId}/UserPost/{postId}")]
-        public async Task<IActionResult> DeleteUserPost(int pageId, int postId)
+        public async Task<IActionResult> DeleteUserPostFromPage(int pageId, int postId)
         {
-            await _userPage.DeleteAPostFromAPage(pageId, postId);
+            try
+            {
+                await _userPage.DeleteAPostFromAPage(pageId, postId);
 
-            return Ok();
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                throw new Exception($"Cannot delete that post from the page: {e.Message}");
+            }
         }
     }
 }
