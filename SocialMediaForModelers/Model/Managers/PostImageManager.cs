@@ -1,15 +1,12 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
 using SocialMediaForModelers.Data;
 using SocialMediaForModelers.Model.DTOs;
 using SocialMediaForModelers.Model.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Security.Cryptography.X509Certificates;
+
 using System.Threading.Tasks;
 
 namespace SocialMediaForModelers.Model.Managers

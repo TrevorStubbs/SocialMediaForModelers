@@ -30,6 +30,11 @@ namespace SocialMediaForModelers.Controllers
         }
 
         // POST: /UserPage
+        /// <summary>
+        /// Creates a new UserPage in the database.
+        /// </summary>
+        /// <param name="newPage">Client provided UserPageDTO</param>
+        /// <returns>If successful the userPageDTO.</returns>
         [HttpPost]
         public async Task<ActionResult<UserPageDTO>> PostUserPage(UserPageDTO newPage)
         {
@@ -44,6 +49,10 @@ namespace SocialMediaForModelers.Controllers
         }
 
         // GET: /UserPage
+        /// <summary>
+        /// Gets all of the UserPages from the database and returns a list of UserPageDTOs to the client.
+        /// </summary>
+        /// <returns>List of UserPageDTOs</returns>
         [HttpGet]
         public async Task<ActionResult<IEnumerable<UserPageDTO>>> GetAllUserPages()
         {
@@ -58,6 +67,10 @@ namespace SocialMediaForModelers.Controllers
         }
 
         // GET: /UserPage/UserId
+        /// <summary>
+        /// Gets all of the UserPages that is owned by a specific user from the database and returns a list of UserPageDTOs to the client.
+        /// </summary>
+        /// <returns>List of UserPageDTOs</returns>
         [HttpGet("UserId")]
         public async Task<ActionResult<IEnumerable<UserPageDTO>>> GetAllPagesForAUser()
         {
@@ -72,6 +85,11 @@ namespace SocialMediaForModelers.Controllers
         }
 
         // GET: /UserPage/{PageId}
+        /// <summary>
+        /// Gets a specific page from the database and returns a UserPageDTO to the client.
+        /// </summary>
+        /// <param name="pageId">The page's database id.</param>
+        /// <returns>A single UserPageDTO</returns>
         [HttpGet("{pageId}")]
         public async Task<ActionResult<UserPageDTO>> GetAUserPage(int pageId)
         {
@@ -86,6 +104,12 @@ namespace SocialMediaForModelers.Controllers
         }
 
         // PUT: /UserPage/{PageId}
+        /// <summary>
+        /// Updates a UserPage.
+        /// </summary>
+        /// <param name="page">A UserPageDTO with the updated information.</param>
+        /// <param name="pageId">The page's database id</param>
+        /// <returns>The UserPageDTO, if action successful</returns>
         [HttpPut("{pageId}")]
         public async Task<ActionResult<UserPageDTO>> PutAPage(UserPageDTO page, int pageId)
         {
@@ -104,8 +128,13 @@ namespace SocialMediaForModelers.Controllers
         }
 
         // DELETE: /UserPage/{PageId}
+        /// <summary>
+        /// Delete's a UserPage from the database.
+        /// </summary>
+        /// <param name="pageId">The page's database id.</param>
+        /// <returns>IActionResult</returns>
         [HttpDelete("{pageId}")]
-        public async Task<ActionResult<UserPage>> DeletePage(int pageId)
+        public async Task<IActionResult> DeletePage(int pageId)
         {
             // Test to see if claim == page.UserId or policy is admin
             // if so allow the delete
@@ -126,6 +155,11 @@ namespace SocialMediaForModelers.Controllers
         }
 
         // POST: /UserPage/{PageId}/Like
+        /// <summary>
+        /// Adds a Like to a UserPage.
+        /// </summary>
+        /// <param name="pageId">The page's database id.</param>
+        /// <returns>IActionResult</returns>
         [HttpPost("{pageId}/Like")]
         public async Task<IActionResult> PostPageLike(int pageId)
         {
@@ -144,6 +178,11 @@ namespace SocialMediaForModelers.Controllers
 
 
         // GET: /UserPage/{PageId}/Like
+        /// <summary>
+        /// Gets a LikeDTO for the page.
+        /// </summary>
+        /// <param name="pageId">The page's database id.</param>
+        /// <returns>A LikeDTO object</returns>
         [HttpGet("{pageId}/Like")]
         public async Task<ActionResult<LikeDTO>> GetPageLikes(int pageId)
         {
@@ -158,9 +197,17 @@ namespace SocialMediaForModelers.Controllers
         }
 
         // DELETE: /UserPage/{PageId}/Like
+        /// <summary>
+        /// Delete's a like from a UserPage.
+        /// </summary>
+        /// <param name="pageId">The page's database id.</param>
+        /// <returns>IActionResult</returns>
         [HttpDelete("{pageId}/Like")]
         public async Task<IActionResult> DeletePageLike(int pageId)
         {
+            // ====================== TODO: =================================
+            // Check to see if claims == user.id or policy == admin.
+            // ========================================================
             try
             {
                 await _userPage.DeleteALike(pageId, UserClaimsGetters.GetUserId(User));
@@ -174,6 +221,12 @@ namespace SocialMediaForModelers.Controllers
         }
 
         // POST: /UserPage/{PageId}/UserPost/{PostId}
+        /// <summary>
+        /// Adds a UserPost to a UserPage.
+        /// </summary>
+        /// <param name="pageId">The page's database id.</param>
+        /// <param name="postId">The post's database id.</param>
+        /// <returns></returns>
         [HttpPost("{pageId}/UserPost/{postId}")]
         public async Task<IActionResult> PostUserPostToPage(int pageId, int postId)
         {
@@ -190,6 +243,12 @@ namespace SocialMediaForModelers.Controllers
         }
 
         // DELETE: /UserPage/{PageId}/UserPost/{PostId}
+        /// <summary>
+        /// Delete's a UserPost from a UserPage.
+        /// </summary>
+        /// <param name="pageId">The page's database id.</param>
+        /// <param name="postId">The post's database id.</param>
+        /// <returns>IActionResult</returns>
         [HttpDelete("{pageId}/UserPost/{postId}")]
         public async Task<IActionResult> DeleteUserPostFromPage(int pageId, int postId)
         {
