@@ -108,6 +108,10 @@ namespace SocialMediaForModelers.Controllers
         [HttpPut("{postId}")]
         public async Task<ActionResult<UserPostDTO>> PutUserPost(UserPostDTO updatePost, int postId)
         {
+            // Test to see if claim == post.UserId or policy is admin
+            // if so allow the update
+            // if not don't allow it
+
             if (postId != updatePost.Id)
             {
                 return BadRequest();
