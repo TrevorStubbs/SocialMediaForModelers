@@ -43,11 +43,11 @@
     - Deletes a post from the database
       - TODO: deletes comments, images, and likes.
   - POST: `/{postId}/Like`
-    - Add a like to a page
+    - Add a like to a post
   - GET: `/{postId}/Like`
-    - Gets the total number of like for the page
+    - Gets the total number of like for the post
   - DELETE: `/{postId}/Like`
-    - Delete a like from a page
+    - Delete a like from a post
   - POST: `/{postId}/Image/{imageId}`
     - Adds an image to the post
   - DELETE: `/{postId}/Image/{imageId}`
@@ -80,7 +80,7 @@
     - Gets all of comments from the site (should be restricted to admins only)
   - GET: `/UserId`
     - Gets all of the comments from a specific user
-  - GET: `/{postId}`
+  - GET: `/{postId}/post`
     - Gets all of the comments associated with a specific post
   - GET: `/{commentId}`
     - Gets a specific comment
@@ -88,3 +88,9 @@
     - Updates a specific comment
   - DELETE: `/{commentId}`
     - Deletes a comment from the database
+  - POST: `/{commentId}/Like`
+    - Add a like to a comment
+  - GET: `/{commentId}/Like`
+    - Gets the total number of like for the comment
+  - DELETE: `/{commentId}/Like`
+    - Delete a like from a comment

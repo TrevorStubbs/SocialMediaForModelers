@@ -17,6 +17,12 @@ namespace SocialMediaForModelers.Model.Interfaces
         /// <returns>If successful returns the DTO to the caller</returns>
         Task<PostCommentDTO> Create(PostCommentDTO postComment, string userId);
 
+        /// <summary>
+        /// Gets all comments from the database.
+        /// </summary>
+        /// <returns>A list of PostCommentDTOs</returns>
+        Task<List<PostCommentDTO>> GetAllComments();
+
         // ReadUsersComments
         /// <summary>
         /// Gets all the comments made by the specified user

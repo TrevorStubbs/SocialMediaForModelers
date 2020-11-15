@@ -39,10 +39,11 @@ namespace SocialMediaForModelers.Model.Managers
             return postComment;
         }
 
-        // =============== TODO =========================
-        // 1. Add this to the interface
-        // 2. Build unit tests for this method
-        // 3. Summary comments on the Method and interface
+
+        /// <summary>
+        /// Gets all comments from the database.
+        /// </summary>
+        /// <returns>A list of PostCommentDTOs</returns>
         public async Task<List<PostCommentDTO>> GetAllComments()
         {
             var comments = await _context.PostComments.ToListAsync();
