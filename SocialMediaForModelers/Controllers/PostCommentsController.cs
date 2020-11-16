@@ -25,6 +25,11 @@ namespace SocialMediaForModelers.Controllers
         }
 
         // POST: /PostComment
+        /// <summary>
+        /// Creates a new PostComment and adds it to the database
+        /// </summary>
+        /// <param name="newComment">PostCommentDTO</param>
+        /// <returns>The PostCommentDTO, if successful.</returns>
         [HttpPost]
         public async Task<ActionResult<PostCommentDTO>> PostPostComment(PostCommentDTO newComment)
         {
@@ -39,6 +44,10 @@ namespace SocialMediaForModelers.Controllers
         }
 
         // GET: /PostComment
+        /// <summary>
+        /// Gets all comments from the database.
+        /// </summary>
+        /// <returns>A list of PostCommentDTOs</returns>
         [HttpGet]
         public async Task<ActionResult<List<PostCommentDTO>>> GetAllComments()
         {
@@ -53,6 +62,11 @@ namespace SocialMediaForModelers.Controllers
         }
 
         // GET: /PostComment/UserId
+        /// <summary>
+        /// Gets all the PostComments from the database
+        /// </summary>
+        /// <returns>A list of PostCommentDTOs</returns>
+        [HttpGet("UserId")]
         public async Task<ActionResult<List<PostCommentDTO>>> GetUsersPostComments()
         {
             var comments = await _postComment.GetAllUsersComments(UserClaimsGetters.GetUserId(User));
@@ -66,20 +80,27 @@ namespace SocialMediaForModelers.Controllers
         }
 
         // GET: /PostComment/{postId}/post
-        [HttpGet("{postId}/post")]
-        public async Task<ActionResult<List<PostCommentDTO>>> GetPostCommentsForUserPost(int postId)
-        {
-            var comments = await _postComment.GetCommentsForAPost(postId);
+        // ============ TODO: Re-evaluate the need for this route =============
+        //[HttpGet("{postId}/UserPost")]
+        //public async Task<ActionResult<List<PostCommentDTO>>> GetPostCommentsForUserPost(int postId)
+        //{
+        //    var comments = await _postComment.GetCommentsForAPost(postId);
 
-            if (comments != null)
-            {
-                return comments;
-            }
+        //    if (comments != null)
+        //    {
+        //        return comments;
+        //    }
 
-            return BadRequest();
-        }
+        //    return BadRequest();
+        //}
+        // =====================================================================
 
         // GET: /PostComment/{commentId}
+        /// <summary>
+        /// Gets a single PostComment.
+        /// </summary>
+        /// <param name="commentId">The comment's database id.</param>
+        /// <returns>A PostCommentDTO</returns>
         [HttpGet("{commentId}")]
         public async Task<ActionResult<PostCommentDTO>> GetComment(int commentId)
         {
@@ -94,6 +115,12 @@ namespace SocialMediaForModelers.Controllers
         }
 
         // PUT: /PostComment/{commentId}
+        /// <summary>
+        /// Updates a PostComment.
+        /// </summary>
+        /// <param name="updateComment">The PostCommentDTO used to update the database.</param>
+        /// <param name="commentId">The comment's database id.</param>
+        /// <returns>The provided PostCommentDTO, if successful.</returns>
         [HttpPut("{commentId}")]
         public async Task<ActionResult<PostCommentDTO>> PutPostComment(PostCommentDTO updateComment, int commentId)
         {
@@ -101,14 +128,14 @@ namespace SocialMediaForModelers.Controllers
             // if so allow the update
             // if not don't allow it
 
-            if(commentId != updateComment.Id)
+            if (commentId != updateComment.Id)
             {
                 return BadRequest();
             }
 
             var comment = await _postComment.Update(updateComment, commentId);
 
-            if(comment != null)
+            if (comment != null)
             {
                 return comment;
             }
@@ -117,6 +144,11 @@ namespace SocialMediaForModelers.Controllers
         }
 
         // DELETE: /PostComment/{commentId}
+        /// <summary>
+        /// Deletes a PostComment from the database.
+        /// </summary>
+        /// <param name="commentId">The comment's database id.</param>
+        /// <returns>IActionResult</returns>
         [HttpDelete("{commentId}")]
         public async Task<IActionResult> DeletePostComment(int commentId)
         {
@@ -138,6 +170,11 @@ namespace SocialMediaForModelers.Controllers
         }
 
         // POST: /PostComment/{commentId}/Like
+        /// <summary>
+        /// Adds a like to the PostComment.
+        /// </summary>
+        /// <param name="commentId">The comment's database id.</param>
+        /// <returns>IActionResult</returns>
         [HttpPost("{commentId}/Like")]
         public async Task<IActionResult> PostCommentLike(int commentId)
         {
@@ -154,12 +191,17 @@ namespace SocialMediaForModelers.Controllers
         }
 
         // GET: /PostComment/{commentId}/Like
+        /// <summary>
+        /// Gets the like data for a comment.
+        /// </summary>
+        /// <param name="commentId">The comment's database id.</param>
+        /// <returns>A LikeDTO, if successful.</returns>
         [HttpGet("{commentId}/Like")]
         public async Task<ActionResult<LikeDTO>> GetCommentLikes(int commentId)
         {
             var likeData = await _postComment.GetCommentsLikes(commentId, UserClaimsGetters.GetUserId(User));
 
-            if(likeData != null)
+            if (likeData != null)
             {
                 return likeData;
             }
@@ -168,6 +210,11 @@ namespace SocialMediaForModelers.Controllers
         }
 
         // DELETE: /PostComment/{commentId}/Like
+        /// <summary>
+        /// Deletes a like from a PostComment.
+        /// </summary>
+        /// <param name="commentId">The comment's database id.</param>
+        /// <returns>IActionResult</returns>
         [HttpDelete("{commentId}/Like")]
         public async Task<IActionResult> DeleteCommentLike(int commentId)
         {
