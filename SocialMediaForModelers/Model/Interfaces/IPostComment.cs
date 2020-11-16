@@ -41,7 +41,7 @@ namespace SocialMediaForModelers.Model.Interfaces
 
         // ReadPostsComments
         // TODO: Move this to posts
-        Task<List<PostCommentDTO>> GetCommentsForAPost(int postId);
+        //Task<List<PostCommentDTO>> GetCommentsForAPost(int postId);
 
         // Update
         /// <summary>
