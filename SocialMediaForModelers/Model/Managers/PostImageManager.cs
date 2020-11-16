@@ -94,23 +94,23 @@ namespace SocialMediaForModelers.Model.Managers
         }
 
         // ============= TODO: This may need to be moved to the Post Manager ===================
-        public async Task<List<PostImageDTO>> GetAllImagesForAPost(int postId)
-        {
-            var images = await _context.PostImages.Where(x => x.ID == postId).ToListAsync();
+        //public async Task<List<PostImageDTO>> GetAllImagesForAPost(int postId)
+        //{
+        //    var images = await _context.PostImages.Where(x => x.ID == postId).ToListAsync();
 
-            var imageList = new List<PostImageDTO>();
-            foreach (var item in images)
-            {
-                imageList.Add(new PostImageDTO()
-                {
-                    Id = item.ID,
-                    UserId = item.UserId,
-                    ImageURI = _cloudImage.GetImageUrl(item.CloudStorageKey)
-                });
-            }
+        //    var imageList = new List<PostImageDTO>();
+        //    foreach (var item in images)
+        //    {
+        //        imageList.Add(new PostImageDTO()
+        //        {
+        //            Id = item.ID,
+        //            UserId = item.UserId,
+        //            ImageURI = _cloudImage.GetImageUrl(item.CloudStorageKey)
+        //        });
+        //    }
 
-            return imageList;
-        }
+        //    return imageList;
+        //}
         // ===================================================================================
 
         /// <summary>
