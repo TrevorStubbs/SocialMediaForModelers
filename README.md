@@ -58,3 +58,16 @@ Microsoft Visual Studio Community 2019
     - US2 Swagger Install
     - US3 JWT Token initialization
     - US4 Account Controller Built
+  - Milestone 2
+    - US 1 UserPageController Scaffold
+    - US 2 UserPageController Methods
+    - US 3 UserPageController Swagger Testing
+  - Milestone 3
+    - US 1 UserPostController Scaffold
+    - US 2 UserPostController Methods
+    - US 3 UserPostController Swagger Testing
+  - Milestone 4
+    - US 1 PostCommentController Scaffold
+    - US 2 PostCommentController Methods
+    - US 3 PostCommentController Swagger Testing
+  

@@ -113,28 +113,28 @@ namespace SocialMediaForModelers
             {
                 app.UseDeveloperExceptionPage();
 
-                //app.UseSwagger(c =>
-                //{
-                //    c.RouteTemplate = "swagger/{documentName}/swagger.json";
-                //    c.SerializeAsV2 = true;
-                //});
+                app.UseSwagger(c =>
+                {
+                    c.RouteTemplate = "swagger/{documentName}/swagger.json";
+                    c.SerializeAsV2 = true;
+                });
 
-                //app.UseSwaggerUI(c =>
-                //{
-                //    c.SwaggerEndpoint("/swagger/v1/swagger.json", "SMModelers V1");
-                //});
+                app.UseSwaggerUI(c =>
+                {
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "SMModelers V1");
+                });
             }
 
             app.UseHttpsRedirection();
 
             app.UseStaticFiles();
 
-            app.UseSwagger();
+            //app.UseSwagger();
 
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/Swagger/v1/swagger.json", "SMModelers V1");
-            });
+            //app.UseSwaggerUI(c =>
+            //{
+            //    c.SwaggerEndpoint("/Swagger/v1/swagger.json", "SMModelers V1");
+            //});
 
             app.UseRouting();
 

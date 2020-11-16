@@ -108,6 +108,10 @@ namespace SocialMediaForModelers.Controllers
         [HttpPut("{postId}")]
         public async Task<ActionResult<UserPostDTO>> PutUserPost(UserPostDTO updatePost, int postId)
         {
+            // Test to see if claim == post.UserId or policy is admin
+            // if so allow the update
+            // if not don't allow it
+
             if (postId != updatePost.Id)
             {
                 return BadRequest();
@@ -190,7 +194,7 @@ namespace SocialMediaForModelers.Controllers
 
         // DELETE: /UserPost/{postId}/Like
         /// <summary>
-        /// Delete's a like from a UserPost
+        /// Deletes a like from a UserPost
         /// </summary>
         /// <param name="postId">The post's database id.</param>
         /// <returns>IActionResult</returns>
