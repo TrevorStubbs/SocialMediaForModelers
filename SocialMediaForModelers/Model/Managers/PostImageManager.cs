@@ -15,11 +15,13 @@ namespace SocialMediaForModelers.Model.Managers
     {
         private SMModelersContext _context;
         private ICloudImage _cloudImage;
+        private IAmazonS3Provider _s3Provider;
 
-        public PostImageManager(SMModelersContext context, ICloudImage cloudImage)
+        public PostImageManager(SMModelersContext context, ICloudImage cloudImage, IAmazonS3Provider amazonS3Provider)
         {
             _context = context;
             _cloudImage = cloudImage;
+            _s3Provider = amazonS3Provider;
         }
 
         /// <summary>
@@ -28,11 +30,11 @@ namespace SocialMediaForModelers.Model.Managers
         /// <param name="postImage">The PostImageDTO to create the new entity</param>
         /// <param name="userId">The user's id</param>
         /// <returns>If successful: the new ImageDTO</returns>
-        public async Task<PostImageDTO> Create(PostImageDTO postImage, string userId, IFormFile imageFile)
+        public async Task<PostImageDTO> Create(CreatePostImageDTO postImage, string userId)
         {
             PostImage newImage = new PostImage()
             {
-                UserId = postImage.UserId,
+                UserId = userId,
                 CloudStorageKey = Guid.NewGuid().ToString()
             };
 
@@ -41,7 +43,7 @@ namespace SocialMediaForModelers.Model.Managers
 
             if(success > 0)
             {
-                await _cloudImage.AddAnImageToCloudStorage(newImage.CloudStorageKey, imageFile);
+                await _s3Provider.MoveImageFromTransferBucketToStorageBucket(postImage.transferKey, newImage.CloudStorageKey);
             }
 
             return postImage;

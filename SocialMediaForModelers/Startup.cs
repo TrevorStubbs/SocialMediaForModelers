@@ -104,6 +104,7 @@ namespace SocialMediaForModelers
             services.AddTransient<IUserPost, UserPostManager>();
             services.AddTransient<IUserPage, UserPageManager>();
             services.AddTransient<ICloudImage, S3ImageManager>();
+            services.AddTransient<IAmazonS3Provider, S3ImageManager>(); // Does this work?
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
