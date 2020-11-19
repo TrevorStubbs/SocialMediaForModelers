@@ -165,7 +165,7 @@ namespace SocialMediaForModelers.Controllers
             catch (Exception e)
             {
 
-                throw new Exception($"Delete action exeption message: {e.Message}");
+                throw new Exception($"Delete action exception message: {e.Message}");
             }
         }
 

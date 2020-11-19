@@ -31,5 +31,6 @@ namespace SocialMediaForModelers.Model.Interfaces
         /// <param name="imageId">The imageId from the app database</param>
         /// <returns>An HTTP Response Code</returns>
         Task<HttpStatusCode> DeleteAnImageFromCloudStorage(string imageId);
+
     }
 }
