@@ -25,6 +25,11 @@ namespace SocialMediaForModelers.Controllers
         }
 
         // POST: /PostImage
+        /// <summary>
+        /// Creates a new image and adds it to the database. 
+        /// </summary>
+        /// <param name="newImage">A CreatePostImageDTO to build the database entry with.</param>
+        /// <returns>Ok, if successful</returns>
         [HttpPost]
         public async Task<ActionResult<PostImageDTO>> PostPostImage(CreatePostImageDTO newImage)
         {
@@ -32,13 +37,17 @@ namespace SocialMediaForModelers.Controllers
 
             if(image != null)
             {
-                return image;
+                return Ok();
             }
 
             return BadRequest();
         }
 
         // GET: /PostImage
+        /// <summary>
+        /// Gets all Images from the database. 
+        /// </summary>
+        /// <returns>A list of PostImageDTOs</returns>
         [HttpGet]
         public async Task<ActionResult<List<PostImageDTO>>> GetAllImages()
         {
@@ -52,11 +61,16 @@ namespace SocialMediaForModelers.Controllers
             return BadRequest();
         }
 
-        // GET: /PostImage/UserId
-        [HttpGet("UserId")]
-        public async Task<ActionResult<List<PostImageDTO>>> GetUsersPostImages()
+        // POST: /PostImage/UserId
+        /// <summary>
+        /// POSTs a UserId to GET all the PostImage from the database of the current user.
+        /// </summary>
+        /// <param name="user">UserRequestDTO</param>
+        /// <returns>List of PostImageDTO</returns>
+        [HttpPost("UserId")]
+        public async Task<ActionResult<List<PostImageDTO>>> GetUsersPostImages(UserRequestDTO user)
         {
-            var images = await _postImage.GetAllUsersImages(UserClaimsGetters.GetUserId(User));
+            var images = await _postImage.GetAllUsersImages(user.UserId);
 
             if(images != null)
             {
@@ -67,6 +81,11 @@ namespace SocialMediaForModelers.Controllers
         }
 
         // GET: /PostImage/{imageId}
+        /// <summary>
+        /// Gets a single PostImage.
+        /// </summary>
+        /// <param name="commentId">The image's database id.</param>
+        /// <returns>A PostImageDTO</returns>
         [HttpGet("{imageId}")]
         public async Task<ActionResult<PostImageDTO>> GetImage(int imageId)
         {
@@ -81,25 +100,30 @@ namespace SocialMediaForModelers.Controllers
         }
 
         // PUT: /PostImage/{imageId}
-        [HttpPut("{imageId}")]
-        public async Task<ActionResult<PostImageDTO>> PutPostImage(PostImageDTO updateImage, int imageId)
-        {
-            if(imageId != updateImage.Id)
-            {
-                return BadRequest();
-            }
+        //[HttpPut("{imageId}")]
+        //public async Task<ActionResult<PostImageDTO>> PutPostImage(PostImageDTO updateImage, int imageId)
+        //{
+        //    if(imageId != updateImage.Id)
+        //    {
+        //        return BadRequest();
+        //    }
 
-            var image = await _postImage.Update(updateImage, imageId);
+        //    var image = await _postImage.Update(updateImage, imageId);
 
-            if(image != null)
-            {
-                return image;
-            }
+        //    if(image != null)
+        //    {
+        //        return image;
+        //    }
 
-            return BadRequest();
-        }
+        //    return BadRequest();
+        //}
 
         // DELETE: /PostImage/{imageId}
+        /// <summary>
+        /// Deletes a PostImage from the database.
+        /// </summary>
+        /// <param name="commentId">The image's database id.</param>
+        /// <returns>IActionResult</returns>
         [HttpDelete("{imageId}")]
         public async Task<IActionResult> DeletePostImage(int imageId)
         {

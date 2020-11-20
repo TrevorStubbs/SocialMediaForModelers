@@ -29,7 +29,7 @@ namespace SocialMediaForModelers.Controllers
         /// Creates a new UsePost.
         /// </summary>
         /// <param name="newPost">UserPostDTO</param>
-        /// <returns>The UserPostDTO, if successful.</returns>
+        /// <returns>Ok, if successful</returns>
         [HttpPost]
         public async Task<ActionResult<UserPostDTO>> PostUserPost(UserPostDTO newPost)
         {
@@ -37,7 +37,7 @@ namespace SocialMediaForModelers.Controllers
 
             if (post != null)
             {
-                return post;
+                return Ok();
             }
 
             return BadRequest();
@@ -61,15 +61,16 @@ namespace SocialMediaForModelers.Controllers
             return BadRequest();
         }
 
-        // GET: /UserPost/UserId
+        // POST: /UserPost/UserId
         /// <summary>
-        /// Gets all the post owned by a user.
+        /// POSTs a UserId to GET all the UserPosts from the database of the current user.
         /// </summary>
-        /// <returns>A list of UserPostDTOs</returns>
-        [HttpGet("UserId")]
-        public async Task<ActionResult<List<UserPostDTO>>> GetUsersUserPosts()
+        /// <param name="user">UserRequestDTO</param>
+        /// <returns>List of UserPostDTOs</returns>
+        [HttpPost("UserId")]
+        public async Task<ActionResult<List<UserPostDTO>>> GetUsersUserPosts(UserRequestDTO user)
         {
-            var posts = await _userPost.GetAllUserPosts(UserClaimsGetters.GetUserId(User));
+            var posts = await _userPost.GetAllUserPosts(user.UserId);
 
             if (posts != null)
             {

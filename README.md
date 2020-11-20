@@ -70,4 +70,8 @@ Microsoft Visual Studio Community 2019
     - US 1 PostCommentController Scaffold
     - US 2 PostCommentController Methods
     - US 3 PostCommentController Swagger Testing
+  - Milestone 5
+    - US 1 PostImageController Scaffold
+    - US 2 PostImageController Methods
+    - US 3 PostImageController Swagger Testing
   

@@ -29,7 +29,7 @@ namespace SocialMediaForModelers.Controllers
         /// Creates a new PostComment and adds it to the database
         /// </summary>
         /// <param name="newComment">PostCommentDTO</param>
-        /// <returns>The PostCommentDTO, if successful.</returns>
+        /// <returns>Ok, if successful</returns>
         [HttpPost]
         public async Task<ActionResult<PostCommentDTO>> PostPostComment(PostCommentDTO newComment)
         {
@@ -61,15 +61,16 @@ namespace SocialMediaForModelers.Controllers
             return BadRequest();
         }
 
-        // GET: /PostComment/UserId
+        // Post: /PostComment/UserId
         /// <summary>
-        /// Gets all the PostComments from the database
+        /// POSTs a UserId to GET all the PostComments from the database of the current user.
         /// </summary>
-        /// <returns>A list of PostCommentDTOs</returns>
-        [HttpGet("UserId")]
-        public async Task<ActionResult<List<PostCommentDTO>>> GetUsersPostComments()
+        /// <param name="user">UserRequestDTO</param>
+        /// <returns>List of PostCommentDTOs</returns>
+        [HttpPost("UserId")]
+        public async Task<ActionResult<List<PostCommentDTO>>> GetUsersPostComments(UserRequestDTO user)
         {
-            var comments = await _postComment.GetAllUsersComments(UserClaimsGetters.GetUserId(User));
+            var comments = await _postComment.GetAllUsersComments(user.UserId);
 
             if (comments != null)
             {
