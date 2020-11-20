@@ -78,7 +78,7 @@ namespace SocialMediaForModelers.Model.Managers
             {
                 GetPreSignedUrlRequest urlRequest = new GetPreSignedUrlRequest()
                 {
-                    BucketName = _config["AWSS3:BuckName"],
+                    BucketName = _config["AWSS3:StorageBucketName"],
                     Key = imageId,
                     Expires = DateTime.UtcNow.AddMinutes(5) // change this to 1 hour
                 };
@@ -141,15 +141,15 @@ namespace SocialMediaForModelers.Model.Managers
 
                 if (copyOjectResponse.HttpStatusCode == HttpStatusCode.OK)
                 {
-                    var deleteObjectReponse = await _s3Client.DeleteObjectAsync(_config["AWSS3:TransferBucketName"], tempTransferKey);
+                    var deleteObjectResponse = await _s3Client.DeleteObjectAsync(_config["AWSS3:TransferBucketName"], tempTransferKey);
 
-                    if (deleteObjectReponse.HttpStatusCode == HttpStatusCode.OK)
+                    if (deleteObjectResponse != null)
                     {
-                        return deleteObjectReponse.HttpStatusCode;
+                        return HttpStatusCode.OK;
                     }
                     else
                     {
-                        throw new Exception($"Transfer image '{tempTransferKey}' was not deleted from the transfer bucket. Response code '{deleteObjectReponse.HttpStatusCode}'");
+                        throw new Exception($"Transfer image '{tempTransferKey}' was not deleted from the transfer bucket. Response code '{deleteObjectResponse.HttpStatusCode}'");
                     }
                 }
                 else

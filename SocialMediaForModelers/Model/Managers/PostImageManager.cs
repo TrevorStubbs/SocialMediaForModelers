@@ -25,9 +25,9 @@ namespace SocialMediaForModelers.Model.Managers
         }
 
         /// <summary>
-        /// Creates a new Image and puts it in the database
+        /// Creates a new PostImage and puts it in the database. If it's successfuly added then it transfers the image from the transfer bucket to the storage bucket.
         /// </summary>
-        /// <param name="postImage">The PostImageDTO to create the new entity</param>
+        /// <param name="postImage">The CreatePostImageDTO to create the new entity</param>
         /// <param name="userId">The user's id</param>
         /// <returns>If successful: the new ImageDTO</returns>
         public async Task<PostImageDTO> Create(CreatePostImageDTO postImage, string userId)
@@ -35,7 +35,7 @@ namespace SocialMediaForModelers.Model.Managers
             PostImage newImage = new PostImage()
             {
                 UserId = userId,
-                CloudStorageKey = Guid.NewGuid().ToString()
+                CloudStorageKey = $"{Guid.NewGuid()}{postImage.ImageExtention}"
             };
 
             _context.Entry(newImage).State = EntityState.Added;
@@ -43,7 +43,7 @@ namespace SocialMediaForModelers.Model.Managers
 
             if(success > 0)
             {
-                await _s3Provider.MoveImageFromTransferBucketToStorageBucket(postImage.transferKey, newImage.CloudStorageKey);
+                await _s3Provider.MoveImageFromTransferBucketToStorageBucket(postImage.TransferKey, newImage.CloudStorageKey);
             }
 
             return postImage;
@@ -147,10 +147,11 @@ namespace SocialMediaForModelers.Model.Managers
             };
 
             var image = await _context.PostImages.Where(x => x.ID == postImage.Id).FirstOrDefaultAsync();
-
+                        
             updateImage.CloudStorageKey = image.CloudStorageKey;
+            image.UserId = postImage.UserId;
 
-            _context.Entry(updateImage).State = EntityState.Modified;
+            _context.Entry(image).State = EntityState.Modified;
             await _context.SaveChangesAsync();
             return postImage;
         }

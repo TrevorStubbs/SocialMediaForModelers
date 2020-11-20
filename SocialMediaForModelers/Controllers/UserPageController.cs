@@ -34,7 +34,7 @@ namespace SocialMediaForModelers.Controllers
         /// Creates a new UserPage in the database.
         /// </summary>
         /// <param name="newPage">Client provided UserPageDTO</param>
-        /// <returns>If successful the userPageDTO.</returns>
+        /// <returns>Ok, if successful</returns>
         [HttpPost]
         public async Task<ActionResult<UserPageDTO>> PostUserPage(UserPageDTO newPage)
         {
@@ -42,7 +42,7 @@ namespace SocialMediaForModelers.Controllers
 
             if (page != null)
             {
-                return page;
+                return Ok();
             }
 
             return BadRequest(); // Maybe reload the page
@@ -66,15 +66,16 @@ namespace SocialMediaForModelers.Controllers
             return BadRequest();
         }
 
-        // GET: /UserPage/UserId
+        // POST: /UserPage/UserId
         /// <summary>
-        /// Gets all of the UserPages that is owned by a specific user from the database and returns a list of UserPageDTOs to the client.
+        /// POSTs a UserId to GET all the UserPage from the database of the current user.
         /// </summary>
-        /// <returns>List of UserPageDTOs</returns>
-        [HttpGet("UserId")]
-        public async Task<ActionResult<IEnumerable<UserPageDTO>>> GetAllPagesForAUser()
+        /// <param name="user">UserRequestDTO</param>
+        /// <returns>List of UserPages</returns>
+        [HttpPost("UserId")]
+        public async Task<ActionResult<IEnumerable<UserPageDTO>>> GetAllPagesForAUser(UserRequestDTO user)
         {
-            var pages = await _userPage.GetAllPagesForAUser(UserClaimsGetters.GetUserId(User));
+            var pages = await _userPage.GetAllPagesForAUser(user.UserId);
 
             if (pages != null)
             {

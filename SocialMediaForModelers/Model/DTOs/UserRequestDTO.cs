@@ -5,9 +5,8 @@ using System.Threading.Tasks;
 
 namespace SocialMediaForModelers.Model.DTOs
 {
-    public class CreatePostImageDTO : PostImageDTO
+    public class UserRequestDTO
     {
-        public string TransferKey { get; set; }
-        public string ImageExtention { get; set; }
+        public string UserId { get; set; }
     }
 }

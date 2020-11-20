@@ -11,7 +11,7 @@ namespace SocialMediaForModelers.Model
     {
         public int ID { get; set; }
         public string UserId { get; set; }
-        public string CloudStorageKey { get; set; }
+        public string CloudStorageKey { get; set; }        
         // TODO: add date created
 
         // Navigation properties
