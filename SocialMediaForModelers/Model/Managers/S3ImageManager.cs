@@ -42,7 +42,7 @@ namespace SocialMediaForModelers.Model.Managers
             {
                 PutObjectRequest imageRequest = new PutObjectRequest()
                 {
-                    BucketName = _config["AWSS3:BucketName"],
+                    BucketName = _config["AWSS3:StorageBucketName"],
                     Key = imageId
                 };
 
@@ -78,7 +78,7 @@ namespace SocialMediaForModelers.Model.Managers
             {
                 GetPreSignedUrlRequest urlRequest = new GetPreSignedUrlRequest()
                 {
-                    BucketName = _config["AWSS3:BuckName"],
+                    BucketName = _config["AWSS3:StorageBucketName"],
                     Key = imageId,
                     Expires = DateTime.UtcNow.AddMinutes(5) // change this to 1 hour
                 };
@@ -108,7 +108,7 @@ namespace SocialMediaForModelers.Model.Managers
                 DeleteObjectResponse response;
                 DeleteObjectRequest deleteThisObject = new DeleteObjectRequest()
                 {
-                    BucketName = _config["AWSS3:BucketName"],
+                    BucketName = _config["AWSS3:StorageBucketName"],
                     Key = imageId
                 };
 
@@ -126,7 +126,47 @@ namespace SocialMediaForModelers.Model.Managers
             }
         }
 
-        // -------------------- S3 Provider Methods ------------------------------
+        // -------------------- S3 Specific Methods ------------------------------
+        /// <summary>
+        /// Moves an image from the transfer bucket to the storage bucket with the appropriate key.
+        /// </summary>
+        /// <param name="tempTransferKey">The S3 object key of the image in the transfer bucket (provided by the client).</param>
+        /// <param name="cloudStorageKey">The permanent object key</param>
+        /// <returns>HttpStatusCode</returns>
+        public async Task<HttpStatusCode> MoveImageFromTransferBucketToStorageBucket(string tempTransferKey, string cloudStorageKey)
+        {
+            try
+            {
+                var copyOjectResponse = await _s3Client.CopyObjectAsync(_config["AWSS3:TransferBucketName"], tempTransferKey, _config["AWSS3:StorageBucketName"], cloudStorageKey);
+
+                if (copyOjectResponse.HttpStatusCode == HttpStatusCode.OK)
+                {
+                    var deleteObjectResponse = await _s3Client.DeleteObjectAsync(_config["AWSS3:TransferBucketName"], tempTransferKey);
+
+                    if (deleteObjectResponse != null)
+                    {
+                        return HttpStatusCode.OK;
+                    }
+                    else
+                    {
+                        throw new Exception($"Transfer image '{tempTransferKey}' was not deleted from the transfer bucket. Response code '{deleteObjectResponse.HttpStatusCode}'");
+                    }
+                }
+                else
+                {
+                    throw new Exception($"Image '{cloudStorageKey}' was not copied to the storage bucket. Response code '{copyOjectResponse.HttpStatusCode}'");
+                }
+            }
+            catch (AmazonS3Exception e)
+            {
+                throw new AmazonS3Exception($"S3 Specific Message: {e.Message}");
+            }
+            catch (Exception e)
+            {
+                throw new Exception($"Generic ASP.NET Message: {e.Message}");
+            }
+        }
+
         /// <summary>
         /// Creates a new S3 Bucket.
         /// Bucket names must be unique across all existing bucket names.
@@ -147,7 +187,7 @@ namespace SocialMediaForModelers.Model.Managers
             {
                 PutBucketRequest newBucket = new PutBucketRequest()
                 {
-                    BucketName = _config["AWSS3:BucketName"]
+                    BucketName = _config["AWSS3:StorageBucketName"]
                 };
 
                 return await _s3Client.PutBucketAsync(newBucket);
@@ -173,7 +213,7 @@ namespace SocialMediaForModelers.Model.Managers
             {
                 DeleteBucketRequest deleteThisBucket = new DeleteBucketRequest()
                 {
-                    BucketName = _config["AWSS3:BucketName"]
+                    BucketName = _config["AWSS3:StorageBucketName"]
                 };
 
                 return await _s3Client.DeleteBucketAsync(deleteThisBucket);
@@ -199,7 +239,7 @@ namespace SocialMediaForModelers.Model.Managers
             {
                 GetObjectRequest itemRequest = new GetObjectRequest()
                 {
-                    BucketName = _config["AWSS3:BucketName"],
+                    BucketName = _config["AWSS3:StorageBucketName"],
                     Key = imageId
                 };
 

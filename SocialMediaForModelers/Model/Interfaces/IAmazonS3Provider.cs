@@ -2,12 +2,22 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace SocialMediaForModelers.Model.Interfaces
 {
     public interface IAmazonS3Provider
     {
+        // TransferImage
+        /// <summary>
+        /// Moves an image from the transfer bucket to the storage bucket with the appropriate key.
+        /// </summary>
+        /// <param name="tempTransferKey">The S3 object key of the image in the transfer bucket (provided by the client).</param>
+        /// <param name="cloudStorageKey">The permanent object key</param>
+        /// <returns>HttpStatusCode</returns>
+        Task<HttpStatusCode> MoveImageFromTransferBucketToStorageBucket(string tempTransferKey, string cloudStorageKey);
+
         /// <summary>
         /// Creates a new S3 Bucket.
         /// Bucket names must be unique across all existing bucket names.

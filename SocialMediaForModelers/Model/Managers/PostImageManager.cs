@@ -15,25 +15,27 @@ namespace SocialMediaForModelers.Model.Managers
     {
         private SMModelersContext _context;
         private ICloudImage _cloudImage;
+        private IAmazonS3Provider _s3Provider;
 
-        public PostImageManager(SMModelersContext context, ICloudImage cloudImage)
+        public PostImageManager(SMModelersContext context, ICloudImage cloudImage, IAmazonS3Provider amazonS3Provider)
         {
             _context = context;
             _cloudImage = cloudImage;
+            _s3Provider = amazonS3Provider;
         }
 
         /// <summary>
-        /// Creates a new Image and puts it in the database
+        /// Creates a new PostImage and puts it in the database. If it's successfuly added then it transfers the image from the transfer bucket to the storage bucket.
         /// </summary>
-        /// <param name="postImage">The PostImageDTO to create the new entity</param>
+        /// <param name="postImage">The CreatePostImageDTO to create the new entity</param>
         /// <param name="userId">The user's id</param>
         /// <returns>If successful: the new ImageDTO</returns>
-        public async Task<PostImageDTO> Create(PostImageDTO postImage, string userId, IFormFile imageFile)
+        public async Task<PostImageDTO> Create(CreatePostImageDTO postImage, string userId)
         {
             PostImage newImage = new PostImage()
             {
-                UserId = postImage.UserId,
-                CloudStorageKey = Guid.NewGuid().ToString()
+                UserId = userId,
+                CloudStorageKey = $"{Guid.NewGuid()}{postImage.ImageExtention}"
             };
 
             _context.Entry(newImage).State = EntityState.Added;
@@ -41,7 +43,7 @@ namespace SocialMediaForModelers.Model.Managers
 
             if(success > 0)
             {
-                await _cloudImage.AddAnImageToCloudStorage(newImage.CloudStorageKey, imageFile);
+                await _s3Provider.MoveImageFromTransferBucketToStorageBucket(postImage.TransferKey, newImage.CloudStorageKey);
             }
 
             return postImage;
@@ -94,23 +96,23 @@ namespace SocialMediaForModelers.Model.Managers
         }
 
         // ============= TODO: This may need to be moved to the Post Manager ===================
-        public async Task<List<PostImageDTO>> GetAllImagesForAPost(int postId)
-        {
-            var images = await _context.PostImages.Where(x => x.ID == postId).ToListAsync();
+        //public async Task<List<PostImageDTO>> GetAllImagesForAPost(int postId)
+        //{
+        //    var images = await _context.PostImages.Where(x => x.ID == postId).ToListAsync();
 
-            var imageList = new List<PostImageDTO>();
-            foreach (var item in images)
-            {
-                imageList.Add(new PostImageDTO()
-                {
-                    Id = item.ID,
-                    UserId = item.UserId,
-                    ImageURI = _cloudImage.GetImageUrl(item.CloudStorageKey)
-                });
-            }
+        //    var imageList = new List<PostImageDTO>();
+        //    foreach (var item in images)
+        //    {
+        //        imageList.Add(new PostImageDTO()
+        //        {
+        //            Id = item.ID,
+        //            UserId = item.UserId,
+        //            ImageURI = _cloudImage.GetImageUrl(item.CloudStorageKey)
+        //        });
+        //    }
 
-            return imageList;
-        }
+        //    return imageList;
+        //}
         // ===================================================================================
 
         /// <summary>
@@ -145,10 +147,11 @@ namespace SocialMediaForModelers.Model.Managers
             };
 
             var image = await _context.PostImages.Where(x => x.ID == postImage.Id).FirstOrDefaultAsync();
-
+                        
             updateImage.CloudStorageKey = image.CloudStorageKey;
+            image.UserId = postImage.UserId;
 
-            _context.Entry(updateImage).State = EntityState.Modified;
+            _context.Entry(image).State = EntityState.Modified;
             await _context.SaveChangesAsync();
             return postImage;
         }
