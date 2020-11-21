@@ -30,11 +30,15 @@ namespace SocialMediaForModelers.Model.Managers
         /// <returns>The provided UserPageDTO</returns>
         public async Task<UserPageDTO> Create(UserPageDTO page)
         {
+            var timeNow = DateTime.UtcNow;
+
             UserPage newPage = new UserPage()
             {
                 UserId = page.UserId,
                 PageName = page.PageName,
-                PageContent = page.PageContent
+                PageContent = page.PageContent,
+                Created = timeNow,
+                Modified = timeNow
             };
 
             _context.Entry(newPage).State = EntityState.Added;
@@ -60,7 +64,9 @@ namespace SocialMediaForModelers.Model.Managers
                     Id = page.ID,
                     UserId = page.UserId,
                     PageName = page.PageName,
-                    PageContent = page.PageContent
+                    PageContent = page.PageContent,
+                    Created = page.Created,
+                    Modified = page.Modified
                 });
             }
 
@@ -87,7 +93,9 @@ namespace SocialMediaForModelers.Model.Managers
                         Id = page.ID,
                         UserId = page.UserId,
                         PageName = page.PageName,
-                        PageContent = page.PageContent
+                        PageContent = page.PageContent,
+                        Created = page.Created,
+                        Modified = page.Modified
                     });
                 }
 
@@ -110,7 +118,9 @@ namespace SocialMediaForModelers.Model.Managers
                 Id = page.ID,
                 UserId = page.UserId,
                 PageName = page.PageName,
-                PageContent = page.PageContent
+                PageContent = page.PageContent,
+                Created = page.Created,
+                Modified = page.Modified
             };
 
             return pageDTO;
@@ -130,8 +140,11 @@ namespace SocialMediaForModelers.Model.Managers
                 ID = page.Id,
                 UserId = page.UserId,
                 PageName = page.PageName,
-                PageContent = page.PageContent
+                PageContent = page.PageContent,
+                Created = page.Created
             };
+
+            updatePage.Modified = DateTime.UtcNow;
 
             _context.Entry(updatePage).State = EntityState.Modified;
             await _context.SaveChangesAsync();

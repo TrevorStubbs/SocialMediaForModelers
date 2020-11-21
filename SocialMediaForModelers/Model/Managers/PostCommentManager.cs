@@ -27,11 +27,15 @@ namespace SocialMediaForModelers.Model.Managers
         /// <returns>If successful returns the DTO to the caller</returns>
         public async Task<PostCommentDTO> Create(PostCommentDTO postComment, string userId)
         {
+            DateTime timeNow = DateTime.UtcNow;
+
             PostComment newComment = new PostComment()
             {
                 ID = postComment.Id,
                 UserId = postComment.UserId,
-                Body = postComment.Body
+                Body = postComment.Body,
+                Created = timeNow,
+                Modified = timeNow
             };
 
             _context.Entry(newComment).State = EntityState.Added;
@@ -56,7 +60,9 @@ namespace SocialMediaForModelers.Model.Managers
                 {
                     Id = comment.ID,
                     UserId = comment.UserId,
-                    Body = comment.Body
+                    Body = comment.Body,
+                    Created = comment.Created,
+                    Modified = comment.Modified
                 });
             }
 
@@ -79,7 +85,9 @@ namespace SocialMediaForModelers.Model.Managers
                 {
                     Id = item.ID,
                     UserId = item.UserId,
-                    Body = item.Body
+                    Body = item.Body,
+                    Created = item.Created,
+                    Modified = item.Modified
                 });
             }
 
@@ -119,7 +127,9 @@ namespace SocialMediaForModelers.Model.Managers
             {
                 Id = comment.ID, 
                 UserId = comment.UserId,
-                Body = comment.Body
+                Body = comment.Body,
+                Created = comment.Created,
+                Modified = comment.Modified
             };
 
             return commentDTO;
@@ -136,8 +146,11 @@ namespace SocialMediaForModelers.Model.Managers
             {
                 ID = postComment.Id,
                 UserId = postComment.UserId,
-                Body = postComment.Body
+                Body = postComment.Body,
+                Created = postComment.Created
             };
+
+            updateComment.Modified = DateTime.UtcNow;
 
             _context.Entry(updateComment).State = EntityState.Modified;
             await _context.SaveChangesAsync();

@@ -32,10 +32,14 @@ namespace SocialMediaForModelers.Model.Managers
         /// <returns>If successful: the new ImageDTO</returns>
         public async Task<PostImageDTO> Create(CreatePostImageDTO postImage, string userId)
         {
+            var timeNow = DateTime.UtcNow;
+
             PostImage newImage = new PostImage()
             {
                 UserId = userId,
-                CloudStorageKey = $"{Guid.NewGuid()}{postImage.ImageExtention}"
+                CloudStorageKey = $"{Guid.NewGuid()}{postImage.ImageExtention}",
+                Created = timeNow,
+                Modified = timeNow
             };
 
             _context.Entry(newImage).State = EntityState.Added;
@@ -65,7 +69,9 @@ namespace SocialMediaForModelers.Model.Managers
                 {
                     Id = item.ID,
                     UserId = item.UserId,
-                    ImageURI = _cloudImage.GetImageUrl(item.CloudStorageKey)
+                    ImageURI = _cloudImage.GetImageUrl(item.CloudStorageKey),
+                    Created = item.Created,
+                    Modified = item.Modified
                 });
             }
 
@@ -88,7 +94,9 @@ namespace SocialMediaForModelers.Model.Managers
                 {
                     Id = item.ID,
                     UserId = item.UserId,
-                    ImageURI = _cloudImage.GetImageUrl(item.CloudStorageKey)
+                    ImageURI = _cloudImage.GetImageUrl(item.CloudStorageKey),
+                    Created = item.Created,
+                    Modified = item.Modified
                 });
             }
 
@@ -127,7 +135,9 @@ namespace SocialMediaForModelers.Model.Managers
             {
                 Id = image.ID,
                 UserId = image.UserId,
-                ImageURI = _cloudImage.GetImageUrl(image.CloudStorageKey)
+                ImageURI = _cloudImage.GetImageUrl(image.CloudStorageKey),
+                Created = image.Created,
+                Modified = image.Modified
             };
 
             return imageDTO;
@@ -143,8 +153,11 @@ namespace SocialMediaForModelers.Model.Managers
             PostImage updateImage = new PostImage()
             {
                 ID = postImage.Id,
-                UserId = postImage.UserId
+                UserId = postImage.UserId,
+                Created = postImage.Created
             };
+
+            updateImage.Modified = DateTime.UtcNow;
 
             var image = await _context.PostImages.Where(x => x.ID == postImage.Id).FirstOrDefaultAsync();
                         

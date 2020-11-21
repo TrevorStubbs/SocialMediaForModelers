@@ -21,6 +21,8 @@ namespace SocialMediaForModelers.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            var timeNow = DateTime.UtcNow;
+
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<AppUserFriend>().HasKey(x => new { x.UserId, x.FriendId });
@@ -47,7 +49,9 @@ namespace SocialMediaForModelers.Data
                 {
                     ID = 1,
                     UserId = "1234",
-                    Body = "I am a comment"
+                    Body = "I am a comment",
+                    Created = timeNow,
+                    Modified = timeNow
                 });
 
             modelBuilder.Entity<PostImage>().HasData(
@@ -55,7 +59,9 @@ namespace SocialMediaForModelers.Data
                 {
                     ID = 1,
                     UserId = "1234",
-                    CloudStorageKey = "/Dog.png"
+                    CloudStorageKey = "/Dog.png",
+                    Created = timeNow,
+                    Modified = timeNow
                 });
 
             modelBuilder.Entity<UserPost>().HasData(
@@ -63,7 +69,9 @@ namespace SocialMediaForModelers.Data
                 {
                     ID = 1,
                     UserId = "1234",
-                    Caption = "This is my post"
+                    Caption = "This is my post",
+                    Created = timeNow,
+                    Modified = timeNow
                 });
 
             modelBuilder.Entity<UserPage>().HasData(
@@ -72,7 +80,9 @@ namespace SocialMediaForModelers.Data
                     ID = 1,
                     UserId = "1234",
                     PageName = "Seed Page",
-                    PageContent = "I am I here"
+                    PageContent = "I am I here",
+                    Created = timeNow,
+                    Modified = timeNow
                 });
 
             // Join Table Seeds

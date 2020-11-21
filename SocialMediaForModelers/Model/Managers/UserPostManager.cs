@@ -33,10 +33,14 @@ namespace SocialMediaForModelers.Model.Managers
         /// <returns>Returns the DTO if successful</returns>
         public async Task<UserPostDTO> Create(UserPostDTO post)
         {
+            var timeNow = DateTime.UtcNow;
+
             var newPost = new UserPost()
             {
                 UserId = post.UserId,
-                Caption = post.Caption
+                Caption = post.Caption,
+                Created = timeNow,
+                Modified = timeNow
             };
 
             _context.Entry(newPost).State = EntityState.Added;
@@ -105,6 +109,8 @@ namespace SocialMediaForModelers.Model.Managers
                 Id = post.ID,
                 UserId = post.UserId,
                 Caption = post.Caption,
+                Created = post.Created,
+                Modified = post.Modified,
                 PostComments = comments,
                 PostImages = images
                 // TODO: Add Likes
@@ -124,8 +130,11 @@ namespace SocialMediaForModelers.Model.Managers
             {
                 ID = post.Id,
                 UserId = post.UserId,
-                Caption = post.Caption
+                Caption = post.Caption,
+                Created = post.Created
             };
+
+            updatedPost.Modified = DateTime.UtcNow;
 
             // ============ TODO: Will not test till this is done! ====================
             // Update the Comment list
@@ -303,6 +312,8 @@ namespace SocialMediaForModelers.Model.Managers
                     Id = post.ID,
                     UserId = post.UserId,
                     Caption = post.Caption,
+                    Created = post.Created,
+                    Modified = post.Modified,
                     PostComments = comments,
                     PostImages = images
                     // TODO : PostLikes = getlikes                    
