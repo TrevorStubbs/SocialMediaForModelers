@@ -12,6 +12,8 @@ namespace SocialMediaForModelers.Model
         public string UserId { get; set; }
         public string PageName { get; set; }
         public string PageContent { get; set; } // may need to be turned into a class
+        // TODO: Date Created
+        // TODO: Date Modified
 
         // Navigation properties
         public List<PageLike> PageLikes { get; set; }

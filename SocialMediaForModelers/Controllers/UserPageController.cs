@@ -206,9 +206,10 @@ namespace SocialMediaForModelers.Controllers
         [HttpDelete("{pageId}/Like")]
         public async Task<IActionResult> DeletePageLike(int pageId)
         {
-            // ====================== TODO: =================================
-            // Check to see if claims == user.id or policy == admin.
-            // ========================================================
+            // Test to see if claim == post.UserId or policy is admin
+            // if so allow the delete
+            // if not don't allow it
+
             try
             {
                 await _userPage.DeleteALike(pageId, UserClaimsGetters.GetUserId(User));

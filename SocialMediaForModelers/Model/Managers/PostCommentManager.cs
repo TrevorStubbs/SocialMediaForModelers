@@ -182,7 +182,7 @@ namespace SocialMediaForModelers.Model.Managers
         /// <returns>A LikeDTO which has the total number of likes and the a boolean</returns>
         public async Task<LikeDTO> GetCommentsLikes(int commentId, string userId)
         {            
-            var likes = await _context.CommentLikes.Where(x => x.CommentId == commentId)                                                    
+            var likes = await _context.CommentLikes.Where(x => x.CommentId == commentId)          
                                                    .ToListAsync();
 
             LikeDTO likeDTO = new LikeDTO() 

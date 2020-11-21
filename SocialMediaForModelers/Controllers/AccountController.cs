@@ -34,12 +34,12 @@ namespace SocialMediaForModelers.Controllers
             _config = config;
         }
 
+        // POST: api/Account/register
         /// <summary>
         /// Route to Register a new user to the application
         /// </summary>
         /// <param name="newUser">A registerDTO provided by the client</param>
         /// <returns>IActionResult status</returns>
-        // POST: api/Account/register
         [HttpPost("Register")]
         [AllowAnonymous]
         public async Task<IActionResult> Register(RegisterDTO newUser)
@@ -67,12 +67,12 @@ namespace SocialMediaForModelers.Controllers
             return BadRequest("Registration Unsuccessful");
         }
 
+        // POST: api/Account/Login
         /// <summary>
         /// Route to let a client login a user
         /// </summary>
         /// <param name="userLogin">A login DTO</param>
         /// <returns>IActionResult status</returns>
-        // POST: api/Account/Login
         [HttpPost("Login")]
         [AllowAnonymous]
         public async Task<IActionResult> Login(LoginDTO userLogin)
@@ -97,12 +97,12 @@ namespace SocialMediaForModelers.Controllers
             return BadRequest("Invalid Attempt");
         }
 
+        // POST: api/Assign/Role
         /// <summary>
         /// Route to change the role of a user. (Admins only)
         /// </summary>
         /// <param name="roleAssignment">AssingRole DTO</param>
         /// <returns>IActionResult status</returns>
-        // POST: api/Assign/Role
         [HttpPost("Assign/Role")]
         [Authorize(Policy = "AdminPriv")]
         public async Task<IActionResult> AssingRoleToUser(AssignRoleDTO roleAssignment)

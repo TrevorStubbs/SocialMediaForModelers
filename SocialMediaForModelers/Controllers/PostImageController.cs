@@ -49,7 +49,7 @@ namespace SocialMediaForModelers.Controllers
         /// </summary>
         /// <returns>A list of PostImageDTOs</returns>
         [HttpGet]
-        public async Task<ActionResult<List<PostImageDTO>>> GetAllImages()
+        public async Task<ActionResult<IEnumerable<PostImageDTO>>> GetAllImages()
         {
             var images = await _postImage.GetAllImages();
 
@@ -68,7 +68,7 @@ namespace SocialMediaForModelers.Controllers
         /// <param name="user">UserRequestDTO</param>
         /// <returns>List of PostImageDTO</returns>
         [HttpPost("UserId")]
-        public async Task<ActionResult<List<PostImageDTO>>> GetUsersPostImages(UserRequestDTO user)
+        public async Task<ActionResult<IEnumerable<PostImageDTO>>> GetUsersPostImages(UserRequestDTO user)
         {
             var images = await _postImage.GetAllUsersImages(user.UserId);
 
@@ -100,6 +100,7 @@ namespace SocialMediaForModelers.Controllers
         }
 
         // PUT: /PostImage/{imageId}
+        // ============ TODO: Re-evaluate the need for this route =============
         //[HttpPut("{imageId}")]
         //public async Task<ActionResult<PostImageDTO>> PutPostImage(PostImageDTO updateImage, int imageId)
         //{
@@ -117,6 +118,7 @@ namespace SocialMediaForModelers.Controllers
 
         //    return BadRequest();
         //}
+        // ===========================================================================
 
         // DELETE: /PostImage/{imageId}
         /// <summary>
@@ -127,6 +129,10 @@ namespace SocialMediaForModelers.Controllers
         [HttpDelete("{imageId}")]
         public async Task<IActionResult> DeletePostImage(int imageId)
         {
+            // Test to see if claim == post.UserId or policy is admin
+            // if so allow the delete
+            // if not don't allow it
+
             try
             {
                 await _postImage.Delete(imageId);

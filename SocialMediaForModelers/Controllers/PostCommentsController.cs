@@ -49,7 +49,7 @@ namespace SocialMediaForModelers.Controllers
         /// </summary>
         /// <returns>A list of PostCommentDTOs</returns>
         [HttpGet]
-        public async Task<ActionResult<List<PostCommentDTO>>> GetAllComments()
+        public async Task<ActionResult<IEnumerable<PostCommentDTO>>> GetAllComments()
         {
             var comments = await _postComment.GetAllComments();
 
@@ -68,7 +68,7 @@ namespace SocialMediaForModelers.Controllers
         /// <param name="user">UserRequestDTO</param>
         /// <returns>List of PostCommentDTOs</returns>
         [HttpPost("UserId")]
-        public async Task<ActionResult<List<PostCommentDTO>>> GetUsersPostComments(UserRequestDTO user)
+        public async Task<ActionResult<IEnumerable<PostCommentDTO>>> GetUsersPostComments(UserRequestDTO user)
         {
             var comments = await _postComment.GetAllUsersComments(user.UserId);
 
