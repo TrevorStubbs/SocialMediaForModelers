@@ -1,9 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -16,11 +19,13 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using SocialMediaForModelers.Data;
 using SocialMediaForModelers.Model;
 using SocialMediaForModelers.Model.AppRoles;
 using SocialMediaForModelers.Model.Interfaces;
 using SocialMediaForModelers.Model.Managers;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace SocialMediaForModelers
 {
@@ -54,6 +59,21 @@ namespace SocialMediaForModelers
                     .AddEntityFrameworkStores<SMModelersContext>()
                     .AddDefaultTokenProviders();
 
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "SMModelers", Version = "v1" });
+
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer"
+                });
+
+                c.OperationFilter<AuthenticationRequirementOperationFilter>();
+            });
+
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -68,8 +88,8 @@ namespace SocialMediaForModelers
                         ValidateAudience = false,
                         ValidateLifetime = true,
                         ValidateIssuerSigningKey = true,
-                        ValidIssuer = Configuration["JWTIssuer"],
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JWTKey"]))
+                        ValidIssuer = Configuration["JWT:Issuer"],
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JWT:Key"]))
                     };
                 });
 
@@ -84,6 +104,7 @@ namespace SocialMediaForModelers
             services.AddTransient<IUserPost, UserPostManager>();
             services.AddTransient<IUserPage, UserPageManager>();
             services.AddTransient<ICloudImage, S3ImageManager>();
+            services.AddTransient<IAmazonS3Provider, S3ImageManager>(); // Does this work?
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -92,11 +113,29 @@ namespace SocialMediaForModelers
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+
+                app.UseSwagger(c =>
+                {
+                    c.RouteTemplate = "swagger/{documentName}/swagger.json";
+                    c.SerializeAsV2 = true;
+                });
+
+                app.UseSwaggerUI(c =>
+                {
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "SMModelers V1");
+                });
             }
 
             app.UseHttpsRedirection();
 
             app.UseStaticFiles();
+
+            //app.UseSwagger();
+
+            //app.UseSwaggerUI(c =>
+            //{
+            //    c.SwaggerEndpoint("/Swagger/v1/swagger.json", "SMModelers V1");
+            //});
 
             app.UseRouting();
 
@@ -107,9 +146,34 @@ namespace SocialMediaForModelers
             RoleInitializer.SeedData(serviceProvider, userManager, Configuration);
 
             app.UseEndpoints(endpoints =>
-            {
+            {                
                 endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
             });
+        }
+
+        private class AuthenticationRequirementOperationFilter : IOperationFilter
+        {
+            public void Apply(OpenApiOperation operation, OperationFilterContext context)
+            {
+                var hasAnonymous = context.ApiDescription.CustomAttributes().OfType<AllowAnonymousAttribute>().Any();
+                if (hasAnonymous)
+                    return;
+
+                operation.Security ??= new List<OpenApiSecurityRequirement>();
+
+                var scheme = new OpenApiSecurityScheme
+                {
+                    Reference = new OpenApiReference
+                    {
+                        Id = "Bearer",
+                        Type = ReferenceType.SecurityScheme,
+                    },
+                };
+                operation.Security.Add(new OpenApiSecurityRequirement
+                {
+                    [scheme] = new List<string>()
+                });
+            }
         }
     }
 }

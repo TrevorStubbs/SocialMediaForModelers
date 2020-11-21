@@ -14,38 +14,64 @@ Microsoft Visual Studio Community 2019
 - Entity Framework
 - MVC
 
-## Data Model TODO
-### Overall Project Schema TODO
+## Data Model 
+### Overall Project Schema 
 ![ERD V2](assets/SMModelV2.png)
 
+### Routes
+[API Routes](Routes.md)
+  
 ### Model Properties and Requirements TODO
 ---
 ## Project Organization
 - [GitHub Projects](https://github.com/TrevorStubbs/SocialMediaForModelers/projects)
 
 ### Scrum Log
-- Sprint 2
-  - Milestone 6
-    - US 3 AWS S3 Integration
-    - US 2 AWS S3 Manager
-    - US 1 AWS Setup
-  - Milestone 3
-    - US 2 RoleInitializer
-    - US 1 ApplicationUser
-  - Milestone 4
-    - US 2 UserPageManager Tests
-    - US 1 UserPageManager
-  - Milestone 5
-    - US 2 UserPostManager Tests
-    - US 1 UserPostManager
-  - Milestone 2
-    - US2 PostImageManager Tests
-    - US1 PostImageManager
-  - Milestone 1
-    - US2 PostCommentManager Tests
-    - US1 PostCommentManager
 - Sprint 1
   - Milestone 1
-    - EF Core setup
-    - ERD Scaffold
     - Initial Repo Build
+    - ERD Scaffold
+    - EF Core setup
+- Sprint 2
+  - Milestone 1
+    - US1 PostCommentManager
+    - US2 PostCommentManager Tests
+  - Milestone 2
+    - US1 PostImageManager
+    - US2 PostImageManager Tests
+  - Milestone 3
+    - US 1 ApplicationUser
+    - US 2 RoleInitializer
+  - Milestone 4
+    - US 1 UserPageManager
+    - US 2 UserPageManager Tests
+  - Milestone 5
+    - US 1 UserPostManager
+    - US 2 UserPostManager Tests
+  - Milestone 6
+    - US 1 AWS Setup
+    - US 2 AWS S3 Manager
+    - US 3 AWS S3 Integration
+- Sprint 3
+  - Milestone 1
+    - US1 Route Plan
+    - US2 Swagger Install
+    - US3 JWT Token initialization
+    - US4 Account Controller Built
+  - Milestone 2
+    - US 1 UserPageController Scaffold
+    - US 2 UserPageController Methods
+    - US 3 UserPageController Swagger Testing
+  - Milestone 3
+    - US 1 UserPostController Scaffold
+    - US 2 UserPostController Methods
+    - US 3 UserPostController Swagger Testing
+  - Milestone 4
+    - US 1 PostCommentController Scaffold
+    - US 2 PostCommentController Methods
+    - US 3 PostCommentController Swagger Testing
+  - Milestone 5
+    - US 1 PostImageController Scaffold
+    - US 2 PostImageController Methods
+    - US 3 PostImageController Swagger Testing
+  

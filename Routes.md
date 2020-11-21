@@ -1,0 +1,96 @@
+# Routes
+> Key: `api/{controller}/{action}/{id?}`
+- Account Routes - `/Account`
+  - POST: `/Register`
+    - Register a new user
+  - POST: `/Login`
+    - Login a user
+  - POST: `/assign/role`
+    - Allow a user with a higher role to change the role of a "lower" user.
+- UserPage Routes - `/UserPage`
+  - POST: `/`
+    - Create a new page for the user
+  - GET: `/`
+    - Gets all the pages of the site
+  - GET: `/userId`
+    - Gets the pages for that user
+  - GET: `/{pageId}`
+    - Gets a specific page
+  - PUT: `/{pageId}`
+    - Updates a user's page
+  - DELETE: `/{pageId}`
+    - Delete's a page 
+      - TODO: Delete all the element from all the associated tables.
+      - TODO: Front end needs to make doubly sure a user wants to do this.
+  - POST: `/{pageId}/like`
+    - Add a like to a page
+  - GET: `/{pageId}/like`
+    - Gets the total number of like for the page
+  - DELETE: `/{PageId}/like`
+    - Delete a like from a page
+- UserPost Routes - "/UserPost"
+  - POST: `/`
+    - Create a new post for the user
+  - GET: `/`
+    - Gets all of posts from the site (should be restricted to admins only)
+  - GET: `/UserId`
+    - Gets all of the posts from a specific user
+  - GET: `/{PostId}`
+    - Gets a specific post
+  - PUT: `/{PostId}`
+    - Updates a specific post
+  - DELETE: `/{PostId}`
+    - Deletes a post from the database
+      - TODO: deletes comments, images, and likes.
+  - POST: `/{postId}/Like`
+    - Add a like to a post
+  - GET: `/{postId}/Like`
+    - Gets the total number of like for the post
+  - DELETE: `/{postId}/Like`
+    - Delete a like from a post
+  - POST: `/{postId}/Image/{imageId}`
+    - Adds an image to the post
+  - DELETE: `/{postId}/Image/{imageId}`
+    - Deletes an image from the post
+  - POST: `/{postId}/Comment/{commentId}`
+    - Adds a comment to the post
+  - DELETE: `/{postId}/Comment/{commentId}`
+    - Deletes a comment from the post
+- PostImage Routes - "/PostImage"
+  - POST: `/`
+    - Create a new image entry for the user
+    - Adds the image to S3
+  - GET: `/`
+    - Gets all of images from the site (should be restricted to admins only)
+  - GET: `/UserId`
+    - Gets all of the images from a specific user
+  - GET: `/{postId}`
+    - Gets the images associated with a specific post
+  - GET: `/{imageId}`
+    - Gets a specific image
+  - PUT: `/{imageId}`
+    - Updates a specific image
+  - DELETE: `/{imageId}`
+    - Deletes a image from the database
+    - And deletes the image from S3
+- PostComment Routes - "/PostComments"
+  - POST: `/`
+    - Create a new comment for the user
+  - GET: `/`
+    - Gets all of comments from the site (should be restricted to admins only)
+  - GET: `/UserId`
+    - Gets all of the comments from a specific user
+  - GET: `/{postId}/post`
+    - Gets all of the comments associated with a specific post
+  - GET: `/{commentId}`
+    - Gets a specific comment
+  - PUT: `/{commentId}`
+    - Updates a specific comment
+  - DELETE: `/{commentId}`
+    - Deletes a comment from the database
+  - POST: `/{commentId}/Like`
+    - Add a like to a comment
+  - GET: `/{commentId}/Like`
+    - Gets the total number of like for the comment
+  - DELETE: `/{commentId}/Like`
+    - Delete a like from a comment

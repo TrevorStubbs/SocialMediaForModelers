@@ -10,11 +10,27 @@ namespace SocialMediaForModelers.Model.Interfaces
 {
     public interface ICloudImage
     {
-        // Add an image
+        /// <summary>
+        /// Takes an image object and places it into the assigned cloud storage.
+        /// </summary>
+        /// <param name="imageId">The imageId from the app database</param>
+        /// <param name="imageFile">The imageFile provided by the client</param>
+        /// <returns>The HttpStatusCode</returns>
         Task<HttpStatusCode> AddAnImageToCloudStorage(string imageId, IFormFile imageFile);
-        // Get image url
+
+        /// <summary>
+        /// Generates a temporary image URL for the client to use.
+        /// </summary>
+        /// <param name="imageId">The imageId from the app database</param>
+        /// <returns>The URL as a string</returns>
         string GetImageUrl(string imageId);
-        // Delete an image
+
+        /// <summary>
+        /// Deletes an image object from the assigned cloud storage.
+        /// </summary>
+        /// <param name="imageId">The imageId from the app database</param>
+        /// <returns>An HTTP Response Code</returns>
         Task<HttpStatusCode> DeleteAnImageFromCloudStorage(string imageId);
+
     }
 }

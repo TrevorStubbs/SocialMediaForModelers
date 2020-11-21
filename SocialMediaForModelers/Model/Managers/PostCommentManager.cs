@@ -39,10 +39,11 @@ namespace SocialMediaForModelers.Model.Managers
             return postComment;
         }
 
-        // =============== TODO =========================
-        // 1. Add this to the interface
-        // 2. Build unit tests for this method
-        // 3. Summary comments on the Method and interface
+
+        /// <summary>
+        /// Gets all comments from the database.
+        /// </summary>
+        /// <returns>A list of PostCommentDTOs</returns>
         public async Task<List<PostCommentDTO>> GetAllComments()
         {
             var comments = await _context.PostComments.ToListAsync();
@@ -85,25 +86,24 @@ namespace SocialMediaForModelers.Model.Managers
             return commentDTOs;
         }
 
-        // ============ TODO: This may need to move to the Post Manager =============
-        public async Task<List<PostCommentDTO>> GetCommentsForAPost(int postId)
-        {
-            var comments = await _context.PostComments.Where(x => x.ID == postId) // This is not correct.
-                                                      .ToListAsync();
-            var commentDTOs = new List<PostCommentDTO>();
-            foreach (var item in commentDTOs)
-            {
-                commentDTOs.Add(new PostCommentDTO()
-                {
-                    Id = item.Id,
-                    UserId = item.UserId,
-                    Body = item.Body
-                });
-            }
+        // ============ TODO: Re-evaluate the need for this method =============
+        //public async Task<List<PostCommentDTO>> GetCommentsForAPost(int postId)
+        //{
+        //    var comments = await _context.PostComments.Where(x => x.ID == postId) // This is not correct.
+        //                                              .ToListAsync();
+        //    var commentDTOs = new List<PostCommentDTO>();
+        //    foreach (var item in commentDTOs)
+        //    {
+        //        commentDTOs.Add(new PostCommentDTO()
+        //        {
+        //            Id = item.Id,
+        //            UserId = item.UserId,
+        //            Body = item.Body
+        //        });
+        //    }
 
-            return commentDTOs;
-        }
-
+        //    return commentDTOs;
+        //}
         // =============================================================================
 
         /// <summary>
@@ -130,7 +130,7 @@ namespace SocialMediaForModelers.Model.Managers
         /// </summary>
         /// <param name="postComment">The PostCommentDTO to be used to update the comment</param>
         /// <returns>If successful returns the updated PostCommentDTO</returns>
-        public async Task<PostCommentDTO> Update(PostCommentDTO postComment)
+        public async Task<PostCommentDTO> Update(PostCommentDTO postComment, int commentId)
         {
             PostComment updateComment = new PostComment()
             {
@@ -182,7 +182,7 @@ namespace SocialMediaForModelers.Model.Managers
         /// <returns>A LikeDTO which has the total number of likes and the a boolean</returns>
         public async Task<LikeDTO> GetCommentsLikes(int commentId, string userId)
         {            
-            var likes = await _context.CommentLikes.Where(x => x.CommentId == commentId)                                                    
+            var likes = await _context.CommentLikes.Where(x => x.CommentId == commentId)          
                                                    .ToListAsync();
 
             LikeDTO likeDTO = new LikeDTO() 

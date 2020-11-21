@@ -3,6 +3,7 @@ using SocialMediaForModelers.Model.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace SocialMediaForModelers.Model.Interfaces
@@ -16,7 +17,7 @@ namespace SocialMediaForModelers.Model.Interfaces
         /// <param name="postImage">The PostImageDTO to create the new entity</param>
         /// <param name="userId">The user's id</param>
         /// <returns>If successful: the new ImageDTO</returns>
-        Task<PostImageDTO> Create(PostImageDTO postImage, string userId, IFormFile imageFile);
+        Task<PostImageDTO> Create(CreatePostImageDTO postImage, string userId);
 
         // Read
         // GetAllImages - Will be Admin Only
@@ -36,7 +37,7 @@ namespace SocialMediaForModelers.Model.Interfaces
 
         // GetAllImagesForAPost
         // TODO: Move this to PostManager
-        Task<List<PostImageDTO>> GetAllImagesForAPost(int postId);
+        //Task<List<PostImageDTO>> GetAllImagesForAPost(int postId);
 
         // GetAllASpecificImage
         /// <summary>
@@ -52,7 +53,7 @@ namespace SocialMediaForModelers.Model.Interfaces
         /// </summary>
         /// <param name="postImage">A PostImageDTO to be use to update the DB</param>
         /// <returns>If successful the DTO gets sent back to the caller</returns>
-        Task<PostImageDTO> Update(PostImageDTO postImage);
+        Task<PostImageDTO> Update(PostImageDTO postImage, int imageId);
 
         // Delete
         /// <summary>
