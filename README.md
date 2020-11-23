@@ -74,4 +74,11 @@ Microsoft Visual Studio Community 2019
     - US 1 PostImageController Scaffold
     - US 2 PostImageController Methods
     - US 3 PostImageController Swagger Testing
+- Sprint 4
+  - Milestone 1
+    - US 1 Updated each entity with DateTime
+    - US 2 Added DateTime when entity is created/modified
+    - US 3 DateTime Tests
+    - Us 4 Update methods are fixed.
+  - Milestone 2
   
