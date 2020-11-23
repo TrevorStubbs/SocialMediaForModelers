@@ -135,6 +135,7 @@ namespace SocialMediaForModelers.Model.Managers
             };
 
             updatedPost.Modified = DateTime.UtcNow;
+            post.Modified = DateTime.UtcNow;
 
             // ============ TODO: Will not test till this is done! ====================
             // Update the Comment list

@@ -145,6 +145,7 @@ namespace SocialMediaForModelers.Model.Managers
             };
 
             updatePage.Modified = DateTime.UtcNow;
+            page.Modified = DateTime.UtcNow;
 
             _context.Entry(updatePage).State = EntityState.Modified;
             await _context.SaveChangesAsync();

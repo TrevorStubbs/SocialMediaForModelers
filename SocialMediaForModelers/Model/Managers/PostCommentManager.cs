@@ -151,6 +151,7 @@ namespace SocialMediaForModelers.Model.Managers
             };
 
             updateComment.Modified = DateTime.UtcNow;
+            postComment.Modified = DateTime.UtcNow;
 
             _context.Entry(updateComment).State = EntityState.Modified;
             await _context.SaveChangesAsync();
