@@ -30,11 +30,15 @@ namespace SocialMediaForModelers.Model.Managers
         /// <returns>The provided UserPageDTO</returns>
         public async Task<UserPageDTO> Create(UserPageDTO page)
         {
+            var timeNow = DateTime.UtcNow;
+
             UserPage newPage = new UserPage()
             {
                 UserId = page.UserId,
                 PageName = page.PageName,
-                PageContent = page.PageContent
+                PageContent = page.PageContent,
+                Created = timeNow,
+                Modified = timeNow
             };
 
             _context.Entry(newPage).State = EntityState.Added;
@@ -60,7 +64,9 @@ namespace SocialMediaForModelers.Model.Managers
                     Id = page.ID,
                     UserId = page.UserId,
                     PageName = page.PageName,
-                    PageContent = page.PageContent
+                    PageContent = page.PageContent,
+                    Created = page.Created,
+                    Modified = page.Modified
                 });
             }
 
@@ -87,7 +93,9 @@ namespace SocialMediaForModelers.Model.Managers
                         Id = page.ID,
                         UserId = page.UserId,
                         PageName = page.PageName,
-                        PageContent = page.PageContent
+                        PageContent = page.PageContent,
+                        Created = page.Created,
+                        Modified = page.Modified
                     });
                 }
 
@@ -110,7 +118,9 @@ namespace SocialMediaForModelers.Model.Managers
                 Id = page.ID,
                 UserId = page.UserId,
                 PageName = page.PageName,
-                PageContent = page.PageContent
+                PageContent = page.PageContent,
+                Created = page.Created,
+                Modified = page.Modified
             };
 
             return pageDTO;
@@ -123,19 +133,23 @@ namespace SocialMediaForModelers.Model.Managers
         /// <param name="page">The UserPageDTO to make the update</param>
         /// <param name="pageId">The Page's database Id</param>
         /// <returns>The UserPageDTO that was provided</returns>
-        public async Task<UserPageDTO> Update(UserPageDTO page, int pageId)
+        public async Task<UserPageDTO> Update(UserPageDTO userPage, int pageId)
         {
-            UserPage updatePage = new UserPage()
-            {
-                ID = page.Id,
-                UserId = page.UserId,
-                PageName = page.PageName,
-                PageContent = page.PageContent
-            };
+            var databasePage = await _context.UserPages.Where(x => x.ID == pageId).FirstOrDefaultAsync();
 
-            _context.Entry(updatePage).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
-            return page;
+            if (databasePage != null)
+            {
+                databasePage.ID = databasePage.ID;
+                databasePage.UserId = userPage.UserId == null ? databasePage.UserId : userPage.UserId;
+                databasePage.PageName = userPage.PageName == null ? databasePage.PageName : userPage.PageName;
+                databasePage.PageContent = userPage.PageContent == null ? databasePage.PageContent : userPage.PageContent;
+                databasePage.Modified = DateTime.UtcNow;
+                _context.Entry(databasePage).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+                return await GetASpecificPage(pageId);
+            }
+
+            throw new Exception("That page does not exist.");
         }
 
         // Delete

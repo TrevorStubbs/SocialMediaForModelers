@@ -1,4 +1,5 @@
-﻿using SocialMediaForModelers.Model.Entities.JoinEntites;
+﻿using SocialMediaForModelers.Model.Entities;
+using SocialMediaForModelers.Model.Entities.JoinEntites;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,12 +8,9 @@ using System.Threading.Tasks;
 
 namespace SocialMediaForModelers.Model
 {
-    public class PostImage
+    public class PostImage : EntityBase
     {
-        public int ID { get; set; }
-        public string UserId { get; set; }
-        public string CloudStorageKey { get; set; }        
-        // TODO: add date created
+        public string CloudStorageKey { get; set; }
 
         // Navigation properties
         public List<PostToImage> PostToImages { get; set; }

@@ -10,16 +10,16 @@ using SocialMediaForModelers.Data;
 namespace SocialMediaForModelers.Migrations
 {
     [DbContext(typeof(SMModelersContext))]
-    [Migration("20201105200408_PostImageImageURIChangedtoCloudKey")]
-    partial class PostImageImageURIChangedtoCloudKey
+    [Migration("20201121222539_addedALevelOfInheritanceToEntities")]
+    partial class addedALevelOfInheritanceToEntities
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.9")
+                .UseIdentityColumns()
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("ProductVersion", "5.0.0");
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
@@ -31,18 +31,18 @@ namespace SocialMediaForModelers.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("NormalizedName")
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedName")
                         .IsUnique()
-                        .HasName("RoleNameIndex")
+                        .HasDatabaseName("RoleNameIndex")
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles");
@@ -53,7 +53,7 @@ namespace SocialMediaForModelers.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .UseIdentityColumn();
 
                     b.Property<string>("ClaimType")
                         .HasColumnType("nvarchar(max)");
@@ -77,7 +77,7 @@ namespace SocialMediaForModelers.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .UseIdentityColumn();
 
                     b.Property<string>("ClaimType")
                         .HasColumnType("nvarchar(max)");
@@ -186,8 +186,8 @@ namespace SocialMediaForModelers.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
@@ -205,12 +205,12 @@ namespace SocialMediaForModelers.Migrations
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("NormalizedEmail")
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("NormalizedUserName")
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("PasswordHash")
                         .HasColumnType("nvarchar(max)");
@@ -228,17 +228,17 @@ namespace SocialMediaForModelers.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("UserName")
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedEmail")
-                        .HasName("EmailIndex");
+                        .HasDatabaseName("EmailIndex");
 
                     b.HasIndex("NormalizedUserName")
                         .IsUnique()
-                        .HasName("UserNameIndex")
+                        .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
@@ -246,9 +246,9 @@ namespace SocialMediaForModelers.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "8fe8247e-2345-4fca-8412-489d2ccdcaee",
+                            Id = "13101a4f-bb4f-4fdd-843f-70d4095bc516",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "4034e20d-4f45-4ae4-9c86-2d8aced96443",
+                            ConcurrencyStamp = "374a4f15-9a67-4edb-84da-3db87fbbadbf",
                             DOB = new DateTime(1982, 6, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "stubbste@gmail.com",
                             EmailConfirmed = false,
@@ -256,7 +256,7 @@ namespace SocialMediaForModelers.Migrations
                             LastName = "Stubbs",
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "9e2ba19d-ef5b-4057-9a4a-79300ea1bd7c",
+                            SecurityStamp = "6ef1da8b-62b6-4751-ad81-e0e09a733e0f",
                             TwoFactorEnabled = false,
                             UserName = "stubbste@gmail.com"
                         });
@@ -393,10 +393,16 @@ namespace SocialMediaForModelers.Migrations
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .UseIdentityColumn();
 
                     b.Property<string>("Body")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("Modified")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(max)");
@@ -410,6 +416,8 @@ namespace SocialMediaForModelers.Migrations
                         {
                             ID = 1,
                             Body = "I am a comment",
+                            Created = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Modified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             UserId = "1234"
                         });
                 });
@@ -419,10 +427,16 @@ namespace SocialMediaForModelers.Migrations
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .UseIdentityColumn();
 
                     b.Property<string>("CloudStorageKey")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("Modified")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(max)");
@@ -436,6 +450,8 @@ namespace SocialMediaForModelers.Migrations
                         {
                             ID = 1,
                             CloudStorageKey = "/Dog.png",
+                            Created = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Modified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             UserId = "1234"
                         });
                 });
@@ -463,10 +479,16 @@ namespace SocialMediaForModelers.Migrations
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .UseIdentityColumn();
 
                     b.Property<string>("ApplicationUserId")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("Modified")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("PageContent")
                         .HasColumnType("nvarchar(max)");
@@ -487,6 +509,8 @@ namespace SocialMediaForModelers.Migrations
                         new
                         {
                             ID = 1,
+                            Created = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Modified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             PageContent = "I am I here",
                             PageName = "Seed Page",
                             UserId = "1234"
@@ -498,10 +522,16 @@ namespace SocialMediaForModelers.Migrations
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .UseIdentityColumn();
 
                     b.Property<string>("Caption")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("Modified")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(max)");
@@ -515,6 +545,8 @@ namespace SocialMediaForModelers.Migrations
                         {
                             ID = 1,
                             Caption = "This is my post",
+                            Created = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Modified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             UserId = "1234"
                         });
                 });
@@ -575,6 +607,8 @@ namespace SocialMediaForModelers.Migrations
                     b.HasOne("SocialMediaForModelers.Model.ApplicationUser", "AppUser")
                         .WithMany("UserFriends")
                         .HasForeignKey("AppUserId");
+
+                    b.Navigation("AppUser");
                 });
 
             modelBuilder.Entity("SocialMediaForModelers.Model.CommentLike", b =>
@@ -582,6 +616,8 @@ namespace SocialMediaForModelers.Migrations
                     b.HasOne("SocialMediaForModelers.Model.PostComment", "PostComment")
                         .WithMany("CommentLikes")
                         .HasForeignKey("PostCommentID");
+
+                    b.Navigation("PostComment");
                 });
 
             modelBuilder.Entity("SocialMediaForModelers.Model.Entities.JoinEntites.PostToComment", b =>
@@ -604,6 +640,10 @@ namespace SocialMediaForModelers.Migrations
                     b.HasOne("SocialMediaForModelers.Model.UserPost", "UserPost")
                         .WithMany("PostImages")
                         .HasForeignKey("UserPostID");
+
+                    b.Navigation("PostImage");
+
+                    b.Navigation("UserPost");
                 });
 
             modelBuilder.Entity("SocialMediaForModelers.Model.Entities.JoinEntites.UserPageToPost", b =>
@@ -615,6 +655,10 @@ namespace SocialMediaForModelers.Migrations
                     b.HasOne("SocialMediaForModelers.Model.UserPost", "UserPost")
                         .WithMany("UserPageToPosts")
                         .HasForeignKey("UserPostID");
+
+                    b.Navigation("UserPage");
+
+                    b.Navigation("UserPost");
                 });
 
             modelBuilder.Entity("SocialMediaForModelers.Model.PageLike", b =>
@@ -622,6 +666,8 @@ namespace SocialMediaForModelers.Migrations
                     b.HasOne("SocialMediaForModelers.Model.UserPage", "UserPage")
                         .WithMany("PageLikes")
                         .HasForeignKey("UserPageID");
+
+                    b.Navigation("UserPage");
                 });
 
             modelBuilder.Entity("SocialMediaForModelers.Model.PostLike", b =>
@@ -629,6 +675,8 @@ namespace SocialMediaForModelers.Migrations
                     b.HasOne("SocialMediaForModelers.Model.UserPost", "UserPost")
                         .WithMany("PostLikes")
                         .HasForeignKey("UserPostID");
+
+                    b.Navigation("UserPost");
                 });
 
             modelBuilder.Entity("SocialMediaForModelers.Model.UserPage", b =>
@@ -636,6 +684,43 @@ namespace SocialMediaForModelers.Migrations
                     b.HasOne("SocialMediaForModelers.Model.ApplicationUser", null)
                         .WithMany("UsersPage")
                         .HasForeignKey("ApplicationUserId");
+                });
+
+            modelBuilder.Entity("SocialMediaForModelers.Model.ApplicationUser", b =>
+                {
+                    b.Navigation("UserFriends");
+
+                    b.Navigation("UsersPage");
+                });
+
+            modelBuilder.Entity("SocialMediaForModelers.Model.PostComment", b =>
+                {
+                    b.Navigation("CommentLikes");
+
+                    b.Navigation("PostToComments");
+                });
+
+            modelBuilder.Entity("SocialMediaForModelers.Model.PostImage", b =>
+                {
+                    b.Navigation("PostToImages");
+                });
+
+            modelBuilder.Entity("SocialMediaForModelers.Model.UserPage", b =>
+                {
+                    b.Navigation("PageLikes");
+
+                    b.Navigation("PageToPost");
+                });
+
+            modelBuilder.Entity("SocialMediaForModelers.Model.UserPost", b =>
+                {
+                    b.Navigation("PostComments");
+
+                    b.Navigation("PostImages");
+
+                    b.Navigation("PostLikes");
+
+                    b.Navigation("UserPageToPosts");
                 });
 #pragma warning restore 612, 618
         }

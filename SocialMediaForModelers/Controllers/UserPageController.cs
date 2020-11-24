@@ -118,11 +118,6 @@ namespace SocialMediaForModelers.Controllers
             // if so allow the update
             // if not don't allow it
 
-            if (pageId != page.Id)
-            {
-                return BadRequest();
-            }
-
             var updatedPage = await _userPage.Update(page, pageId);
 
             return updatedPage;
