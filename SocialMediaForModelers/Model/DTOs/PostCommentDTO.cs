@@ -7,8 +7,7 @@ namespace SocialMediaForModelers.Model.DTOs
 {
     public class PostCommentDTO : BaseDTO
     {
-        public string Body { get; set; }
-        
-        public List<LikeDTO> CommentLikes { get; set; }
+        public string Body { get; set; }        
+        public LikeDTO CommentLikes { get; set; }
     }
 }

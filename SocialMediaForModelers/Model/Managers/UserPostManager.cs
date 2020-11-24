@@ -112,8 +112,8 @@ namespace SocialMediaForModelers.Model.Managers
                 Created = post.Created,
                 Modified = post.Modified,
                 PostComments = comments,
-                PostImages = images
-                // TODO: Add Likes
+                PostImages = images,
+                PostLikes = await GetPostLikes(postId, post.UserId)
             };
 
             return postDTO;
@@ -311,8 +311,8 @@ namespace SocialMediaForModelers.Model.Managers
                     Created = post.Created,
                     Modified = post.Modified,
                     PostComments = comments,
-                    PostImages = images
-                    // TODO : PostLikes = getlikes                    
+                    PostImages = images,
+                    PostLikes = await GetPostLikes(post.ID, post.UserId)
                 });
             }
 
