@@ -55,22 +55,7 @@ namespace SocialMediaForModelers.Model.Managers
         {
             var pages = await _context.UserPages.ToListAsync();
 
-            var pageList = new List<UserPageDTO>();
-
-            foreach (var page in pages)
-            {
-                pageList.Add(new UserPageDTO()
-                {
-                    Id = page.ID,
-                    UserId = page.UserId,
-                    PageName = page.PageName,
-                    PageContent = page.PageContent,
-                    Created = page.Created,
-                    Modified = page.Modified
-                });
-            }
-
-            return pageList;
+            return await FillUserPageDTOs(pages);
         }
 
         // Read All for a user
@@ -81,26 +66,9 @@ namespace SocialMediaForModelers.Model.Managers
         /// <returns>A list of UserPageDTOs</returns>
         public async Task<List<UserPageDTO>> GetAllPagesForAUser(string userId)
         {
-            {
-                var pages = await _context.UserPages.Where(x => x.UserId == userId).ToListAsync();
+            var pages = await _context.UserPages.Where(x => x.UserId == userId).ToListAsync();
 
-                var pageList = new List<UserPageDTO>();
-
-                foreach (var page in pages)
-                {
-                    pageList.Add(new UserPageDTO()
-                    {
-                        Id = page.ID,
-                        UserId = page.UserId,
-                        PageName = page.PageName,
-                        PageContent = page.PageContent,
-                        Created = page.Created,
-                        Modified = page.Modified
-                    });
-                }
-
-                return pageList;
-            }
+            return await FillUserPageDTOs(pages);
         }
 
         // Read A page
@@ -120,7 +88,8 @@ namespace SocialMediaForModelers.Model.Managers
                 PageName = page.PageName,
                 PageContent = page.PageContent,
                 Created = page.Created,
-                Modified = page.Modified
+                Modified = page.Modified,
+                PageLikes = await GetPageLikes(pageId, page.UserId)
             };
 
             return pageDTO;
@@ -256,6 +225,32 @@ namespace SocialMediaForModelers.Model.Managers
 
             _context.Entry(postJoin).State = EntityState.Deleted;
             await _context.SaveChangesAsync();
+        }
+
+        /// <summary>
+        /// Helper method that fills UserPageDTOs
+        /// </summary>
+        /// <param name="inputList">A list of UserPages</param>
+        /// <returns>A list of UserPageDTOs</returns>
+        private async Task<List<UserPageDTO>> FillUserPageDTOs(List<UserPage> inputList)
+        {
+            var pageList = new List<UserPageDTO>();
+
+            foreach (var page in inputList)
+            {
+                pageList.Add(new UserPageDTO()
+                {
+                    Id = page.ID,
+                    UserId = page.UserId,
+                    PageName = page.PageName,
+                    PageContent = page.PageContent,
+                    Created = page.Created,
+                    Modified = page.Modified,
+                    PageLikes = await GetPageLikes(page.ID, page.UserId)
+                });
+            }
+
+            return pageList;
         }
 
         /// <summary>
