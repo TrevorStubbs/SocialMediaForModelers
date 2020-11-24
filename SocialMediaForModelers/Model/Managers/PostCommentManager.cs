@@ -43,7 +43,6 @@ namespace SocialMediaForModelers.Model.Managers
             return postComment;
         }
 
-
         /// <summary>
         /// Gets all comments from the database.
         /// </summary>
@@ -52,21 +51,7 @@ namespace SocialMediaForModelers.Model.Managers
         {
             var comments = await _context.PostComments.ToListAsync();
 
-            var commentDTOs = new List<PostCommentDTO>();
-
-            foreach (var comment in comments)
-            {
-                commentDTOs.Add(new PostCommentDTO()
-                {
-                    Id = comment.ID,
-                    UserId = comment.UserId,
-                    Body = comment.Body,
-                    Created = comment.Created,
-                    Modified = comment.Modified
-                });
-            }
-
-            return commentDTOs;
+            return await FillPostCommentDTOs(comments);
         }
 
         /// <summary>
@@ -78,41 +63,9 @@ namespace SocialMediaForModelers.Model.Managers
         {
             var comments = await _context.PostComments.Where(x => x.UserId == userId)
                                                       .ToListAsync();
-            var commentDTOs = new List<PostCommentDTO>();
-            foreach (var item in comments)
-            {
-                commentDTOs.Add(new PostCommentDTO()
-                {
-                    Id = item.ID,
-                    UserId = item.UserId,
-                    Body = item.Body,
-                    Created = item.Created,
-                    Modified = item.Modified
-                });
-            }
 
-            return commentDTOs;
+            return await FillPostCommentDTOs(comments);
         }
-
-        // ============ TODO: Re-evaluate the need for this method =============
-        //public async Task<List<PostCommentDTO>> GetCommentsForAPost(int postId)
-        //{
-        //    var comments = await _context.PostComments.Where(x => x.ID == postId) // This is not correct.
-        //                                              .ToListAsync();
-        //    var commentDTOs = new List<PostCommentDTO>();
-        //    foreach (var item in commentDTOs)
-        //    {
-        //        commentDTOs.Add(new PostCommentDTO()
-        //        {
-        //            Id = item.Id,
-        //            UserId = item.UserId,
-        //            Body = item.Body
-        //        });
-        //    }
-
-        //    return commentDTOs;
-        //}
-        // =============================================================================
 
         /// <summary>
         /// Get a single specified comment
@@ -129,7 +82,8 @@ namespace SocialMediaForModelers.Model.Managers
                 UserId = comment.UserId,
                 Body = comment.Body,
                 Created = comment.Created,
-                Modified = comment.Modified
+                Modified = comment.Modified,
+                CommentLikes = await GetCommentsLikes(commentId, comment.UserId)
             };
 
             return commentDTO;
@@ -158,7 +112,7 @@ namespace SocialMediaForModelers.Model.Managers
 
             throw new Exception("The comment does not exist in the database.");
         }
-
+         
         /// <summary>
         /// Deletes a comment from the database
         /// </summary>
@@ -224,7 +178,38 @@ namespace SocialMediaForModelers.Model.Managers
             await _context.SaveChangesAsync();
         }
 
+        /// <summary>
+        /// Helper method that fills a  list of PostCommentDTOs
+        /// </summary>
+        /// <param name="inputList">A list of PostComments</param>
+        /// <returns>List of PostCommentDTOs</returns>
+        private async Task<List<PostCommentDTO>> FillPostCommentDTOs(List<PostComment> inputList)
+        {
+            var commentDTOs = new List<PostCommentDTO>();
 
+            foreach (var comment in inputList)
+            {
+                commentDTOs.Add(new PostCommentDTO()
+                {
+                    Id = comment.ID,
+                    UserId = comment.UserId,
+                    Body = comment.Body,
+                    Created = comment.Created,
+                    Modified = comment.Modified,
+                    CommentLikes = await GetCommentsLikes(comment.ID, comment.UserId)
+                }); ;
+            }
+
+            return commentDTOs;
+
+        }
+
+        /// <summary>
+        /// Helper method that checks to see if the user requesting the likes has already liked the Post.
+        /// </summary>
+        /// <param name="likes">List of CommentLikes</param>
+        /// <param name="userId">The user's id</param>
+        /// <returns>True if the user liked the post</returns>
         private bool UserLiked(List<CommentLike> likes, string userId)
         {
             foreach (var item in likes)

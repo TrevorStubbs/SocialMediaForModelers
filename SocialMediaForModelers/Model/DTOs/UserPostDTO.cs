@@ -9,10 +9,10 @@ namespace SocialMediaForModelers.Model.DTOs
     public class UserPostDTO : BaseDTO
     {
         public string Caption { get; set; }
+        public LikeDTO PostLikes { get; set; }
 
         // Navigation properties
         public List<UserPageToPost> UserPageToPosts { get; set; }
-        public List<LikeDTO> PostLikes { get; set; }
         public List<PostImageDTO> PostImages { get; set; }
         public List<PostCommentDTO> PostComments { get; set; }
     }

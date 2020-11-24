@@ -39,10 +39,6 @@ namespace SocialMediaForModelers.Model.Interfaces
         /// <returns>A DTO of the specified comment</returns>
         Task<PostCommentDTO> GetASpecificComment(int commentId);
 
-        // ReadPostsComments
-        // TODO: Move this to posts
-        //Task<List<PostCommentDTO>> GetCommentsForAPost(int postId);
-
         // Update
         /// <summary>
         /// Updates a comments in the database
