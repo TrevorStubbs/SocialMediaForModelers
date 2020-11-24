@@ -113,10 +113,10 @@ namespace SocialMediaForModelers.Controllers
             // if so allow the update
             // if not don't allow it
 
-            if (postId != updatePost.Id)
-            {
-                return BadRequest();
-            }
+            //if (postId != updatePost.Id)
+            //{
+            //    return BadRequest();
+            //}
 
             var post = await _userPost.Update(updatePost, postId);
 
