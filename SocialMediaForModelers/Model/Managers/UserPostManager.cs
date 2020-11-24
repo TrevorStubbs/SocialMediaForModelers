@@ -124,28 +124,23 @@ namespace SocialMediaForModelers.Model.Managers
         /// </summary>
         /// <param name="post">The PostDTO needed to update the database</param>
         /// <returns>If successful the updated DTO</returns>
-        public async Task<UserPostDTO> Update(UserPostDTO post, int postId)
+        public async Task<UserPostDTO> Update(UserPostDTO userPost, int postId)
         {
-            UserPost updatedPost = new UserPost()
+            var databasePost = await _context.UserPosts.Where(x => x.ID == postId).FirstOrDefaultAsync();
+
+            if (databasePost != null)
             {
-                ID = post.Id,
-                UserId = post.UserId,
-                Caption = post.Caption,
-                Created = post.Created
-            };
+                databasePost.ID = databasePost.ID;
+                databasePost.UserId = userPost.UserId == null ? databasePost.UserId : userPost.UserId;
+                databasePost.Caption = userPost.Caption == null ? databasePost.Caption : userPost.Caption;
+                databasePost.Modified = DateTime.UtcNow;
 
-            updatedPost.Modified = DateTime.UtcNow;
-            post.Modified = DateTime.UtcNow;
+                _context.Entry(databasePost).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+                return await GetASpecificPost(postId);
+            }
 
-            // ============ TODO: Will not test till this is done! ====================
-            // Update the Comment list
-            // Update the Image list
-            // Update the Likes
-            // ========================================================================
-
-            _context.Entry(updatedPost).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
-            return post;
+            throw new Exception("That Post does not exist");
         }
 
         /// <summary>

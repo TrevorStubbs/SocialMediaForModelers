@@ -129,11 +129,6 @@ namespace SocialMediaForModelers.Controllers
             // if so allow the update
             // if not don't allow it
 
-            if (commentId != updateComment.Id)
-            {
-                return BadRequest();
-            }
-
             var comment = await _postComment.Update(updateComment, commentId);
 
             if (comment != null)

@@ -125,7 +125,7 @@ namespace SocialMediaForModelers.Model.Managers
                                                      .FirstOrDefaultAsync();
             var commentDTO = new PostCommentDTO()
             {
-                Id = comment.ID, 
+                Id = comment.ID,
                 UserId = comment.UserId,
                 Body = comment.Body,
                 Created = comment.Created,
@@ -142,20 +142,21 @@ namespace SocialMediaForModelers.Model.Managers
         /// <returns>If successful returns the updated PostCommentDTO</returns>
         public async Task<PostCommentDTO> Update(PostCommentDTO postComment, int commentId)
         {
-            PostComment updateComment = new PostComment()
+            var comment = await _context.PostComments.Where(x => x.ID == commentId)
+                                                     .FirstOrDefaultAsync();
+            if (comment != null)
             {
-                ID = postComment.Id,
-                UserId = postComment.UserId,
-                Body = postComment.Body,
-                Created = postComment.Created
-            };
+                comment.ID = comment.ID;
+                comment.UserId = postComment.UserId == null ? comment.UserId : postComment.UserId;
+                comment.Body = postComment.Body == null ? comment.Body : postComment.Body;
+                comment.Modified = DateTime.UtcNow;
 
-            updateComment.Modified = DateTime.UtcNow;
-            postComment.Modified = DateTime.UtcNow;
+                _context.Entry(comment).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+                return await GetASpecificComment(commentId);
+            }
 
-            _context.Entry(updateComment).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
-            return postComment;
+            throw new Exception("The comment does not exist in the database.");
         }
 
         /// <summary>
@@ -195,14 +196,14 @@ namespace SocialMediaForModelers.Model.Managers
         /// <param name="userId">The Id of the user requesting this info</param>
         /// <returns>A LikeDTO which has the total number of likes and the a boolean</returns>
         public async Task<LikeDTO> GetCommentsLikes(int commentId, string userId)
-        {            
-            var likes = await _context.CommentLikes.Where(x => x.CommentId == commentId)          
+        {
+            var likes = await _context.CommentLikes.Where(x => x.CommentId == commentId)
                                                    .ToListAsync();
 
-            LikeDTO likeDTO = new LikeDTO() 
-            { 
-                NumberOfLikes = likes.Count, 
-                UserLiked = UserLiked(likes, userId) 
+            LikeDTO likeDTO = new LikeDTO()
+            {
+                NumberOfLikes = likes.Count,
+                UserLiked = UserLiked(likes, userId)
             };
 
             return likeDTO;
@@ -230,7 +231,7 @@ namespace SocialMediaForModelers.Model.Managers
             {
                 if (item.UserId == userId)
                 {
-                    return true;                    
+                    return true;
                 }
             }
 
