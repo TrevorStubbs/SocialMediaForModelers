@@ -123,6 +123,8 @@ namespace SocialMediaForModelers.Model.Managers
             PostComment commentToBeDeleted = await _context.PostComments.FindAsync(commentId);
             _context.Entry(commentToBeDeleted).State = EntityState.Deleted;
             await _context.SaveChangesAsync();
+
+            await DeleteAllLikes(commentId);
         }
 
         /// <summary>
@@ -222,5 +224,22 @@ namespace SocialMediaForModelers.Model.Managers
 
             return false;
         }
+    }
+
+    /// <summary>
+    /// Helper method that deletes all entities in the CommentLikes table when a comment it deleted.
+    /// </summary>
+    /// <param name="commentId">The comment's database id.</param>
+    /// <returns>Void</returns>
+    private async Task DeleteAllLikes(int commentId)
+    {
+        var likes = await _context.CommentLikes.Where(x => x.CommentId == commentId).ToListAsync();
+
+        foreach (var like in likes)
+        {
+            _context.Entry(like).State = EntityState.Deleted;
+        }
+
+        await _context.SaveChangesAsync();
     }
 }
