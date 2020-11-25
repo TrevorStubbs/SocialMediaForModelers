@@ -156,15 +156,13 @@ namespace SocialMediaForModelers.Model.Managers
         /// <returns>Nothing</returns>
         public async Task Delete(int imageId)
         {            
-            // Get the image
-            PostImage imageToBeDeleted = await _context.PostImages.FindAsync(imageId);
-            // Delete the image from S3
-            await _cloudImage.DeleteAnImageFromCloudStorage(imageToBeDeleted.CloudStorageKey);
-            // Delete the image entry from the Database
+            await DeleteImageFromPostToImageTable(imageId);
+
+            PostImage imageToBeDeleted = await _context.PostImages.FindAsync(imageId);        
+            
+            await _cloudImage.DeleteAnImageFromCloudStorage(imageToBeDeleted.CloudStorageKey);            
             _context.Entry(imageToBeDeleted).State = EntityState.Deleted;
             await _context.SaveChangesAsync();
-
-            await DeleteImageFromPostToImageTable(imageId);
         }
 
         /// <summary>

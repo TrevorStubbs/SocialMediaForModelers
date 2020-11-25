@@ -120,12 +120,12 @@ namespace SocialMediaForModelers.Model.Managers
         /// <returns>Nothing</returns>
         public async Task Delete(int commentId)
         {
+            await DeleteAllLikes(commentId);
+            await DeletePostToCommentEntities(commentId);
+
             PostComment commentToBeDeleted = await _context.PostComments.FindAsync(commentId);
             _context.Entry(commentToBeDeleted).State = EntityState.Deleted;
             await _context.SaveChangesAsync();
-
-            await DeleteAllLikes(commentId);
-            await DeletePostToCommentEntities(commentId);
         }
 
         /// <summary>
