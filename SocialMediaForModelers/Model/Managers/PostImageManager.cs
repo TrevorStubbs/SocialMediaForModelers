@@ -103,26 +103,6 @@ namespace SocialMediaForModelers.Model.Managers
             return imageList;
         }
 
-        // ============= TODO: This may need to be moved to the Post Manager ===================
-        //public async Task<List<PostImageDTO>> GetAllImagesForAPost(int postId)
-        //{
-        //    var images = await _context.PostImages.Where(x => x.ID == postId).ToListAsync();
-
-        //    var imageList = new List<PostImageDTO>();
-        //    foreach (var item in images)
-        //    {
-        //        imageList.Add(new PostImageDTO()
-        //        {
-        //            Id = item.ID,
-        //            UserId = item.UserId,
-        //            ImageURI = _cloudImage.GetImageUrl(item.CloudStorageKey)
-        //        });
-        //    }
-
-        //    return imageList;
-        //}
-        // ===================================================================================
-
         /// <summary>
         /// Gets a specific Image from the database
         /// </summary>
@@ -182,6 +162,25 @@ namespace SocialMediaForModelers.Model.Managers
             await _cloudImage.DeleteAnImageFromCloudStorage(imageToBeDeleted.CloudStorageKey);
             // Delete the image entry from the Database
             _context.Entry(imageToBeDeleted).State = EntityState.Deleted;
+            await _context.SaveChangesAsync();
+
+            await DeleteImageFromPostToImageTable(imageId);
+        }
+
+        /// <summary>
+        /// Helper method to delete image from the PostToImages join table.
+        /// </summary>
+        /// <param name="imageId">The image's database id</param>
+        /// <returns>Void</returns>
+        private async Task DeleteImageFromPostToImageTable(int imageId)
+        {
+            var postToImageEntities = await _context.PostToImages.Where(x => x.ImageId == imageId).ToListAsync();
+
+            foreach (var enitity in postToImageEntities)
+            {
+                _context.Entry(enitity).State = EntityState.Deleted;
+            }
+
             await _context.SaveChangesAsync();
         }
     }

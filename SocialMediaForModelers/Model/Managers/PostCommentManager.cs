@@ -112,7 +112,7 @@ namespace SocialMediaForModelers.Model.Managers
 
             throw new Exception("The comment does not exist in the database.");
         }
-         
+
         /// <summary>
         /// Deletes a comment from the database
         /// </summary>
@@ -125,6 +125,7 @@ namespace SocialMediaForModelers.Model.Managers
             await _context.SaveChangesAsync();
 
             await DeleteAllLikes(commentId);
+            await DeletePostToCommentEntities(commentId);
         }
 
         /// <summary>
@@ -224,22 +225,40 @@ namespace SocialMediaForModelers.Model.Managers
 
             return false;
         }
-    }
 
-    /// <summary>
-    /// Helper method that deletes all entities in the CommentLikes table when a comment it deleted.
-    /// </summary>
-    /// <param name="commentId">The comment's database id.</param>
-    /// <returns>Void</returns>
-    private async Task DeleteAllLikes(int commentId)
-    {
-        var likes = await _context.CommentLikes.Where(x => x.CommentId == commentId).ToListAsync();
-
-        foreach (var like in likes)
+        /// <summary>
+        /// Helper method that deletes all entities in the CommentLikes table when a comment it deleted.
+        /// </summary>
+        /// <param name="commentId">The comment's database id.</param>
+        /// <returns>Void</returns>
+        private async Task DeleteAllLikes(int commentId)
         {
-            _context.Entry(like).State = EntityState.Deleted;
+            var likes = await _context.CommentLikes.Where(x => x.CommentId == commentId).ToListAsync();
+
+            foreach (var like in likes)
+            {
+                _context.Entry(like).State = EntityState.Deleted;
+            }
+
+            await _context.SaveChangesAsync();
         }
 
-        await _context.SaveChangesAsync();
+        /// <summary>
+        /// Helper method that deletes the comment's reference to the PostToComment join table.
+        /// </summary>
+        /// <param name="commentId">The comment's database Id</param>
+        /// <returns>Void</returns>
+        private async Task DeletePostToCommentEntities(int commentId)
+        {
+            var postToCommentEntities = await _context.PostToComments.Where(x => x.CommentId == commentId).ToListAsync();
+
+            foreach (var entity in postToCommentEntities)
+            {
+                _context.Entry(entity).State = EntityState.Deleted;
+            }
+
+            await _context.SaveChangesAsync();
+        }
     }
+
 }
