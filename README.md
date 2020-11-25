@@ -85,4 +85,7 @@ Microsoft Visual Studio Community 2019
     - US 2 Implement LikeGetter
     - US 3 Testing all the Like getters
   - Milestone 3
-    - US 1  
+    - US 1 PostComment Delete Procedure
+    - US 2 PostImage Delete Procedure
+    - US 3 UserPost Delete Procedure
+    - US 3 UserPage Delete Procedure
