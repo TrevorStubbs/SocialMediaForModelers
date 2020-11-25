@@ -81,4 +81,8 @@ Microsoft Visual Studio Community 2019
     - US 3 DateTime Tests
     - Us 4 Update methods are fixed.
   - Milestone 2
-  
+    - US 1 LikeGetter
+    - US 2 Implement LikeGetter
+    - US 3 Testing all the Like getters
+  - Milestone 3
+    - US 1  
