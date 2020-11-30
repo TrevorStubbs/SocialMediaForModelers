@@ -123,16 +123,20 @@ namespace SocialMediaForModelers.Model.Managers
 
         // Delete
         /// <summary>
-        /// Delete a UserPage from the database.
+        /// Delete a UserPage and all data associated with that UserPage from the database.
         /// </summary>
         /// <param name="pageId">The page's database Id</param>
         /// <returns>Void</returns>
         public async Task Delete(int pageId)
         {
-            // ================= TODO ===============================
-            // Design Question:
-            // Do we use this method to delete all other items that are connected to this page?
-            // =========================================================================
+            var posts = await _context.UserPageToPosts.Where(x => x.PageId == pageId).ToListAsync();
+
+            foreach (var post in posts)
+            {
+                await _post.Delete(post.PostId);
+            }
+
+            await DeleteAllLikes(pageId);
 
             var pageToBeDeleted = await _context.UserPages.FindAsync(pageId);
             _context.Entry(pageToBeDeleted).State = EntityState.Deleted;
@@ -271,5 +275,22 @@ namespace SocialMediaForModelers.Model.Managers
 
             return false;
         }
+
+        /// <summary>
+        /// Helper method that deletes all the likes from this page.
+        /// </summary>
+        /// <param name="pageId">The page's database id.</param>
+        /// <returns>Void</returns>
+        private async Task DeleteAllLikes(int pageId)
+        {
+            var likes = await _context.PageLikes.Where(x => x.PageId == pageId).ToListAsync();
+
+            foreach (var like in likes)
+            {
+                _context.Entry(like).State = EntityState.Deleted;
+            }
+
+            await _context.SaveChangesAsync();
+        }        
     }
 }

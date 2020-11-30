@@ -164,6 +164,7 @@ namespace SocialMediaForModelers.Model.Managers
                 await _postImage.Delete(image.ImageId);
             }
 
+            await DeletePageToPostEntities(postId);
             await DeleteAllLikes(postId);
 
             var postToBeDeleted = await _context.UserPosts.FindAsync(postId);
@@ -366,6 +367,23 @@ namespace SocialMediaForModelers.Model.Managers
             foreach (var like in likes)
             {
                 _context.Entry(like).State = EntityState.Deleted;
+            }
+
+            await _context.SaveChangesAsync();
+        }
+
+        /// <summary>
+        /// Helper method that deletes the post's reference from to the PageToPost join table.
+        /// </summary>
+        /// <param name="postId">The post's database id</param>
+        /// <returns>Void</returns>
+        private async Task DeletePageToPostEntities(int postId)
+        {
+            var pageToPostEntities = await _context.UserPageToPosts.Where(x => x.PostId == postId).ToListAsync();
+
+            foreach (var entity in pageToPostEntities)
+            {
+                _context.Entry(entity).State = EntityState.Deleted;
             }
 
             await _context.SaveChangesAsync();
