@@ -81,4 +81,11 @@ Microsoft Visual Studio Community 2019
     - US 3 DateTime Tests
     - Us 4 Update methods are fixed.
   - Milestone 2
-  
+    - US 1 LikeGetter
+    - US 2 Implement LikeGetter
+    - US 3 Testing all the Like getters
+  - Milestone 3
+    - US 1 PostComment Delete Procedure
+    - US 2 PostImage Delete Procedure
+    - US 3 UserPost Delete Procedure
+    - US 4 UserPage Delete Procedure

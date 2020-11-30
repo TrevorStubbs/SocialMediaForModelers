@@ -273,12 +273,12 @@ namespace SocialMediaForModelers.Controllers
         /// <param name="postid">The post's database id.</param>
         /// <param name="commentId">The comment's database id.</param>
         /// <returns>IActionResult</returns>
-        [HttpPost("{postId}/Comment/{imageId}")]
-        public async Task<IActionResult> PostACommentToPost(int postid, int commentId)
+        [HttpPost("{postId}/Comment/{commentId}")]
+        public async Task<IActionResult> PostACommentToPost(int postId, int commentId)
         {
             try
             {
-                await _userPost.AddACommentToAPost(postid, commentId);
+                await _userPost.AddACommentToAPost(postId, commentId);
 
                 return Ok();
             }
@@ -295,7 +295,7 @@ namespace SocialMediaForModelers.Controllers
         /// <param name="postId">The post's database id.</param>
         /// <param name="commentId">The comment's database id.</param>
         /// <returns>IActionResult</returns>
-        [HttpDelete("{postId}/Comment/{imageId}")]
+        [HttpDelete("{postId}/Comment/{commentId}")]
         public async Task<IActionResult> DeleteACommentFromPost(int postId, int commentId)
         {
             try

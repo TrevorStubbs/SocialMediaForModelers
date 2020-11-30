@@ -144,12 +144,29 @@ namespace SocialMediaForModelers.Model.Managers
         }
 
         /// <summary>
-        /// Deletes a Post from the database
+        /// Deletes a Post from the database all associated data to that post.
         /// </summary>
-        /// <param name="postId">The Id of the post</param>
-        /// <returns>Returns nothing</returns>
+        /// <param name="postId">The post's database id.</param>
+        /// <returns>Void</returns>
         public async Task Delete(int postId)
         {
+            var comments = await _context.PostToComments.Where(x => x.PostId == postId).ToListAsync();
+
+            foreach (var comment in comments)
+            {
+                await _postComment.Delete(comment.CommentId);
+            }
+
+            var images = await _context.PostToImages.Where(x => x.PostId == postId).ToListAsync();
+
+            foreach (var image in images)
+            {
+                await _postImage.Delete(image.ImageId);
+            }
+
+            await DeletePageToPostEntities(postId);
+            await DeleteAllLikes(postId);
+
             var postToBeDeleted = await _context.UserPosts.FindAsync(postId);
             _context.Entry(postToBeDeleted).State = EntityState.Deleted;
             await _context.SaveChangesAsync();
@@ -160,7 +177,7 @@ namespace SocialMediaForModelers.Model.Managers
         /// </summary>
         /// <param name="postId">The Post's Id</param>
         /// <param name="userId">THe User's Id string</param>
-        /// <returns>Nothing</returns>
+        /// <returns>Void</returns>
         public async Task AddALikeToAPost(int postId, string userId)
         {
             PostLike like = new PostLike()
@@ -336,6 +353,40 @@ namespace SocialMediaForModelers.Model.Managers
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// Helper method that deletes all the likes from this post.
+        /// </summary>
+        /// <param name="postId">The post's database id.</param>
+        /// <returns>Void</returns>
+        private async Task DeleteAllLikes(int postId)
+        {
+            var likes = await _context.PostLikes.Where(x => x.PostId == postId).ToListAsync();
+
+            foreach (var like in likes)
+            {
+                _context.Entry(like).State = EntityState.Deleted;
+            }
+
+            await _context.SaveChangesAsync();
+        }
+
+        /// <summary>
+        /// Helper method that deletes the post's reference from to the PageToPost join table.
+        /// </summary>
+        /// <param name="postId">The post's database id</param>
+        /// <returns>Void</returns>
+        private async Task DeletePageToPostEntities(int postId)
+        {
+            var pageToPostEntities = await _context.UserPageToPosts.Where(x => x.PostId == postId).ToListAsync();
+
+            foreach (var entity in pageToPostEntities)
+            {
+                _context.Entry(entity).State = EntityState.Deleted;
+            }
+
+            await _context.SaveChangesAsync();
         }
     }
 }
