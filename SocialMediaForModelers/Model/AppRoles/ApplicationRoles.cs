@@ -7,6 +7,7 @@ namespace SocialMediaForModelers.Model.AppRoles
 {
     public static class ApplicationRoles
     {
+        public const string Owner = "Owner";
         public const string Admin = "Admin";
         public const string User = "User";
     }

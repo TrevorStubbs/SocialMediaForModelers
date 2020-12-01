@@ -37,15 +37,15 @@ namespace SocialMediaForModelers.Data
             modelBuilder.Entity<PageLike>().HasKey(x => new { x.PageId, x.UserId });
             modelBuilder.Entity<PostLike>().HasKey(x => new { x.PostId, x.UserId });
 
-            modelBuilder.Entity<ApplicationUser>().HasData(
-                new ApplicationUser
-                {
-                    FirstName = "Trevor",
-                    LastName = "Stubbs",
-                    Email = "stubbste@gmail.com",
-                    UserName = "stubbste@gmail.com",
-                    DOB = new DateTime(1982, 6, 8)
-                });
+            //modelBuilder.Entity<ApplicationUser>().HasData(
+            //    new ApplicationUser
+            //    {
+            //        FirstName = "Trevor",
+            //        LastName = "Stubbs",
+            //        Email = "stubbste@gmail.com",
+            //        UserName = "stubbste@gmail.com",
+            //        DOB = new DateTime(1982, 6, 8)
+            //    });
 
             modelBuilder.Entity<PostComment>().HasData(
                 new PostComment

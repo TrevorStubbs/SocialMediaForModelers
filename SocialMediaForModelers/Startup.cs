@@ -95,8 +95,9 @@ namespace SocialMediaForModelers
 
             services.AddAuthorization(options =>
             {
-                options.AddPolicy("AdminPriv", policy => policy.RequireRole(ApplicationRoles.Admin));
-                options.AddPolicy("UserPriv", policy => policy.RequireRole(ApplicationRoles.Admin, ApplicationRoles.User));
+                options.AddPolicy("ApplicationOwnerPriv", policy => policy.RequireRole(ApplicationRoles.Owner));
+                options.AddPolicy("AdminPriv", policy => policy.RequireRole(ApplicationRoles.Owner, ApplicationRoles.Admin));
+                options.AddPolicy("UserPriv", policy => policy.RequireRole(ApplicationRoles.Owner, ApplicationRoles.Admin, ApplicationRoles.User));
             });
 
             services.AddTransient<IPostComment, PostCommentManager>();
