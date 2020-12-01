@@ -16,6 +16,12 @@ namespace SocialMediaForModelers.Model.AppRoles
         {
             new IdentityRole
             {
+                Name = ApplicationRoles.Owner,
+                NormalizedName = ApplicationRoles.Owner.ToUpper(),
+                ConcurrencyStamp = Guid.NewGuid().ToString()
+            },
+            new IdentityRole
+            {
                 Name = ApplicationRoles.Admin,
                 NormalizedName = ApplicationRoles.Admin.ToUpper(),
                 ConcurrencyStamp = Guid.NewGuid().ToString()
@@ -40,6 +46,24 @@ namespace SocialMediaForModelers.Model.AppRoles
 
         public static void SeedUsers(UserManager<ApplicationUser> userManager, IConfiguration _config)
         {
+            if (userManager.FindByEmailAsync(_config["OwnerEmail"]).Result == null)
+            {
+                ApplicationUser user = new ApplicationUser()
+                {
+                    UserName = _config["OwnerEmail"],
+                    Email = _config["OwnerEmail"],
+                    FirstName = "SMM",
+                    LastName = "Owner",
+                    DOB = new DateTime(2000, 1, 1)
+                };
+
+                IdentityResult result = userManager.CreateAsync(user, _config["AdminPassword"]).Result;
+
+                if (result.Succeeded)
+                {
+                    userManager.AddToRoleAsync(user, ApplicationRoles.Owner).Wait();
+                }
+            }
             if (userManager.FindByEmailAsync(_config["AdminEmail"]).Result == null)
             {
                 ApplicationUser user = new ApplicationUser()
