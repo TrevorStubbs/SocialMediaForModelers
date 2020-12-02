@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SocialMediaForModelers.Data;
 
 namespace SocialMediaForModelers.Migrations
 {
     [DbContext(typeof(SMModelersContext))]
-    partial class SMModelersContextModelSnapshot : ModelSnapshot
+    [Migration("20201201010509_addedOwnerRole")]
+    partial class addedOwnerRole
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -396,9 +398,9 @@ namespace SocialMediaForModelers.Migrations
                         {
                             ID = 1,
                             Body = "I am a comment",
-                            Created = new DateTime(2020, 12, 1, 19, 54, 24, 717, DateTimeKind.Utc).AddTicks(7881),
-                            Modified = new DateTime(2020, 12, 1, 19, 54, 24, 717, DateTimeKind.Utc).AddTicks(7881),
-                            UserId = "fc2155ec-7184-4dd8-a45e-2ea07e8cc5ea"
+                            Created = new DateTime(2020, 12, 1, 1, 5, 8, 577, DateTimeKind.Utc).AddTicks(9270),
+                            Modified = new DateTime(2020, 12, 1, 1, 5, 8, 577, DateTimeKind.Utc).AddTicks(9270),
+                            UserId = "1234"
                         });
                 });
 
@@ -430,9 +432,9 @@ namespace SocialMediaForModelers.Migrations
                         {
                             ID = 1,
                             CloudStorageKey = "/Dog.png",
-                            Created = new DateTime(2020, 12, 1, 19, 54, 24, 717, DateTimeKind.Utc).AddTicks(7881),
-                            Modified = new DateTime(2020, 12, 1, 19, 54, 24, 717, DateTimeKind.Utc).AddTicks(7881),
-                            UserId = "fc2155ec-7184-4dd8-a45e-2ea07e8cc5ea"
+                            Created = new DateTime(2020, 12, 1, 1, 5, 8, 577, DateTimeKind.Utc).AddTicks(9270),
+                            Modified = new DateTime(2020, 12, 1, 1, 5, 8, 577, DateTimeKind.Utc).AddTicks(9270),
+                            UserId = "1234"
                         });
                 });
 
@@ -489,11 +491,11 @@ namespace SocialMediaForModelers.Migrations
                         new
                         {
                             ID = 1,
-                            Created = new DateTime(2020, 12, 1, 19, 54, 24, 717, DateTimeKind.Utc).AddTicks(7881),
-                            Modified = new DateTime(2020, 12, 1, 19, 54, 24, 717, DateTimeKind.Utc).AddTicks(7881),
+                            Created = new DateTime(2020, 12, 1, 1, 5, 8, 577, DateTimeKind.Utc).AddTicks(9270),
+                            Modified = new DateTime(2020, 12, 1, 1, 5, 8, 577, DateTimeKind.Utc).AddTicks(9270),
                             PageContent = "I am I here",
                             PageName = "Seed Page",
-                            UserId = "fc2155ec-7184-4dd8-a45e-2ea07e8cc5ea"
+                            UserId = "1234"
                         });
                 });
 
@@ -525,9 +527,9 @@ namespace SocialMediaForModelers.Migrations
                         {
                             ID = 1,
                             Caption = "This is my post",
-                            Created = new DateTime(2020, 12, 1, 19, 54, 24, 717, DateTimeKind.Utc).AddTicks(7881),
-                            Modified = new DateTime(2020, 12, 1, 19, 54, 24, 717, DateTimeKind.Utc).AddTicks(7881),
-                            UserId = "fc2155ec-7184-4dd8-a45e-2ea07e8cc5ea"
+                            Created = new DateTime(2020, 12, 1, 1, 5, 8, 577, DateTimeKind.Utc).AddTicks(9270),
+                            Modified = new DateTime(2020, 12, 1, 1, 5, 8, 577, DateTimeKind.Utc).AddTicks(9270),
+                            UserId = "1234"
                         });
                 });
 

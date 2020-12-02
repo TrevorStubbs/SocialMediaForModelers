@@ -89,3 +89,9 @@ Microsoft Visual Studio Community 2019
     - US 2 PostImage Delete Procedure
     - US 3 UserPost Delete Procedure
     - US 4 UserPage Delete Procedure
+  - Milestone 4
+    - US 1 AccountController Authorization/Authentication
+    - US 2 UserPageController Authorization/Authentication
+    - US 3 UserPostController Authorization/Authentication
+    - US 4 PostComment Controller Authorization/Authentication
+    - US 5 PostImage Controller Authorization/Authentication

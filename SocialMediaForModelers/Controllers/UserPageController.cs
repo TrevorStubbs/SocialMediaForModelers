@@ -5,6 +5,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualBasic;
@@ -18,15 +19,16 @@ namespace SocialMediaForModelers.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    // ===================== TODO: Change to Restricted =============================
-    [AllowAnonymous]
+    [Authorize]
     public class UserPageController : ControllerBase
     {
         private readonly IUserPage _userPage;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public UserPageController(IUserPage userPage)
+        public UserPageController(IUserPage userPage, UserManager<ApplicationUser> userManager)
         {
             _userPage = userPage;
+            _userManager = userManager;
         }
 
         // POST: /UserPage
@@ -112,15 +114,31 @@ namespace SocialMediaForModelers.Controllers
         /// <param name="pageId">The page's database id</param>
         /// <returns>The UserPageDTO, if action successful</returns>
         [HttpPut("{pageId}")]
-        public async Task<ActionResult<UserPageDTO>> PutAPage(UserPageDTO page, int pageId)
+        public async Task<ActionResult<UserPageDTO>> PutAPage(UserPageDTO pageDTO, int pageId)
         {
             // Test to see if claim == page.UserId or policy is admin
             // if so allow the update
             // if not don't allow it
+            var page = await _userPage.GetASpecificPage(pageId);
+            var usersRoles = UserClaimsGetters.GetUserRoles(User, _userManager);
 
-            var updatedPage = await _userPage.Update(page, pageId);
+            if (UserClaimsGetters.GetUserId(User) == page.UserId || usersRoles.Contains("Admin") || usersRoles.Contains("Owner"))
+            {
+                try
+                {
+                    var updatedPage = await _userPage.Update(pageDTO, pageId);
 
-            return updatedPage;
+                    return updatedPage;
+                }
+                catch (Exception e)
+                {
+
+                    throw new Exception($"Update action exception message: {e.Message}");
+                }
+
+            }
+
+            throw new Exception("You are not authorized to Update that Page.");
         }
 
         // DELETE: /UserPage/{PageId}
@@ -136,18 +154,25 @@ namespace SocialMediaForModelers.Controllers
             // if so allow the delete
             // if not don't allow it
 
-            try
-            {
-                await _userPage.Delete(pageId);
+            var page = await _userPage.GetASpecificPage(pageId);
+            var usersRoles = UserClaimsGetters.GetUserRoles(User, _userManager);
 
-                return Ok();
-            }
-            catch (Exception e)
+            if (UserClaimsGetters.GetUserId(User) == page.UserId || usersRoles.Contains("Admin") || usersRoles.Contains("Owner"))
             {
+                try
+                {
+                    await _userPage.Delete(pageId);
 
-                throw new Exception($"Delete action exception message: {e.Message}"
-                    );
+                    return Ok();
+                }
+                catch (Exception e)
+                {
+
+                    throw new Exception($"Delete action exception message: {e.Message}");
+                }
             }
+
+            throw new Exception("You are not authorized to Delete that Page.");
         }
 
         // POST: /UserPage/{PageId}/Like
@@ -227,16 +252,23 @@ namespace SocialMediaForModelers.Controllers
         [HttpPost("{pageId}/UserPost/{postId}")]
         public async Task<IActionResult> PostUserPostToPage(int pageId, int postId)
         {
-            try
-            {
-                await _userPage.AddAPostToAPage(pageId, postId);
+            var page = await _userPage.GetASpecificPage(pageId);
+            var usersRoles = UserClaimsGetters.GetUserRoles(User, _userManager);
 
-                return Ok();
-            }
-            catch (Exception e)
+            if (UserClaimsGetters.GetUserId(User) == page.UserId || usersRoles.Contains("Admin") || usersRoles.Contains("Owner"))
             {
-                throw new Exception($"Cannot add that post to the page: {e.Message}");
+                try
+                {
+                    await _userPage.AddAPostToAPage(pageId, postId);
+
+                    return Ok();
+                }
+                catch (Exception e)
+                {
+                    throw new Exception($"Cannot add that post to the page: {e.Message}");
+                }
             }
+            throw new Exception("You are not authorized to attach that Page to that post.");
         }
 
         // DELETE: /UserPage/{PageId}/UserPost/{PostId}
@@ -249,16 +281,24 @@ namespace SocialMediaForModelers.Controllers
         [HttpDelete("{pageId}/UserPost/{postId}")]
         public async Task<IActionResult> DeleteUserPostFromPage(int pageId, int postId)
         {
-            try
-            {
-                await _userPage.DeleteAPostFromAPage(pageId, postId);
+            var page = await _userPage.GetASpecificPage(pageId);
+            var usersRoles = UserClaimsGetters.GetUserRoles(User, _userManager);
 
-                return Ok();
-            }
-            catch (Exception e)
+            if (UserClaimsGetters.GetUserId(User) == page.UserId || usersRoles.Contains("Admin") || usersRoles.Contains("Owner"))
             {
-                throw new Exception($"Cannot delete that post from the page: {e.Message}");
+                try
+                {
+                    await _userPage.DeleteAPostFromAPage(pageId, postId);
+
+                    return Ok();
+                }
+                catch (Exception e)
+                {
+                    throw new Exception($"Cannot delete that post from the page: {e.Message}");
+                }
             }
+            throw new Exception("You are not authorized to delete that Page from that post.");
+
         }
     }
 }
