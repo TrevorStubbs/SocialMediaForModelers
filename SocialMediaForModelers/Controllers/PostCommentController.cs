@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SocialMediaForModelers.Controllers.ControllerSupport;
+using SocialMediaForModelers.Model;
 using SocialMediaForModelers.Model.DTOs;
 using SocialMediaForModelers.Model.Interfaces;
 using System;
@@ -13,15 +15,16 @@ namespace SocialMediaForModelers.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    // ===================== TODO: Change to Restricted =============================
-    [AllowAnonymous]
-    public class PostCommentsController : ControllerBase
+    [Authorize]
+    public class PostCommentController : ControllerBase
     {
         private readonly IPostComment _postComment;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public PostCommentsController(IPostComment postComment)
+        public PostCommentController(IPostComment postComment, UserManager<ApplicationUser> userManager)
         {
             _postComment = postComment;
+            _userManager = userManager;
         }
 
         // POST: /PostComment
@@ -128,15 +131,23 @@ namespace SocialMediaForModelers.Controllers
             // Test to see if claim == post.UserId or policy is admin
             // if so allow the update
             // if not don't allow it
+            var comment = await _postComment.GetASpecificComment(commentId);
+            var usersRoles = UserClaimsGetters.GetUserRoles(User, _userManager);
 
-            var comment = await _postComment.Update(updateComment, commentId);
-
-            if (comment != null)
+            if (UserClaimsGetters.GetUserId(User) == comment.UserId || usersRoles.Contains("Admin") || usersRoles.Contains("Owner"))
             {
-                return comment;
+                var commentUpdate = await _postComment.Update(updateComment, commentId);
+
+                if (commentUpdate != null)
+                {
+                    return commentUpdate;
+                }
+
+                return BadRequest();
             }
 
-            return BadRequest();
+            throw new Exception("You are not authorized to Update that Comment.");
+
         }
 
         // DELETE: /PostComment/{commentId}
@@ -151,18 +162,27 @@ namespace SocialMediaForModelers.Controllers
             // Test to see if claim == post.UserId or policy is admin
             // if so allow the delete
             // if not don't allow it
+            var comment = await _postComment.GetASpecificComment(commentId);
+            var usersRoles = UserClaimsGetters.GetUserRoles(User, _userManager);
 
-            try
+            // TODO: Need to figure out how to allow the Post's owner is allowed to delete another user's comment
+            if (UserClaimsGetters.GetUserId(User) == comment.UserId || usersRoles.Contains("Admin") || usersRoles.Contains("Owner"))
             {
-                await _postComment.Delete(commentId);
+                try
+                {
+                    await _postComment.Delete(commentId);
 
-                return Ok();
-            }
-            catch (Exception e)
-            {
+                    return Ok();
+                }
+                catch (Exception e)
+                {
 
-                throw new Exception($"Delete action exception message: {e.Message}");
+                    throw new Exception($"Delete action exception message: {e.Message}");
+                }
+
             }
+
+            throw new Exception("You are not authorized to Delete that Comment.");
         }
 
         // POST: /PostComment/{commentId}/Like

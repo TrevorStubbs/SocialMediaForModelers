@@ -93,3 +93,4 @@ Microsoft Visual Studio Community 2019
     - US 1 AccountController Authorization/Authentication
     - US 2 UserPageController Authorization/Authentication
     - US 3 UserPostController Authorization/Authentication
+    - US 4 PostComment Controller Authorization/Authentication
