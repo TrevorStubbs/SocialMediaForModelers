@@ -51,7 +51,7 @@ namespace SocialMediaForModelers.Data
                 new PostComment
                 {
                     ID = 1,
-                    UserId = "1234",
+                    UserId = "fc2155ec-7184-4dd8-a45e-2ea07e8cc5ea",
                     Body = "I am a comment",
                     Created = timeNow,
                     Modified = timeNow
@@ -61,7 +61,7 @@ namespace SocialMediaForModelers.Data
                 new PostImage
                 {
                     ID = 1,
-                    UserId = "1234",
+                    UserId = "fc2155ec-7184-4dd8-a45e-2ea07e8cc5ea",
                     CloudStorageKey = "/Dog.png",
                     Created = timeNow,
                     Modified = timeNow
@@ -71,7 +71,7 @@ namespace SocialMediaForModelers.Data
                 new UserPost
                 {
                     ID = 1,
-                    UserId = "1234",
+                    UserId = "fc2155ec-7184-4dd8-a45e-2ea07e8cc5ea",
                     Caption = "This is my post",
                     Created = timeNow,
                     Modified = timeNow
@@ -81,7 +81,7 @@ namespace SocialMediaForModelers.Data
                 new UserPage
                 {
                     ID = 1,
-                    UserId = "1234",
+                    UserId = "fc2155ec-7184-4dd8-a45e-2ea07e8cc5ea",
                     PageName = "Seed Page",
                     PageContent = "I am I here",
                     Created = timeNow,
