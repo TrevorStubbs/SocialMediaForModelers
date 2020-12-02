@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity;
+using SocialMediaForModelers.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
@@ -18,8 +20,15 @@ namespace SocialMediaForModelers.Controllers.ControllerSupport
         /// <returns></returns>
         public static string GetUserId(ClaimsPrincipal user)
         {
-            // return user.Claims.FirstOrDefault(x => x.Type == "UserId").Value;
-            return "1234"; // This is here for testing.
+            return user.Claims.FirstOrDefault(x => x.Type == "UserId").Value;
+            //return "1234"; // This is here for testing.
         }
+
+        public static IList<string> GetUserRoles(ClaimsPrincipal user, UserManager<ApplicationUser> userManager)
+        {
+            var appUser = userManager.FindByIdAsync(user.Claims.FirstOrDefault(x => x.Type == "UserId").Value).Result;
+
+            return userManager.GetRolesAsync(appUser).Result;
+        }        
     }
 }
