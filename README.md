@@ -74,4 +74,24 @@ Microsoft Visual Studio Community 2019
     - US 1 PostImageController Scaffold
     - US 2 PostImageController Methods
     - US 3 PostImageController Swagger Testing
-  
+- Sprint 4
+  - Milestone 1
+    - US 1 Updated each entity with DateTime
+    - US 2 Added DateTime when entity is created/modified
+    - US 3 DateTime Tests
+    - Us 4 Update methods are fixed.
+  - Milestone 2
+    - US 1 LikeGetter
+    - US 2 Implement LikeGetter
+    - US 3 Testing all the Like getters
+  - Milestone 3
+    - US 1 PostComment Delete Procedure
+    - US 2 PostImage Delete Procedure
+    - US 3 UserPost Delete Procedure
+    - US 4 UserPage Delete Procedure
+  - Milestone 4
+    - US 1 AccountController Authorization/Authentication
+    - US 2 UserPageController Authorization/Authentication
+    - US 3 UserPostController Authorization/Authentication
+    - US 4 PostComment Controller Authorization/Authentication
+    - US 5 PostImage Controller Authorization/Authentication

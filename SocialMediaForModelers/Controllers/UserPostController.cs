@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SocialMediaForModelers.Controllers.ControllerSupport;
+using SocialMediaForModelers.Model;
 using SocialMediaForModelers.Model.DTOs;
 using SocialMediaForModelers.Model.Interfaces;
 using System;
@@ -13,15 +15,19 @@ namespace SocialMediaForModelers.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [AllowAnonymous] // Temporary - Change after testing
+    [Authorize]
 
     public class UserPostController : ControllerBase
     {
         private readonly IUserPost _userPost;
+        private readonly IPostComment _postComment;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public UserPostController(IUserPost userPost)
+        public UserPostController(IUserPost userPost, IPostComment postComment, UserManager<ApplicationUser> userManager)
         {
             _userPost = userPost;
+            _postComment = postComment;
+            _userManager = userManager;
         }
 
         // POST: /UserPost
@@ -33,6 +39,11 @@ namespace SocialMediaForModelers.Controllers
         [HttpPost]
         public async Task<ActionResult<UserPostDTO>> PostUserPost(UserPostDTO newPost)
         {
+            if(newPost.UserId == null)
+            {
+                newPost.UserId = UserClaimsGetters.GetUserId(User);
+            }
+
             var post = await _userPost.Create(newPost);
 
             if (post != null)
@@ -113,19 +124,34 @@ namespace SocialMediaForModelers.Controllers
             // if so allow the update
             // if not don't allow it
 
-            if (postId != updatePost.Id)
+            //if (postId != updatePost.Id)
+            //{
+            //    return BadRequest();
+            //}
+
+            var post = await _userPost.GetASpecificPost(postId);
+            var usersRoles = UserClaimsGetters.GetUserRoles(User, _userManager);
+
+            if (UserClaimsGetters.GetUserId(User) == post.UserId || usersRoles.Contains("Admin") || usersRoles.Contains("Owner"))
             {
-                return BadRequest();
+                try
+                {
+                    var postUpdate = await _userPost.Update(updatePost, postId);
+
+                    if (postUpdate != null)
+                    {
+                        return postUpdate;
+                    }
+
+                    return BadRequest();
+                }
+                catch (Exception e)
+                {
+                    throw new Exception($"Update error message: {e.Message}");
+                }
             }
 
-            var post = await _userPost.Update(updatePost, postId);
-
-            if (post != null)
-            {
-                return post;
-            }
-
-            return BadRequest();
+            throw new Exception("You are not authorized to Update that Post.");
         }
 
         // DELETE: /UserPost/{postId}
@@ -140,17 +166,25 @@ namespace SocialMediaForModelers.Controllers
             // Test to see if claim == post.UserId or policy is admin
             // if so allow the delete
             // if not don't allow it
+            var post = await _userPost.GetASpecificPost(postId);
+            var usersRoles = UserClaimsGetters.GetUserRoles(User, _userManager);
 
-            try
+            if (UserClaimsGetters.GetUserId(User) == post.UserId || usersRoles.Contains("Admin") || usersRoles.Contains("Owner"))
             {
-                await _userPost.Delete(postId);
+                try
+                {
+                    await _userPost.Delete(postId);
 
-                return Ok();
+                    return Ok();
+                }
+                catch (Exception e)
+                {
+                    throw new Exception($"Delete action exception message: {e.Message}");
+                }
+
             }
-            catch (Exception e)
-            {
-                throw new Exception($"Delete action exception message: {e.Message}");
-            }
+
+            throw new Exception("You are not authorized to Delete that Post.");
         }
 
         // POST: /UserPost/{postId}/Like
@@ -201,7 +235,7 @@ namespace SocialMediaForModelers.Controllers
         /// <returns>IActionResult</returns>
         [HttpDelete("{postId}/Like")]
         public async Task<IActionResult> DeletePostLike(int postId)
-        {            
+        {
             try
             {
                 await _userPost.DeleteALike(postId, UserClaimsGetters.GetUserId(User));
@@ -229,16 +263,24 @@ namespace SocialMediaForModelers.Controllers
             // Do we make the client do it?
             // Cant test till this is completed
             // ========================================================================================
-            try
-            {
-                await _userPost.AddAnImageToAPost(postId, imageId);
+            var post = await _userPost.GetASpecificPost(postId);
+            var usersRoles = UserClaimsGetters.GetUserRoles(User, _userManager);
 
-                return Ok();
-            }
-            catch (Exception e)
+            if (UserClaimsGetters.GetUserId(User) == post.UserId || usersRoles.Contains("Admin") || usersRoles.Contains("Owner"))
             {
-                throw new Exception($"Cannot add the image to the post: {e.Message}");
+                try
+                {
+                    await _userPost.AddAnImageToAPost(postId, imageId);
+
+                    return Ok();
+                }
+                catch (Exception e)
+                {
+                    throw new Exception($"Cannot add the image to the post: {e.Message}");
+                }
             }
+
+            throw new Exception("You are not authorized to Add that Image to the Post.");
         }
 
         // DELETE: /UserPost/{postId}/Image/{imageId}
@@ -254,16 +296,24 @@ namespace SocialMediaForModelers.Controllers
             // ====================== TODO: Same here how are we going to deal with S3 ===============   
             // Cant test till this is completed
             // =======================================================================================
-            try
-            {
-                await _userPost.DeleteAnImageFromAPost(postId, imageid);
+            var post = await _userPost.GetASpecificPost(postId);
+            var usersRoles = UserClaimsGetters.GetUserRoles(User, _userManager);
 
-                return Ok();
-            }
-            catch (Exception e)
+            if (UserClaimsGetters.GetUserId(User) == post.UserId || usersRoles.Contains("Admin") || usersRoles.Contains("Owner"))
             {
-                throw new Exception($"Cannot delete the image from the post: {e.Message}");
+                try
+                {
+                    await _userPost.DeleteAnImageFromAPost(postId, imageid);
+
+                    return Ok();
+                }
+                catch (Exception e)
+                {
+                    throw new Exception($"Cannot delete the image from the post: {e.Message}");
+                }
             }
+
+            throw new Exception("You are not authorized to Delete that Image from the Post.");
         }
 
         // POST: /UserPost/{postId}/Comment/{commentId}
@@ -273,17 +323,17 @@ namespace SocialMediaForModelers.Controllers
         /// <param name="postid">The post's database id.</param>
         /// <param name="commentId">The comment's database id.</param>
         /// <returns>IActionResult</returns>
-        [HttpPost("{postId}/Comment/{imageId}")]
-        public async Task<IActionResult> PostACommentToPost(int postid, int commentId)
+        [HttpPost("{postId}/Comment/{commentId}")]
+        public async Task<IActionResult> PostACommentToPost(int postId, int commentId)
         {
             try
             {
-                await _userPost.AddACommentToAPost(postid, commentId);
+                await _userPost.AddACommentToAPost(postId, commentId);
 
                 return Ok();
             }
             catch (Exception e)
-            {                
+            {
                 throw new Exception($"Cannot add the comment to the post: {e.Message}");
             }
         }
@@ -295,20 +345,28 @@ namespace SocialMediaForModelers.Controllers
         /// <param name="postId">The post's database id.</param>
         /// <param name="commentId">The comment's database id.</param>
         /// <returns>IActionResult</returns>
-        [HttpDelete("{postId}/Comment/{imageId}")]
+        [HttpDelete("{postId}/Comment/{commentId}")]
         public async Task<IActionResult> DeleteACommentFromPost(int postId, int commentId)
         {
-            try
-            {
-                await _userPost.DeleteACommentFromAPost(postId, commentId);
+            var post = await _userPost.GetASpecificPost(postId);
+            var comment = await _postComment.GetASpecificComment(commentId);
+            var usersRoles = UserClaimsGetters.GetUserRoles(User, _userManager);
 
-                return Ok();
-            }
-            catch (Exception e)
+            if (UserClaimsGetters.GetUserId(User) == post.UserId || UserClaimsGetters.GetUserId(User) == comment.UserId || usersRoles.Contains("Admin") || usersRoles.Contains("Owner"))
             {
-                throw new Exception($"Cannot delete the comment from the post: {e.Message}");
+                try
+                {
+                    await _userPost.DeleteACommentFromAPost(postId, commentId);
+
+                    return Ok();
+                }
+                catch (Exception e)
+                {
+                    throw new Exception($"Cannot delete the comment from the post: {e.Message}");
+                }
             }
+
+            throw new Exception("You are not authorized to Delete that Post.");
         }
-
     }
 }

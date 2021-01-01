@@ -30,11 +30,15 @@ namespace SocialMediaForModelers.Model.Managers
         /// <returns>The provided UserPageDTO</returns>
         public async Task<UserPageDTO> Create(UserPageDTO page)
         {
+            var timeNow = DateTime.UtcNow;
+
             UserPage newPage = new UserPage()
             {
                 UserId = page.UserId,
                 PageName = page.PageName,
-                PageContent = page.PageContent
+                PageContent = page.PageContent,
+                Created = timeNow,
+                Modified = timeNow
             };
 
             _context.Entry(newPage).State = EntityState.Added;
@@ -51,20 +55,7 @@ namespace SocialMediaForModelers.Model.Managers
         {
             var pages = await _context.UserPages.ToListAsync();
 
-            var pageList = new List<UserPageDTO>();
-
-            foreach (var page in pages)
-            {
-                pageList.Add(new UserPageDTO()
-                {
-                    Id = page.ID,
-                    UserId = page.UserId,
-                    PageName = page.PageName,
-                    PageContent = page.PageContent
-                });
-            }
-
-            return pageList;
+            return await FillUserPageDTOs(pages);
         }
 
         // Read All for a user
@@ -75,24 +66,9 @@ namespace SocialMediaForModelers.Model.Managers
         /// <returns>A list of UserPageDTOs</returns>
         public async Task<List<UserPageDTO>> GetAllPagesForAUser(string userId)
         {
-            {
-                var pages = await _context.UserPages.Where(x => x.UserId == userId).ToListAsync();
+            var pages = await _context.UserPages.Where(x => x.UserId == userId).ToListAsync();
 
-                var pageList = new List<UserPageDTO>();
-
-                foreach (var page in pages)
-                {
-                    pageList.Add(new UserPageDTO()
-                    {
-                        Id = page.ID,
-                        UserId = page.UserId,
-                        PageName = page.PageName,
-                        PageContent = page.PageContent
-                    });
-                }
-
-                return pageList;
-            }
+            return await FillUserPageDTOs(pages);
         }
 
         // Read A page
@@ -110,7 +86,10 @@ namespace SocialMediaForModelers.Model.Managers
                 Id = page.ID,
                 UserId = page.UserId,
                 PageName = page.PageName,
-                PageContent = page.PageContent
+                PageContent = page.PageContent,
+                Created = page.Created,
+                Modified = page.Modified,
+                PageLikes = await GetPageLikes(pageId, page.UserId)
             };
 
             return pageDTO;
@@ -123,33 +102,41 @@ namespace SocialMediaForModelers.Model.Managers
         /// <param name="page">The UserPageDTO to make the update</param>
         /// <param name="pageId">The Page's database Id</param>
         /// <returns>The UserPageDTO that was provided</returns>
-        public async Task<UserPageDTO> Update(UserPageDTO page, int pageId)
+        public async Task<UserPageDTO> Update(UserPageDTO userPage, int pageId)
         {
-            UserPage updatePage = new UserPage()
-            {
-                ID = page.Id,
-                UserId = page.UserId,
-                PageName = page.PageName,
-                PageContent = page.PageContent
-            };
+            var databasePage = await _context.UserPages.Where(x => x.ID == pageId).FirstOrDefaultAsync();
 
-            _context.Entry(updatePage).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
-            return page;
+            if (databasePage != null)
+            {
+                databasePage.ID = databasePage.ID;
+                databasePage.UserId = userPage.UserId == null ? databasePage.UserId : userPage.UserId;
+                databasePage.PageName = userPage.PageName == null ? databasePage.PageName : userPage.PageName;
+                databasePage.PageContent = userPage.PageContent == null ? databasePage.PageContent : userPage.PageContent;
+                databasePage.Modified = DateTime.UtcNow;
+                _context.Entry(databasePage).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+                return await GetASpecificPage(pageId);
+            }
+
+            throw new Exception("That page does not exist.");
         }
 
         // Delete
         /// <summary>
-        /// Delete a UserPage from the database.
+        /// Delete a UserPage and all data associated with that UserPage from the database.
         /// </summary>
         /// <param name="pageId">The page's database Id</param>
         /// <returns>Void</returns>
         public async Task Delete(int pageId)
         {
-            // ================= TODO ===============================
-            // Design Question:
-            // Do we use this method to delete all other items that are connected to this page?
-            // =========================================================================
+            var posts = await _context.UserPageToPosts.Where(x => x.PageId == pageId).ToListAsync();
+
+            foreach (var post in posts)
+            {
+                await _post.Delete(post.PostId);
+            }
+
+            await DeleteAllLikes(pageId);
 
             var pageToBeDeleted = await _context.UserPages.FindAsync(pageId);
             _context.Entry(pageToBeDeleted).State = EntityState.Deleted;
@@ -245,6 +232,32 @@ namespace SocialMediaForModelers.Model.Managers
         }
 
         /// <summary>
+        /// Helper method that fills UserPageDTOs
+        /// </summary>
+        /// <param name="inputList">A list of UserPages</param>
+        /// <returns>A list of UserPageDTOs</returns>
+        private async Task<List<UserPageDTO>> FillUserPageDTOs(List<UserPage> inputList)
+        {
+            var pageList = new List<UserPageDTO>();
+
+            foreach (var page in inputList)
+            {
+                pageList.Add(new UserPageDTO()
+                {
+                    Id = page.ID,
+                    UserId = page.UserId,
+                    PageName = page.PageName,
+                    PageContent = page.PageContent,
+                    Created = page.Created,
+                    Modified = page.Modified,
+                    PageLikes = await GetPageLikes(page.ID, page.UserId)
+                });
+            }
+
+            return pageList;
+        }
+
+        /// <summary>
         /// A helper method that checks to see if the user has like the page.
         /// </summary>
         /// <param name="likes">Reference to all the like from the page</param>
@@ -262,5 +275,22 @@ namespace SocialMediaForModelers.Model.Managers
 
             return false;
         }
+
+        /// <summary>
+        /// Helper method that deletes all the likes from this page.
+        /// </summary>
+        /// <param name="pageId">The page's database id.</param>
+        /// <returns>Void</returns>
+        private async Task DeleteAllLikes(int pageId)
+        {
+            var likes = await _context.PageLikes.Where(x => x.PageId == pageId).ToListAsync();
+
+            foreach (var like in likes)
+            {
+                _context.Entry(like).State = EntityState.Deleted;
+            }
+
+            await _context.SaveChangesAsync();
+        }        
     }
 }

@@ -6,16 +6,13 @@ using System.Threading.Tasks;
 
 namespace SocialMediaForModelers.Model.DTOs
 {
-    public class UserPostDTO
+    public class UserPostDTO : BaseDTO
     {
-        public int Id { get; set; }
-        public string UserId { get; set; }
         public string Caption { get; set; }
-        // TODO: add date created
+        public LikeDTO PostLikes { get; set; }
 
         // Navigation properties
         public List<UserPageToPost> UserPageToPosts { get; set; }
-        public List<LikeDTO> PostLikes { get; set; }
         public List<PostImageDTO> PostImages { get; set; }
         public List<PostCommentDTO> PostComments { get; set; }
     }

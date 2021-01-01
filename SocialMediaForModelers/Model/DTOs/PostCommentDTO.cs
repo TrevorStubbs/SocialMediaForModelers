@@ -5,13 +5,9 @@ using System.Threading.Tasks;
 
 namespace SocialMediaForModelers.Model.DTOs
 {
-    public class PostCommentDTO
+    public class PostCommentDTO : BaseDTO
     {
-        public int Id { get; set; }
-        public string UserId { get; set; }
-        public string Body { get; set; }
-        // TODO: add date created
-
-        public List<LikeDTO> CommentLikes { get; set; }
+        public string Body { get; set; }        
+        public LikeDTO CommentLikes { get; set; }
     }
 }

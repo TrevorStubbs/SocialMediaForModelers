@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SocialMediaForModelers.Data;
 
 namespace SocialMediaForModelers.Migrations
 {
     [DbContext(typeof(SMModelersContext))]
-    partial class SMModelersContextModelSnapshot : ModelSnapshot
+    [Migration("20201121205318_newMigrationAfterEnityUpdates")]
+    partial class newMigrationAfterEnityUpdates
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -240,6 +242,24 @@ namespace SocialMediaForModelers.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "e4a550de-cd87-4ba1-aa77-7c2d6009ec87",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "82081fbc-3212-43e1-a0bb-f792498d6fa7",
+                            DOB = new DateTime(1982, 6, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "stubbste@gmail.com",
+                            EmailConfirmed = false,
+                            FirstName = "Trevor",
+                            LastName = "Stubbs",
+                            LockoutEnabled = false,
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "383058ef-d46f-4f28-be98-aa5f9d5148f6",
+                            TwoFactorEnabled = false,
+                            UserName = "stubbste@gmail.com"
+                        });
                 });
 
             modelBuilder.Entity("SocialMediaForModelers.Model.CommentLike", b =>
@@ -396,9 +416,9 @@ namespace SocialMediaForModelers.Migrations
                         {
                             ID = 1,
                             Body = "I am a comment",
-                            Created = new DateTime(2020, 12, 1, 19, 54, 24, 717, DateTimeKind.Utc).AddTicks(7881),
-                            Modified = new DateTime(2020, 12, 1, 19, 54, 24, 717, DateTimeKind.Utc).AddTicks(7881),
-                            UserId = "fc2155ec-7184-4dd8-a45e-2ea07e8cc5ea"
+                            Created = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Modified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UserId = "1234"
                         });
                 });
 
@@ -430,9 +450,9 @@ namespace SocialMediaForModelers.Migrations
                         {
                             ID = 1,
                             CloudStorageKey = "/Dog.png",
-                            Created = new DateTime(2020, 12, 1, 19, 54, 24, 717, DateTimeKind.Utc).AddTicks(7881),
-                            Modified = new DateTime(2020, 12, 1, 19, 54, 24, 717, DateTimeKind.Utc).AddTicks(7881),
-                            UserId = "fc2155ec-7184-4dd8-a45e-2ea07e8cc5ea"
+                            Created = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Modified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UserId = "1234"
                         });
                 });
 
@@ -489,11 +509,11 @@ namespace SocialMediaForModelers.Migrations
                         new
                         {
                             ID = 1,
-                            Created = new DateTime(2020, 12, 1, 19, 54, 24, 717, DateTimeKind.Utc).AddTicks(7881),
-                            Modified = new DateTime(2020, 12, 1, 19, 54, 24, 717, DateTimeKind.Utc).AddTicks(7881),
+                            Created = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Modified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             PageContent = "I am I here",
                             PageName = "Seed Page",
-                            UserId = "fc2155ec-7184-4dd8-a45e-2ea07e8cc5ea"
+                            UserId = "1234"
                         });
                 });
 
@@ -525,9 +545,9 @@ namespace SocialMediaForModelers.Migrations
                         {
                             ID = 1,
                             Caption = "This is my post",
-                            Created = new DateTime(2020, 12, 1, 19, 54, 24, 717, DateTimeKind.Utc).AddTicks(7881),
-                            Modified = new DateTime(2020, 12, 1, 19, 54, 24, 717, DateTimeKind.Utc).AddTicks(7881),
-                            UserId = "fc2155ec-7184-4dd8-a45e-2ea07e8cc5ea"
+                            Created = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Modified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UserId = "1234"
                         });
                 });
 

@@ -32,10 +32,14 @@ namespace SocialMediaForModelers.Model.Managers
         /// <returns>If successful: the new ImageDTO</returns>
         public async Task<PostImageDTO> Create(CreatePostImageDTO postImage, string userId)
         {
+            var timeNow = DateTime.UtcNow;
+
             PostImage newImage = new PostImage()
             {
                 UserId = userId,
-                CloudStorageKey = $"{Guid.NewGuid()}{postImage.ImageExtention}"
+                CloudStorageKey = $"{Guid.NewGuid()}{postImage.ImageExtention}",
+                Created = timeNow,
+                Modified = timeNow
             };
 
             _context.Entry(newImage).State = EntityState.Added;
@@ -65,7 +69,9 @@ namespace SocialMediaForModelers.Model.Managers
                 {
                     Id = item.ID,
                     UserId = item.UserId,
-                    ImageURI = _cloudImage.GetImageUrl(item.CloudStorageKey)
+                    ImageURI = _cloudImage.GetImageUrl(item.CloudStorageKey),
+                    Created = item.Created,
+                    Modified = item.Modified
                 });
             }
 
@@ -88,32 +94,14 @@ namespace SocialMediaForModelers.Model.Managers
                 {
                     Id = item.ID,
                     UserId = item.UserId,
-                    ImageURI = _cloudImage.GetImageUrl(item.CloudStorageKey)
+                    ImageURI = _cloudImage.GetImageUrl(item.CloudStorageKey),
+                    Created = item.Created,
+                    Modified = item.Modified
                 });
             }
 
             return imageList;
         }
-
-        // ============= TODO: This may need to be moved to the Post Manager ===================
-        //public async Task<List<PostImageDTO>> GetAllImagesForAPost(int postId)
-        //{
-        //    var images = await _context.PostImages.Where(x => x.ID == postId).ToListAsync();
-
-        //    var imageList = new List<PostImageDTO>();
-        //    foreach (var item in images)
-        //    {
-        //        imageList.Add(new PostImageDTO()
-        //        {
-        //            Id = item.ID,
-        //            UserId = item.UserId,
-        //            ImageURI = _cloudImage.GetImageUrl(item.CloudStorageKey)
-        //        });
-        //    }
-
-        //    return imageList;
-        //}
-        // ===================================================================================
 
         /// <summary>
         /// Gets a specific Image from the database
@@ -127,7 +115,9 @@ namespace SocialMediaForModelers.Model.Managers
             {
                 Id = image.ID,
                 UserId = image.UserId,
-                ImageURI = _cloudImage.GetImageUrl(image.CloudStorageKey)
+                ImageURI = _cloudImage.GetImageUrl(image.CloudStorageKey),
+                Created = image.Created,
+                Modified = image.Modified
             };
 
             return imageDTO;
@@ -143,8 +133,11 @@ namespace SocialMediaForModelers.Model.Managers
             PostImage updateImage = new PostImage()
             {
                 ID = postImage.Id,
-                UserId = postImage.UserId
+                UserId = postImage.UserId,
+                Created = postImage.Created
             };
+
+            updateImage.Modified = DateTime.UtcNow;
 
             var image = await _context.PostImages.Where(x => x.ID == postImage.Id).FirstOrDefaultAsync();
                         
@@ -163,12 +156,29 @@ namespace SocialMediaForModelers.Model.Managers
         /// <returns>Nothing</returns>
         public async Task Delete(int imageId)
         {            
-            // Get the image
-            PostImage imageToBeDeleted = await _context.PostImages.FindAsync(imageId);
-            // Delete the image from S3
-            await _cloudImage.DeleteAnImageFromCloudStorage(imageToBeDeleted.CloudStorageKey);
-            // Delete the image entry from the Database
+            await DeleteImageFromPostToImageTable(imageId);
+
+            PostImage imageToBeDeleted = await _context.PostImages.FindAsync(imageId);        
+            
+            await _cloudImage.DeleteAnImageFromCloudStorage(imageToBeDeleted.CloudStorageKey);            
             _context.Entry(imageToBeDeleted).State = EntityState.Deleted;
+            await _context.SaveChangesAsync();
+        }
+
+        /// <summary>
+        /// Helper method to delete image from the PostToImages join table.
+        /// </summary>
+        /// <param name="imageId">The image's database id</param>
+        /// <returns>Void</returns>
+        private async Task DeleteImageFromPostToImageTable(int imageId)
+        {
+            var postToImageEntities = await _context.PostToImages.Where(x => x.ImageId == imageId).ToListAsync();
+
+            foreach (var enitity in postToImageEntities)
+            {
+                _context.Entry(enitity).State = EntityState.Deleted;
+            }
+
             await _context.SaveChangesAsync();
         }
     }

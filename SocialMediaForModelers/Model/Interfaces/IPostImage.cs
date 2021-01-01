@@ -35,10 +35,6 @@ namespace SocialMediaForModelers.Model.Interfaces
         /// <returns>A list of all the users images</returns>
         Task<List<PostImageDTO>> GetAllUsersImages(string userId);
 
-        // GetAllImagesForAPost
-        // TODO: Move this to PostManager
-        //Task<List<PostImageDTO>> GetAllImagesForAPost(int postId);
-
         // GetAllASpecificImage
         /// <summary>
         /// Gets a specific Image from the database

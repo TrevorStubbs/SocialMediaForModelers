@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SocialMediaForModelers.Controllers.ControllerSupport;
+using SocialMediaForModelers.Model;
 using SocialMediaForModelers.Model.DTOs;
 using SocialMediaForModelers.Model.Interfaces;
 using System;
@@ -12,16 +14,17 @@ using System.Threading.Tasks;
 namespace SocialMediaForModelers.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController]
-    // ===================== TODO: Change to Restricted =============================
-    [AllowAnonymous]
+    [ApiController]    
+    [Authorize]
     public class PostImageController : ControllerBase
     {
         private readonly IPostImage _postImage;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public PostImageController(IPostImage postImage)
+        public PostImageController(IPostImage postImage, UserManager<ApplicationUser> userManager)
         {
             _postImage = postImage;
+            _userManager = userManager;
         }
 
         // POST: /PostImage
@@ -132,17 +135,24 @@ namespace SocialMediaForModelers.Controllers
             // Test to see if claim == post.UserId or policy is admin
             // if so allow the delete
             // if not don't allow it
+            var image = await _postImage.GetASpecificImage(imageId);
+            var usersRoles = UserClaimsGetters.GetUserRoles(User, _userManager);
 
-            try
+            if (UserClaimsGetters.GetUserId(User) == image.UserId || usersRoles.Contains("Admin") || usersRoles.Contains("Owner"))
             {
-                await _postImage.Delete(imageId);
+                try
+                {
+                    await _postImage.Delete(imageId);
 
-                return Ok();
+                    return Ok();
+                }
+                catch (Exception e)
+                {
+                    throw new Exception($"Delete action exception message: {e.Message}");
+                }
             }
-            catch (Exception e)
-            {
-                throw new Exception($"Delete action exception message: {e.Message}");
-            }
+
+            throw new Exception("You are not authorized to Delete that Image.");
         }
     }
 }

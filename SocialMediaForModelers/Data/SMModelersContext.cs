@@ -21,58 +21,71 @@ namespace SocialMediaForModelers.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            var timeNow = DateTime.UtcNow;
+
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<AppUserFriend>().HasKey(x => new { x.UserId, x.FriendId });
 
+            // Join Tables
             modelBuilder.Entity<PostToComment>().HasKey(x => new { x.PostId, x.CommentId });
             modelBuilder.Entity<PostToImage>().HasKey(x => new { x.PostId, x.ImageId });
             modelBuilder.Entity<UserPageToPost>().HasKey(x => new { x.PageId, x.PostId });
+
+            // Like Tables
             modelBuilder.Entity<CommentLike>().HasKey(x => new { x.CommentId, x.UserId });
             modelBuilder.Entity<PageLike>().HasKey(x => new { x.PageId, x.UserId });
             modelBuilder.Entity<PostLike>().HasKey(x => new { x.PostId, x.UserId });
 
-            modelBuilder.Entity<ApplicationUser>().HasData(
-                new ApplicationUser
-                {
-                    FirstName = "Trevor",
-                    LastName = "Stubbs",
-                    Email = "stubbste@gmail.com",
-                    UserName = "stubbste@gmail.com",
-                    DOB = new DateTime(1982, 6, 8)
-                });
+            //modelBuilder.Entity<ApplicationUser>().HasData(
+            //    new ApplicationUser
+            //    {
+            //        FirstName = "Trevor",
+            //        LastName = "Stubbs",
+            //        Email = "stubbste@gmail.com",
+            //        UserName = "stubbste@gmail.com",
+            //        DOB = new DateTime(1982, 6, 8)
+            //    });
 
             modelBuilder.Entity<PostComment>().HasData(
                 new PostComment
                 {
                     ID = 1,
-                    UserId = "1234",
-                    Body = "I am a comment"
+                    UserId = "fc2155ec-7184-4dd8-a45e-2ea07e8cc5ea",
+                    Body = "I am a comment",
+                    Created = timeNow,
+                    Modified = timeNow
                 });
 
             modelBuilder.Entity<PostImage>().HasData(
                 new PostImage
                 {
                     ID = 1,
-                    UserId = "1234",
-                    CloudStorageKey = "/Dog.png"
+                    UserId = "fc2155ec-7184-4dd8-a45e-2ea07e8cc5ea",
+                    CloudStorageKey = "/Dog.png",
+                    Created = timeNow,
+                    Modified = timeNow
                 });
 
             modelBuilder.Entity<UserPost>().HasData(
                 new UserPost
                 {
                     ID = 1,
-                    UserId = "1234",
-                    Caption = "This is my post"
+                    UserId = "fc2155ec-7184-4dd8-a45e-2ea07e8cc5ea",
+                    Caption = "This is my post",
+                    Created = timeNow,
+                    Modified = timeNow
                 });
 
             modelBuilder.Entity<UserPage>().HasData(
                 new UserPage
                 {
                     ID = 1,
-                    UserId = "1234",
+                    UserId = "fc2155ec-7184-4dd8-a45e-2ea07e8cc5ea",
                     PageName = "Seed Page",
-                    PageContent = "I am I here"
+                    PageContent = "I am I here",
+                    Created = timeNow,
+                    Modified = timeNow
                 });
 
             // Join Table Seeds

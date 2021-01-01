@@ -33,10 +33,14 @@ namespace SocialMediaForModelers.Model.Managers
         /// <returns>Returns the DTO if successful</returns>
         public async Task<UserPostDTO> Create(UserPostDTO post)
         {
+            var timeNow = DateTime.UtcNow;
+
             var newPost = new UserPost()
             {
                 UserId = post.UserId,
-                Caption = post.Caption
+                Caption = post.Caption,
+                Created = timeNow,
+                Modified = timeNow
             };
 
             _context.Entry(newPost).State = EntityState.Added;
@@ -105,9 +109,11 @@ namespace SocialMediaForModelers.Model.Managers
                 Id = post.ID,
                 UserId = post.UserId,
                 Caption = post.Caption,
+                Created = post.Created,
+                Modified = post.Modified,
                 PostComments = comments,
-                PostImages = images
-                // TODO: Add Likes
+                PostImages = images,
+                PostLikes = await GetPostLikes(postId, post.UserId)
             };
 
             return postDTO;
@@ -118,33 +124,49 @@ namespace SocialMediaForModelers.Model.Managers
         /// </summary>
         /// <param name="post">The PostDTO needed to update the database</param>
         /// <returns>If successful the updated DTO</returns>
-        public async Task<UserPostDTO> Update(UserPostDTO post, int postId)
+        public async Task<UserPostDTO> Update(UserPostDTO userPost, int postId)
         {
-            UserPost updatedPost = new UserPost()
+            var databasePost = await _context.UserPosts.Where(x => x.ID == postId).FirstOrDefaultAsync();
+
+            if (databasePost != null)
             {
-                ID = post.Id,
-                UserId = post.UserId,
-                Caption = post.Caption
-            };
+                databasePost.ID = databasePost.ID;
+                databasePost.UserId = userPost.UserId == null ? databasePost.UserId : userPost.UserId;
+                databasePost.Caption = userPost.Caption == null ? databasePost.Caption : userPost.Caption;
+                databasePost.Modified = DateTime.UtcNow;
 
-            // ============ TODO: Will not test till this is done! ====================
-            // Update the Comment list
-            // Update the Image list
-            // Update the Likes
-            // ========================================================================
+                _context.Entry(databasePost).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+                return await GetASpecificPost(postId);
+            }
 
-            _context.Entry(updatedPost).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
-            return post;
+            throw new Exception("That Post does not exist");
         }
 
         /// <summary>
-        /// Deletes a Post from the database
+        /// Deletes a Post from the database all associated data to that post.
         /// </summary>
-        /// <param name="postId">The Id of the post</param>
-        /// <returns>Returns nothing</returns>
+        /// <param name="postId">The post's database id.</param>
+        /// <returns>Void</returns>
         public async Task Delete(int postId)
         {
+            var comments = await _context.PostToComments.Where(x => x.PostId == postId).ToListAsync();
+
+            foreach (var comment in comments)
+            {
+                await _postComment.Delete(comment.CommentId);
+            }
+
+            var images = await _context.PostToImages.Where(x => x.PostId == postId).ToListAsync();
+
+            foreach (var image in images)
+            {
+                await _postImage.Delete(image.ImageId);
+            }
+
+            await DeletePageToPostEntities(postId);
+            await DeleteAllLikes(postId);
+
             var postToBeDeleted = await _context.UserPosts.FindAsync(postId);
             _context.Entry(postToBeDeleted).State = EntityState.Deleted;
             await _context.SaveChangesAsync();
@@ -155,7 +177,7 @@ namespace SocialMediaForModelers.Model.Managers
         /// </summary>
         /// <param name="postId">The Post's Id</param>
         /// <param name="userId">THe User's Id string</param>
-        /// <returns>Nothing</returns>
+        /// <returns>Void</returns>
         public async Task AddALikeToAPost(int postId, string userId)
         {
             PostLike like = new PostLike()
@@ -303,9 +325,11 @@ namespace SocialMediaForModelers.Model.Managers
                     Id = post.ID,
                     UserId = post.UserId,
                     Caption = post.Caption,
+                    Created = post.Created,
+                    Modified = post.Modified,
                     PostComments = comments,
-                    PostImages = images
-                    // TODO : PostLikes = getlikes                    
+                    PostImages = images,
+                    PostLikes = await GetPostLikes(post.ID, post.UserId)
                 });
             }
 
@@ -329,6 +353,40 @@ namespace SocialMediaForModelers.Model.Managers
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// Helper method that deletes all the likes from this post.
+        /// </summary>
+        /// <param name="postId">The post's database id.</param>
+        /// <returns>Void</returns>
+        private async Task DeleteAllLikes(int postId)
+        {
+            var likes = await _context.PostLikes.Where(x => x.PostId == postId).ToListAsync();
+
+            foreach (var like in likes)
+            {
+                _context.Entry(like).State = EntityState.Deleted;
+            }
+
+            await _context.SaveChangesAsync();
+        }
+
+        /// <summary>
+        /// Helper method that deletes the post's reference from to the PageToPost join table.
+        /// </summary>
+        /// <param name="postId">The post's database id</param>
+        /// <returns>Void</returns>
+        private async Task DeletePageToPostEntities(int postId)
+        {
+            var pageToPostEntities = await _context.UserPageToPosts.Where(x => x.PostId == postId).ToListAsync();
+
+            foreach (var entity in pageToPostEntities)
+            {
+                _context.Entry(entity).State = EntityState.Deleted;
+            }
+
+            await _context.SaveChangesAsync();
         }
     }
 }
